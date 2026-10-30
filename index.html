@@ -1,0 +1,1431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Fourteen quick tests of your reflexes, memory, rhythm and senses. Get one number: your real age.">
+<meta property="og:title" content="Human Calibration Program">
+<meta property="og:description" content="Take 5 quick tests. Find out how old you really are.">
+<meta name="theme-color" content="#1b2340">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23f0493d'/><circle cx='32' cy='32' r='19' fill='none' stroke='%23fff' stroke-width='6'/><path d='M32 32V19' stroke='%23fff' stroke-width='6' stroke-linecap='round'/></svg>">
+<title>Human Calibration Program</title>
+<style>
+@font-face { font-family: "Bagel Fat One"; font-weight: 400; font-display: swap; src: url(fonts/bagel.woff2) format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 400; font-display: swap; src: url(fonts/atkinson-400.woff2) format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-display: swap; src: url(fonts/atkinson-700.woff2) format("woff2"); }
+@font-face { font-family: "JetBrains Mono"; font-weight: 500 700; font-display: swap; src: url(fonts/jbmono.woff2) format("woff2"); }
+html, body { height: auto; } body { margin: 0; }
+.mute { background: none; border: 2px solid var(--line); border-radius: 999px; padding: 4px 12px; cursor: pointer; color: var(--muted); font-size: 14px; }
+.mute:hover { border-color: var(--ink); color: var(--ink); }
+/* Layout: a test shelf. One centered column of chunky tiles; each test opens in place with a big play area and a shared results card */
+:root {
+  --bg: #f2f4fb;
+  --surface: #ffffff;
+  --ink: #1b2340;
+  --muted: #5b6488;
+  --line: #dce1f0;
+  --sky: #3f7cf5;
+  --tomato: #f0493d;
+  --mint: #16a37c;
+  --sun: #f5b324;
+  --on-accent: #ffffff;
+  --tint-blue: #dbe7ff;
+  --tint-red: #ffe0db;
+  --tint-green: #d3f2e5;
+  --tint-yellow: #fff0c7;
+  --sc-track: #3a4470;
+  --sc-hi: #ffc23d;
+  --sc-bg: #1b2340;
+  --sc-fg: #f2f4fb;
+  --display: "Bagel Fat One", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10142a; --surface: #1a2042; --ink: #eef1ff; --muted: #a2aad0; --line: #2c3461;
+    --sky: #7aa6ff; --tomato: #ff7b6f; --mint: #3fd2a5; --sun: #ffc94d; --on-accent: #10142a;
+    --tint-blue: #1e2d5c; --tint-red: #4a2329; --tint-green: #15413a; --tint-yellow: #47391a; --sc-track: #3b4680; --sc-hi: #ffc94d; --sc-bg: #232b5c; --sc-fg: #eef1ff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10142a; --surface: #1a2042; --ink: #eef1ff; --muted: #a2aad0; --line: #2c3461;
+  --sky: #7aa6ff; --tomato: #ff7b6f; --mint: #3fd2a5; --sun: #ffc94d; --on-accent: #10142a;
+  --tint-blue: #1e2d5c; --tint-red: #4a2329; --tint-green: #15413a; --tint-yellow: #47391a; --sc-track: #3b4680; --sc-hi: #ffc94d; --sc-bg: #232b5c; --sc-fg: #eef1ff;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 17px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 48px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; line-height: 1.05; }
+p { margin: 0; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; border-radius: 8px; }
+kbd { font-family: var(--mono); font-size: 12px; border: 1.5px solid var(--line); border-radius: 5px; padding: 0 5px; color: var(--muted); }
+
+/* SVG fills from tokens */
+.f-ink { fill: var(--ink); } .f-sky { fill: var(--sky); } .f-tom { fill: var(--tomato); } .f-mint { fill: var(--mint); }
+.f-sun { fill: var(--sun); } .f-surf { fill: var(--surface); } .f-none { fill: none; }
+.s-ink { stroke: var(--ink); } .s-sky { stroke: var(--sky); } .s-tom { stroke: var(--tomato); } .s-mint { stroke: var(--mint); }
+
+/* Header */
+.brand { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-weight: 700; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+.logo-mark { font-family: var(--display); font-weight: 400; font-size: 20px; letter-spacing: 0; background: var(--tomato); color: var(--on-accent); padding: 2px 10px 0; border-radius: 8px; }
+.brand small { color: var(--muted); font-size: 15px; }
+
+/* Scorecard: the big gauge + estimated age */
+.scorecard {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: clamp(20px, 5vw, 56px);
+  background: var(--sc-bg); color: var(--sc-fg); border-radius: 30px; padding: clamp(22px, 4vw, 44px);
+  text-decoration: none; transition: transform .18s cubic-bezier(.3,1.6,.6,1);
+}
+a.scorecard:hover { transform: translateY(-4px) rotate(-.5deg); }
+.sc-dial { position: relative; width: clamp(190px, 32vw, 300px); aspect-ratio: 1; max-width: 100%; }
+.gauge { width: 100%; height: 100%; display: block; }
+.g-track { fill: none; stroke: var(--sc-track); stroke-width: 12; }
+.g-fill { fill: none; stroke: var(--sc-hi); stroke-width: 12; stroke-linecap: round; transition: stroke-dasharray .8s ease; }
+.g-tick { stroke: var(--sc-track); stroke-width: 1.5; }
+.sc-pct { position: absolute; inset: 0; display: flex; flex-wrap: wrap; align-content: center; justify-content: center; align-items: baseline; text-align: center; }
+.sc-pct b { font-family: var(--display); font-weight: 400; font-size: clamp(64px, 11vw, 112px); line-height: 1; }
+.sc-pct span { font-family: var(--display); font-size: clamp(26px, 4vw, 40px); color: var(--sc-hi); }
+.sc-pct small { flex-basis: 100%; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; opacity: .7; padding-top: 6px; }
+.sc-text { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.sc-tag { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; opacity: .7; }
+.sc-age { font-family: var(--display); font-size: clamp(96px, 19vw, 200px); line-height: .9; color: var(--sc-hi); letter-spacing: -2px; }
+.sc-diff { font-family: var(--display); font-size: clamp(20px, 3vw, 28px); }
+.sc-note { font-size: clamp(18px, 2.4vw, 22px); }
+.sc-meta { font-size: 14px; opacity: .7; }
+@media (max-width: 620px) {
+  .scorecard { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .sc-text { align-items: center; }
+}
+
+/* Home */
+.hero { display: flex; flex-direction: column; gap: 12px; padding-top: 12px; }
+.hero h1 { font-size: clamp(40px, 7vw, 76px); letter-spacing: -1px; }
+.hero h1 em { font-style: normal; color: var(--sky); }
+.hero p { color: var(--muted); max-width: 54ch; font-size: 19px; }
+.shelf { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.tile {
+  position: relative; display: flex; text-decoration: none; color: var(--ink);
+  background: var(--surface); border: 2px solid var(--line); border-radius: 20px; overflow: hidden;
+  transition: transform .18s cubic-bezier(.3,1.6,.6,1), border-color .18s;
+}
+.tile:hover { transform: translateY(-4px) rotate(-.6deg); border-color: var(--ink); }
+.tile:nth-child(even):hover { transform: translateY(-4px) rotate(.6deg); }
+.tile .art { width: 128px; flex: none; display: grid; place-items: center; }
+.tile .art svg { width: 64%; height: auto; }
+.tile .meta { padding: 14px 18px 16px; display: flex; flex-direction: column; gap: 4px; min-width: 0; padding-right: 76px; }
+.tile h2 { font-size: 23px; }
+.tile p { color: var(--muted); font-size: 15px; }
+.tile .best { position: absolute; top: 12px; right: 12px; font-family: var(--display); font-size: 22px; color: var(--sky); }
+.tile .best.none { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 4px; }
+.tag { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.foot { color: var(--muted); font-size: 15px; border-top: 2px dashed var(--line); padding-top: 18px; }
+@media (max-width: 820px) { .shelf { grid-template-columns: 1fr; gap: 12px; } }
+@media (max-width: 480px) {
+  .tile .art { width: 92px; }
+  .tile h2 { font-size: 20px; }
+}
+
+/* Test pages */
+.toyhead { display: flex; flex-direction: column; gap: 10px; }
+.back {
+  align-self: flex-start; background: none; border: 2px solid var(--line); border-radius: 999px;
+  padding: 6px 14px; cursor: pointer; color: var(--muted); font-size: 15px;
+}
+.back:hover { border-color: var(--ink); color: var(--ink); }
+.toyhead h1 { font-size: clamp(36px, 6vw, 60px); }
+.toyhead p { color: var(--muted); max-width: 62ch; }
+.stage { background: var(--surface); border: 2px solid var(--line); border-radius: 26px; padding: clamp(18px, 4vw, 40px); display: flex; flex-direction: column; align-items: center; gap: 20px; min-height: 360px; justify-content: center; }
+.fact { color: var(--muted); font-size: 15px; max-width: 64ch; }
+.btn {
+  background: var(--ink); color: var(--bg); border: 0; border-radius: 999px; padding: 12px 24px;
+  font-weight: 700; cursor: pointer; transition: transform .12s; touch-action: manipulation;
+}
+.btn:active { transform: scale(.96); }
+.btn.ghost { background: none; color: var(--ink); border: 2px solid var(--line); }
+.btn.ghost:hover { border-color: var(--ink); }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; }
+.hud { width: 100%; max-width: 760px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-family: var(--mono); font-size: 14px; color: var(--muted); }
+.msg { text-align: center; min-height: 3em; max-width: 46ch; }
+.msg strong { font-size: 20px; display: block; }
+.field { width: 150px; padding: 11px 16px; border-radius: 999px; border: 2px solid var(--line); background: var(--bg); font-family: var(--mono); font-size: 18px; text-align: center; }
+.field:focus { border-color: var(--ink); outline: none; }
+.pips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.pip { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line); }
+.pip.good { background: var(--mint); border-color: transparent; }
+.pip.ok { background: var(--sun); border-color: transparent; }
+.pip.bad { background: var(--tomato); border-color: transparent; }
+.pip.on { background: var(--ink); border-color: transparent; }
+.canvas-box { position: relative; width: 100%; max-width: 760px; aspect-ratio: 3 / 2; border-radius: 18px; background: var(--bg); overflow: hidden; }
+.canvas-box canvas { width: 100%; height: 100%; display: block; }
+.cover { position: absolute; inset: 0; display: grid; place-items: center; background: var(--tint-red); font-family: var(--display); font-size: clamp(60px, 14vw, 120px); color: var(--tomato); }
+
+/* Results card */
+.final { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.final h2 { font-size: clamp(36px, 7vw, 58px); color: var(--sky); }
+.final .stats { display: flex; gap: 26px; flex-wrap: wrap; justify-content: center; color: var(--muted); font-size: 15px; padding-block: 6px; }
+.final .stats b { display: block; color: var(--ink); font-size: 22px; }
+.final .fact { text-align: center; }
+
+/* Dial (Inner Clock) */
+.ck-target { font-family: var(--mono); color: var(--muted); font-size: 15px; letter-spacing: .08em; text-transform: uppercase; text-align: center; }
+.ck-target b { display: block; font-family: var(--display); font-weight: 400; font-size: clamp(44px, 9vw, 72px); color: var(--ink); letter-spacing: 0; text-transform: none; }
+.dial {
+  width: min(250px, 66vw); aspect-ratio: 1; max-width: 100%; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--tint-blue); color: var(--ink); position: relative; touch-action: manipulation;
+  box-shadow: inset 0 0 0 10px var(--surface), inset 0 0 0 13px var(--line);
+  display: grid; place-items: center; transition: transform .1s;
+}
+.dial:active { transform: scale(.97); }
+.dial[data-state="running"] { background: var(--sky); color: var(--on-accent); }
+.dial .num { font-size: clamp(40px, 10vw, 56px); font-weight: 700; transition: filter .4s, opacity .4s; }
+.dial .num.fog { filter: blur(9px); opacity: .6; }
+.dial .lbl { position: absolute; bottom: 22%; font-size: 13px; font-family: var(--mono); letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
+
+/* Tap pad (reflex, rhythm) */
+.pad {
+  width: 100%; max-width: 680px; min-height: 280px; border: 0; border-radius: 22px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px;
+  background: var(--tint-blue); color: var(--ink); user-select: none; -webkit-user-select: none; touch-action: manipulation;
+  transition: background .08s;
+}
+.pad-big { font-family: var(--display); font-size: clamp(34px, 7vw, 58px); line-height: 1.1; }
+.pad[data-state="wait"] { background: var(--tomato); color: var(--on-accent); }
+.pad[data-state="decoy"] { background: var(--sun); color: #1b2340; }
+.pad[data-state="go"] { background: var(--mint); color: var(--on-accent); }
+.pad[data-state="early"] { background: var(--tint-red); }
+.pad[data-state="pulse"] { background: var(--sky); color: var(--on-accent); }
+
+/* Tile grids (hue, pattern, change) */
+.tgrid { display: grid; gap: 8px; width: min(100%, 440px); }
+.cell { aspect-ratio: 1; border: 0; border-radius: 12%; cursor: pointer; padding: 0; background: var(--bg); display: grid; place-items: center; transition: background .15s, transform .1s; }
+.cell:active { transform: scale(.94); }
+.cell svg { width: 72%; height: 72%; }
+.cell.reveal { outline: 4px solid var(--ink); outline-offset: 2px; }
+.cell.lit { background: var(--sky); }
+.cell.hit { background: var(--mint); }
+.cell.miss { background: var(--tomato); }
+.tgrid.blank .cell svg { visibility: hidden; }
+
+/* Big text boxes (span, flash, stroop) */
+.flash-box { width: 100%; max-width: 560px; min-height: 160px; border-radius: 18px; background: var(--bg); display: grid; place-items: center; font-family: var(--mono); font-weight: 700; font-size: clamp(40px, 9vw, 72px); letter-spacing: .04em; text-align: center; overflow-wrap: anywhere; padding: 12px; }
+.word { font-family: var(--display); font-size: clamp(56px, 13vw, 110px); line-height: 1; min-height: 1.1em; }
+.shake { animation: shake .3s; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* Report card */
+.report-list { display: flex; flex-direction: column; width: 100%; gap: 0; align-items: stretch; justify-content: flex-start; }
+.rp-row { display: grid; grid-template-columns: 14px minmax(0, 1.3fr) minmax(0, 1.4fr) 52px 70px; gap: 14px; align-items: center; padding: 14px 6px; border-bottom: 2px solid var(--line); color: var(--ink); text-decoration: none; }
+.rp-row:last-of-type { border-bottom: 0; }
+.rp-row:hover .rp-name { color: var(--sky); }
+.rp-row .sw { width: 14px; height: 14px; border-radius: 4px; }
+.rp-name { font-weight: 700; }
+.rp-name small { display: block; font-weight: 400; color: var(--muted); font-size: 13px; }
+.rp-bar { height: 12px; border-radius: 999px; background: var(--bg); overflow: hidden; }
+.rp-bar i { display: block; height: 100%; border-radius: 999px; background: var(--sky); }
+.rp-pct { font-family: var(--display); font-size: 22px; text-align: right; }
+.rp-age { font-family: var(--mono); font-size: 13px; color: var(--muted); text-align: right; }
+.real-age { justify-content: flex-start; }
+.real-age label { color: var(--muted); font-size: 15px; }
+@media (max-width: 560px) {
+  .rp-row { grid-template-columns: 14px minmax(0, 1fr) 48px; row-gap: 6px; }
+  .rp-bar { grid-column: 2 / 3; }
+  .rp-age { grid-column: 3; grid-row: 2; }
+}
+
+/* Start + calibration run */
+.btn.big { font-size: 20px; padding: 16px 32px; box-shadow: 0 5px 0 var(--tomato); }
+.btn.big:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--tomato); }
+.start-row { display: flex; align-items: center; gap: 14px 18px; flex-wrap: wrap; padding-top: 8px; }
+.hint { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.shelf-h { font-size: 26px; }
+.run-list { width: 100%; max-width: 460px; display: flex; flex-direction: column; }
+.run-list div { display: grid; grid-template-columns: minmax(0, 1fr) 56px 64px; gap: 10px; align-items: baseline; padding: 8px 0; border-bottom: 2px solid var(--line); text-align: left; }
+.run-list b { font-family: var(--display); font-weight: 400; font-size: 20px; text-align: right; }
+.run-list small { font-family: var(--mono); color: var(--muted); text-align: right; }
+.big-pct.reveal { color: var(--tomato); animation: pop .6s cubic-bezier(.3,1.6,.6,1); }
+@keyframes pop { from { transform: scale(.4); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .big-pct.reveal { animation: none; } }
+
+/* Fit the play area to short screens (game frames, landscape phones) */
+.canvas-box { width: min(100%, clamp(270px, (100vh - 420px) * 1.5, 760px)); }
+.pad { min-height: min(280px, max(160px, 100vh - 540px)); }
+.tgrid { width: min(100%, clamp(230px, 100vh - 420px, 440px)); }
+.dial { width: min(250px, 66vw, 36vh); }
+.flash-box { min-height: min(160px, 22vh); }
+@media (max-height: 880px) {
+  body { padding-block: 14px 32px; }
+  .wrap { gap: 18px; }
+  .toyhead { gap: 6px; }
+  .toyhead h1 { font-size: clamp(28px, 5vw, 40px); }
+  .toyhead p { font-size: 15px; }
+  .stage { padding: 16px; gap: 12px; min-height: 0; }
+  .hero h1 { font-size: clamp(36px, 6vw, 56px); }
+  .ck-target b { font-size: clamp(36px, 7vw, 52px); }
+  .msg { min-height: 2.4em; }
+}
+
+/* Per-test result */
+.big-pct { font-family: var(--display); font-size: clamp(96px, 20vw, 170px); line-height: .9; color: var(--sky); }
+.big-pct small { font-size: .4em; color: var(--muted); }
+.res-age { font-size: 22px; }
+.res-age b { font-family: var(--display); font-weight: 400; font-size: 40px; color: var(--tomato); padding-left: 6px; }
+.res-diff { font-family: var(--display); font-size: 24px; color: var(--tomato); }
+.overall { color: var(--muted); font-size: 15px; }
+.overall b { color: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tile, .tile:hover, .tile:nth-child(even):hover { transition: none; transform: none; }
+  .shake { animation: none; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="brand">
+    <a class="logo" href="#home" data-go="home"><span class="logo-mark">HCP</span>Human Calibration Program</a>
+    <small>Fourteen tests. One number. Your true age.</small>
+    <button class="mute" id="mute" aria-pressed="false">Sound on</button>
+  </header>
+
+  <main id="view-home">
+    <div class="wrap">
+      <section class="hero">
+        <h1>How old are you, <em>really?</em></h1>
+        <p>Take 5 quick tests. Get one number: your real age.</p>
+        <div class="start-row">
+          <button class="btn big" id="start-run">▶ Start calibration</button>
+          <span class="hint">5 random tests · about 4 minutes</span>
+        </div>
+      </section>
+      <a class="scorecard" id="scorecard" href="#report" data-go="report" aria-label="Your calibration score and estimated age. Open full results."></a>
+      <h2 class="shelf-h">Or practice one test</h2>
+      <section class="shelf" id="shelf" aria-label="Tests"></section>
+      <p class="foot">For entertainment only. Not a medical test. Screens, speakers and mice add their own small delays, which may age you further.</p>
+    </div>
+  </main>
+
+  <main id="view-play" hidden>
+    <div class="wrap">
+      <div class="toyhead">
+        <button class="back" data-go="home">← All tests</button>
+        <span class="tag" id="pl-tag"></span>
+        <h1 id="pl-title"></h1>
+        <p id="pl-intro"></p>
+      </div>
+      <div class="stage" id="pl-stage"></div>
+      <p class="fact" id="pl-fact"></p>
+    </div>
+  </main>
+
+  <main id="view-report" hidden>
+    <div class="wrap">
+      <div class="toyhead">
+        <button class="back" data-go="home">← All tests</button>
+        <h1>Calibration Results</h1>
+      </div>
+      <div class="scorecard static" id="rp-card"></div>
+      <div class="row real-age"><label for="real-age">Your real age (optional, so we can compare)</label><input id="real-age" class="field" type="number" min="5" max="120" inputmode="numeric" placeholder="age" autocomplete="off"></div>
+      <div class="stage report-list" id="rp-list"></div>
+      <div class="row" style="justify-content:flex-start"><button class="btn ghost" id="rp-reset">Clear my results</button></div>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ---------- Helpers ---------- */
+const $ = id => document.getElementById(id);
+/* ---------- CrazyGames SDK ---------- */
+const CG = { sdk: null, ready: false, playing: false, lastAd: 0, adMute: false };
+async function initSdk() {
+  try {
+    for (let i = 0; i < 50 && !(window.CrazyGames && window.CrazyGames.SDK); i++) await new Promise(ok => setTimeout(ok, 100));
+    const sdk = window.CrazyGames && window.CrazyGames.SDK;
+    if (!sdk) return;
+    await Promise.race([sdk.init(), new Promise((_, no) => setTimeout(no, 4000))]);
+    CG.sdk = sdk; CG.ready = true;
+  } catch {}
+}
+const cgPlay = () => { if (CG.ready && !CG.playing) { CG.playing = true; try { CG.sdk.game.gameplayStart(); } catch {} } };
+const cgStop = () => { if (CG.ready && CG.playing) { CG.playing = false; try { CG.sdk.game.gameplayStop(); } catch {} } };
+function withAd(fn) {
+  const now = Date.now();
+  if (!CG.ready || now - CG.lastAd < 60000) { fn(); return; }
+  let done = false;
+  const end = () => { if (done) return; done = true; CG.adMute = false; CG.lastAd = Date.now(); fn(); };
+  try {
+    CG.sdk.ad.requestAd('midgame', { adStarted: () => { CG.adMute = true; }, adFinished: end, adError: end });
+  } catch { end(); }
+}
+const mem = {};
+const raw = {
+  get(k) { try { return CG.ready ? CG.sdk.data.getItem(k) : localStorage.getItem(k); } catch { return mem[k] ?? null; } },
+  set(k, v) { mem[k] = v; try { CG.ready ? CG.sdk.data.setItem(k, v) : localStorage.setItem(k, v); } catch {} },
+  del(k) { delete mem[k]; try { CG.ready ? CG.sdk.data.removeItem(k) : localStorage.removeItem(k); } catch {} }
+};
+const store = {
+  get(k) { try { const v = raw.get('oa:' + k); return v == null ? null : JSON.parse(v); } catch { return null; } },
+  set(k, v) { raw.set('oa:' + k, JSON.stringify(v)); },
+  del(k) { raw.del('oa:' + k); }
+};
+let muted = false;
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const rand = (a, b) => a + Math.random() * (b - a);
+const randInt = (a, b) => Math.floor(rand(a, b + 1));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
+const refs = root => Object.fromEntries([...root.querySelectorAll('[data-r]')].map(e => [e.dataset.r, e]));
+const pips = (el, n, marks) => { el.innerHTML = Array.from({ length: n }, (_, i) => `<span class="pip ${marks[i] || ''}"></span>`).join(''); };
+const hearts = (el, total, left) => pips(el, total, Array.from({ length: total }, (_, i) => i < left ? 'on' : ''));
+function fitCanvas(cv) {
+  const r = cv.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+  cv.width = Math.max(1, r.width * dpr); cv.height = Math.max(1, r.height * dpr);
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, W: r.width, H: r.height };
+}
+let actx = null;
+function audio() {
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+    return actx;
+  } catch { return null; }
+}
+function tone(freq, dur = 0.4, { type = 'sine', vol = 0.2, at = 0 } = {}) {
+  if (muted || CG.adMute) return;
+  const a = audio(); if (!a) return;
+  const t = a.currentTime + at;
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+  g.gain.setValueAtTime(vol, t + Math.max(0.013, dur - 0.06));
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g).connect(a.destination);
+  o.start(t); o.stop(t + dur + 0.05);
+}
+const TINT = { blue: '--tint-blue', red: '--tint-red', green: '--tint-green', yellow: '--tint-yellow' };
+
+/* ---------- Game framework ---------- */
+const GAMES = [];
+const game = def => GAMES.push(def);
+let active = null;
+
+/* ---------- Scoring and age ---------- */
+// Each test maps its raw result onto 0–100 with a curve whose midpoint is a slightly-below-average human.
+// The curve only approaches 100, and the display caps at 99, so a perfect score is out of reach.
+function scoreOf(def, v) {
+  const { mid, p, off = 0 } = def.curve;
+  const x = Math.max(0, v - off);
+  const s = def.better === 'low' ? 100 / (1 + Math.pow(x / mid, p)) : x <= 0 ? 0 : 100 / (1 + Math.pow(mid / x, p));
+  return clamp(s, 0, 99.9);
+}
+const pct = s => Math.floor(s);
+const ageOf = s => Math.round(clamp(20 + (90 - s) * 0.9, 20, 101));
+const AGE_NOTES = [
+  [20, 'Peak human. Suspiciously peak.'],
+  [29, 'Fresh out of the box.'],
+  [39, 'Still under warranty.'],
+  [49, 'Mild wear and tear.'],
+  [59, 'Starts sentences with “back in my day”.'],
+  [69, 'Asks the grandkids to fix the Wi-Fi.'],
+  [79, 'Has strong opinions about the thermostat.'],
+  [89, 'Remembers when all this was fields.'],
+  [99, 'Technically a historical artifact.'],
+  [Infinity, 'Should be studied by science.']
+];
+const ageNote = a => AGE_NOTES.find(n => a <= n[0])[1];
+function profile() {
+  const rows = GAMES.map(g => { const b = store.get('best:' + g.id); return { g, b, s: b == null ? null : scoreOf(g, b) }; });
+  const done = rows.filter(r => r.s != null);
+  const S = done.length ? avg(done.map(r => r.s)) : null;
+  return { rows, done, S, age: S == null ? null : ageOf(S) };
+}
+function ageDiff(age) {
+  const real = store.get('realAge');
+  if (!real || age == null) return '';
+  const d = age - real;
+  return d > 0 ? `${d} years older than you` : d < 0 ? `${-d} years younger than you` : 'exactly your real age';
+}
+function subjectNo() {
+  let n = store.get('subject');
+  if (!n) { n = randInt(1000, 9999); store.set('subject', n); }
+  return n;
+}
+function gauge(S) {
+  const r = 50, c = 2 * Math.PI * r, f = S == null ? 0 : S / 100;
+  return `<svg viewBox="0 0 120 120" class="gauge" aria-hidden="true">
+    <circle cx="60" cy="60" r="${r}" class="g-track"/>
+    ${Array.from({ length: 20 }, (_, i) => `<line x1="60" y1="3" x2="60" y2="${i % 5 ? 6 : 9}" class="g-tick" transform="rotate(${i * 18} 60 60)"/>`).join('')}
+    ${S == null ? '' : `<circle cx="60" cy="60" r="${r}" class="g-fill" stroke-dasharray="${(c * f).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 60 60)"/>`}
+  </svg>`;
+}
+function renderCard(el) {
+  const { S, age, done } = profile();
+  const diff = ageDiff(age);
+  el.innerHTML = `<div class="sc-dial">${gauge(S)}<div class="sc-pct"><b>${S == null ? '??' : pct(S)}</b><span>%</span><small>calibration score</small></div></div>
+    <div class="sc-text">
+      <span class="sc-tag">Subject #${subjectNo()} · estimated age</span>
+      <div class="sc-age">${age ?? '??'}</div>
+      ${diff ? `<p class="sc-diff">${diff}</p>` : ''}
+      <p class="sc-note">${age == null ? 'No data yet. Press Start calibration to find out.' : ageNote(age)}</p>
+      <p class="sc-meta">Based on ${done.length} of ${GAMES.length} tests${el.dataset.go ? ' · Tap for every score' : ''}</p>
+    </div>`;
+}
+
+let mountTok = 0, sessionGames = 0;
+function mountGame(def) {
+  if (active) active.cleanup();
+  active = null; cgStop();
+  const my = ++mountTok;
+  $('pl-stage').innerHTML = '';
+  const start = () => { if (my === mountTok && current && GAMES.some(g => g === def && g.id === current)) { cgPlay(); doMount(def); } };
+  if (sessionGames++ > 0) withAd(start); else start();
+}
+function doMount(def) {
+  const stage = $('pl-stage');
+  stage.innerHTML = '';
+  const timers = new Set(), offs = [];
+  const api = {
+    later(fn, ms) { const id = setTimeout(() => { timers.delete(id); fn(); }, ms); timers.add(id); return id; },
+    loop(fn) {
+      let alive = true, id = 0;
+      const step = now => { if (!alive) return; fn(now); if (alive) id = requestAnimationFrame(step); };
+      id = requestAnimationFrame(step);
+      const stop = () => { alive = false; cancelAnimationFrame(id); };
+      offs.push(stop);
+      return stop;
+    },
+    on(t, ev, fn, opt) { t.addEventListener(ev, fn, opt); offs.push(() => t.removeEventListener(ev, fn, opt)); },
+    key(fn) { api.on(window, 'keydown', e => { if (e.target.closest && e.target.closest('input, textarea')) return; fn(e); }); },
+    cleanup() { timers.forEach(clearTimeout); timers.clear(); offs.splice(0).forEach(f => f()); },
+    finish(value, extra = []) { api.cleanup(); showResult(def, value, extra); }
+  };
+  active = api;
+  def.mount(stage, api);
+}
+
+function showResult(def, value, extra) {
+  cgStop();
+  const prev = store.get('best:' + def.id);
+  const isBest = prev == null || (def.better === 'low' ? value < prev : value > prev);
+  if (isBest) store.set('best:' + def.id, value);
+  const s = scoreOf(def, value), age = ageOf(s), diff = ageDiff(age);
+  const all = profile();
+  if (s >= 70 && CG.ready) { try { CG.sdk.game.happytime(); } catch {} }
+  const next = GAMES[(GAMES.indexOf(def) + 1) % GAMES.length];
+  const stage = $('pl-stage');
+  stage.innerHTML = `<div class="final">
+    <span class="tag">${def.title} score</span>
+    <div class="big-pct">${pct(s)}<small>%</small></div>
+    <p class="res-age">Test age <b>${age}</b></p>
+    ${diff ? `<p class="res-diff">${diff}</p>` : ''}
+    <p class="fact">${ageNote(age)}</p>
+    <div class="stats">
+      <div><b class="num">${def.fmt(value)}</b>${def.label}</div>
+      ${extra.map(([v, l]) => `<div><b class="num">${v}</b>${l}</div>`).join('')}
+      <div><b class="num">${pct(scoreOf(def, isBest ? value : prev))}%</b>${isBest && prev != null ? 'new record!' : 'your best'}</div>
+    </div>
+    ${run ? '' : `<p class="overall">Overall estimate: <b>age ${all.age}</b> from ${all.done.length} of ${GAMES.length} tests</p>`}
+    <div class="row">${run
+      ? `<button class="btn big" id="again">${run.i + 1 < run.ids.length ? `Next test (${run.i + 2} of ${run.ids.length}) →` : 'Reveal my age →'}</button>`
+      : `<button class="btn" id="again">Play again</button>
+      <button class="btn ghost" data-go="${next.id}">Next: ${next.title}</button>
+      <button class="btn ghost" data-go="report">All results</button>`}
+    </div>
+  </div>`;
+  if (run) {
+    run.scores.push({ def, s });
+    $('again').addEventListener('click', () => {
+      if (run.i + 1 < run.ids.length) { run.i++; go(run.ids[run.i]); } else showRunSummary();
+    });
+  } else $('again').addEventListener('click', () => mountGame(def));
+  $('again').focus({ preventScroll: true });
+}
+
+/* ---------- Calibration run: 5 random tests, one age ---------- */
+const RUN_LEN = 5;
+let run = null;
+function startRun() {
+  const ids = GAMES.map(g => g.id).sort(() => Math.random() - 0.5).slice(0, RUN_LEN);
+  run = { ids, i: 0, scores: [] };
+  go(ids[0]);
+}
+function showRunSummary() {
+  const S = avg(run.scores.map(r => r.s)), age = ageOf(S), diff = ageDiff(age);
+  const rows = run.scores;
+  run = null;
+  $('pl-tag').textContent = 'Calibration complete';
+  $('pl-title').textContent = 'Your Results';
+  $('pl-intro').textContent = '';
+  $('pl-fact').textContent = 'Each run picks 5 of the 14 tests at random, so your age changes from run to run. Try again to see if you can get younger.';
+  $('pl-stage').innerHTML = `<div class="final">
+    <span class="tag">Your calibrated age</span>
+    <div class="big-pct reveal">${age}</div>
+    ${diff ? `<p class="res-diff">${diff}</p>` : ''}
+    <p class="res-age">${ageNote(age)}</p>
+    <div class="run-list">${rows.map(r => `<div><span>${r.def.title}</span><b>${pct(r.s)}%</b><small>age ${ageOf(r.s)}</small></div>`).join('')}</div>
+    <p class="overall">Calibration score <b>${pct(S)}%</b></p>
+    <div class="row"><button class="btn big" id="run-again">Calibrate again</button><button class="btn ghost" data-go="home">Main menu</button></div>
+  </div>`;
+  $('run-again').addEventListener('click', startRun);
+  $('run-again').focus({ preventScroll: true });
+  window.scrollTo(0, 0);
+}
+
+/* ---------- Router ---------- */
+let current = null;
+function show(name) {
+  const def = GAMES.find(g => g.id === name);
+  if (!def && name !== 'report') name = 'home';
+  if (current === name) return;
+  if (run && name !== run.ids[run.i]) run = null;
+  if (active) { active.cleanup(); active = null; }
+  mountTok++; cgStop();
+  current = name;
+  $('view-home').hidden = name !== 'home';
+  $('view-report').hidden = name !== 'report';
+  $('view-play').hidden = !def;
+  if (name === 'home') renderShelf();
+  if (name === 'report') renderReport();
+  if (def) {
+    $('pl-tag').textContent = run ? `Calibration · test ${run.i + 1} of ${run.ids.length}` : def.tag;
+    $('pl-title').textContent = def.title;
+    $('pl-intro').textContent = def.intro;
+    $('pl-fact').textContent = def.fact;
+    mountGame(def);
+  }
+  window.scrollTo(0, 0);
+  if (def && innerHeight < 880) $('pl-tag').scrollIntoView({ block: 'start' });
+}
+function go(name) {
+  try { history.pushState(null, '', name === 'home' ? location.pathname + location.search : '#' + name); } catch {}
+  show(name);
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-go]');
+  if (!t) return;
+  e.preventDefault();
+  go(t.dataset.go);
+});
+addEventListener('popstate', () => show(location.hash.slice(1)));
+addEventListener('hashchange', () => show(location.hash.slice(1)));
+
+function renderShelf() {
+  renderCard($('scorecard'));
+  $('shelf').innerHTML = GAMES.map((g, i) => {
+    const b = store.get('best:' + g.id);
+    return `<a class="tile" href="#${g.id}" data-go="${g.id}">
+      <div class="art" style="background: var(${TINT[g.tint]})">${g.art}</div>
+      <div class="meta">
+        <span class="tag">Test ${String(i + 1).padStart(2, '0')} · ${g.tag}</span>
+        <h2>${g.title}</h2><p>${g.desc}</p>
+      </div>
+      <span class="best ${b == null ? 'none' : ''}">${b == null ? 'not taken' : pct(scoreOf(g, b)) + '%'}</span>
+    </a>`;
+  }).join('');
+}
+function renderReport() {
+  renderCard($('rp-card'));
+  const real = store.get('realAge');
+  if (document.activeElement !== $('real-age')) $('real-age').value = real || '';
+  const { rows } = profile();
+  $('rp-list').innerHTML = rows.map(({ g, b, s }) => `<a class="rp-row" href="#${g.id}" data-go="${g.id}">
+      <span class="sw" style="background: var(${TINT[g.tint]})"></span>
+      <span class="rp-name">${g.title}<small>${b != null ? g.fmt(b) + ' ' + g.label : 'Not taken yet'}</small></span>
+      <span class="rp-bar">${s != null ? `<i style="width:${s.toFixed(1)}%"></i>` : ''}</span>
+      <span class="rp-pct">${s != null ? pct(s) + '%' : '—'}</span>
+      <span class="rp-age">${s != null ? 'age ' + ageOf(s) : 'take it'}</span>
+    </a>`).join('');
+}
+$('real-age').addEventListener('input', e => {
+  const v = parseInt(e.target.value, 10);
+  if (v >= 5 && v <= 120) store.set('realAge', v); else store.del('realAge');
+  renderCard($('rp-card'));
+});
+let resetArmed = false;
+$('rp-reset').addEventListener('click', e => {
+  if (!resetArmed) { resetArmed = true; e.currentTarget.textContent = 'Click again to clear everything'; return; }
+  GAMES.forEach(g => store.del('best:' + g.id));
+  resetArmed = false; e.currentTarget.textContent = 'Results cleared';
+  renderReport();
+});
+
+/* =========================================================
+   THE TESTS
+   ========================================================= */
+
+/* 1. Inner Clock */
+game({
+  id: 'clock', title: 'Inner Clock', tag: 'Time · 5 rounds', tint: 'blue',
+  desc: 'The clock vanishes after one second. Stop it on the exact target anyway.',
+  intro: 'You get a target time. Press the dial to start and again when you think the time is up. The numbers fade after one second, so you are on your own.',
+  fact: 'Most people drift 5 to 15% on intervals like these. Excitement makes internal clocks run fast, so nervous players often stop early.',
+  better: 'low', label: 'average miss', fmt: v => Math.round(v) + ' ms',
+  curve: { mid: 350, p: 1.5 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" class="f-surf s-ink" stroke-width="5"/><g class="s-ink" stroke-width="4" stroke-linecap="round"><path d="M60 18v8M102 60h-8M60 102v-8M18 60h8"/></g><path d="M60 60V32" class="s-ink" stroke-width="6" stroke-linecap="round"/><path d="M60 60l22 12" class="s-sky" stroke-width="4" stroke-linecap="round"/><circle cx="60" cy="60" r="5" class="f-tom"/></svg>`,
+  mount(s, api) {
+    const ROUNDS = 5; let state = 'idle', target = 0, t0 = 0, errs = [], stopTick = null;
+    s.innerHTML = `<div class="ck-target">Stop at <b><span class="num" data-r="target"></span> s</b></div>
+      <button class="dial" data-r="dial" aria-label="Start or stop the timer"><span class="num" data-r="disp">0.00</span><span class="lbl" data-r="lbl"></span></button>
+      <div class="msg" data-r="msg">Tip: the space bar works too.</div><div class="pips" data-r="pips"></div>`;
+    const R = refs(s);
+    const draw = () => pips(R.pips, ROUNDS, errs.map(e => e < 120 ? 'good' : e < 500 ? 'ok' : 'bad'));
+    const newTarget = () => { let t; do t = randInt(3, 10); while (t === target); target = t; R.target.textContent = t.toFixed(2); };
+    const idle = () => { state = 'idle'; R.dial.dataset.state = 'idle'; R.disp.textContent = '0.00'; R.disp.classList.remove('fog'); R.lbl.textContent = 'tap to start'; };
+    const verdict = e => e < 30 ? 'Unreal. Are you made of quartz?' : e < 100 ? 'Superb timing.' : e < 250 ? 'Nicely done.' : e < 500 ? 'Close!' : e < 1000 ? 'A little drifty.' : 'Time got away from you.';
+    function press() {
+      if (state === 'idle') {
+        state = 'running'; R.dial.dataset.state = 'running'; R.lbl.textContent = 'tap to stop';
+        R.msg.textContent = 'Counting… in your head.'; t0 = performance.now();
+        stopTick = api.loop(now => {
+          const t = (now - t0) / 1000;
+          if (t < 1) R.disp.textContent = t.toFixed(2);
+          else if (!R.disp.classList.contains('fog')) { R.disp.textContent = '?.??'; R.disp.classList.add('fog'); }
+        });
+      } else if (state === 'running') {
+        stopTick();
+        const t = (performance.now() - t0) / 1000, diff = t - target, e = Math.abs(diff) * 1000;
+        errs.push(e); draw();
+        R.disp.classList.remove('fog'); R.disp.textContent = t.toFixed(3); R.dial.dataset.state = 'done';
+        R.msg.innerHTML = `<strong>${verdict(e)}</strong>${diff < 0 ? 'Early' : 'Late'} by <span class="num">${Math.round(e)} ms</span>.`;
+        if (errs.length >= ROUNDS) {
+          state = 'over'; R.lbl.textContent = '';
+          api.later(() => api.finish(avg(errs), [[Math.round(Math.min(...errs)) + ' ms', 'best round']]), 1300);
+        } else { state = 'between'; R.lbl.textContent = 'next round'; }
+      } else if (state === 'between') {
+        newTarget(); idle(); R.msg.textContent = `Round ${errs.length + 1} of ${ROUNDS}. New target.`;
+      }
+    }
+    api.on(R.dial, 'pointerdown', press);
+    api.key(e => { if ((e.code === 'Space' || e.code === 'Enter') && !e.repeat) { e.preventDefault(); press(); } });
+    newTarget(); idle(); draw();
+  }
+});
+
+/* 2. How Many Dots */
+game({
+  id: 'dots', title: 'How Many Dots?', tag: 'Estimation · 8 rounds', tint: 'red',
+  desc: 'A cloud of dots flashes for a moment. Guess how many you saw.',
+  intro: 'Dots appear for 1.5 seconds, far too short to count, so trust your gut. Each round gets more crowded.',
+  fact: 'You can see up to about four things at once without counting. Psychologists call it subitizing. Past that, your brain switches to estimating, and the error grows with the number.',
+  better: 'high', label: 'points out of 800', fmt: v => v + ' pts',
+  curve: { mid: 400, p: 4 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><g class="f-tom"><circle cx="22" cy="28" r="7"/><circle cx="48" cy="18" r="5"/><circle cx="90" cy="30" r="8"/><circle cx="70" cy="50" r="6"/><circle cx="30" cy="70" r="9"/><circle cx="96" cy="88" r="6"/></g><g class="f-sky"><circle cx="58" cy="82" r="7"/><circle cx="16" cy="96" r="5"/><circle cx="84" cy="64" r="4"/><circle cx="44" cy="46" r="6"/></g><g class="f-ink"><circle cx="104" cy="50" r="4"/><circle cx="66" cy="104" r="5"/><circle cx="38" cy="102" r="4"/><circle cx="76" cy="14" r="4"/></g></svg>`,
+  mount(s, api) {
+    const RANGES = [[3, 7], [8, 16], [15, 30], [30, 60], [55, 110], [90, 180], [160, 320], [280, 550]];
+    let round = 0, score = 0, dots = [], count = 0;
+    s.innerHTML = `<div class="hud"><span data-r="round"></span><span data-r="score"></span></div>
+      <div class="canvas-box"><canvas data-r="cv"></canvas><div class="cover" data-r="cover">?</div></div>
+      <div class="msg" data-r="msg">Ready when you are.</div>
+      <div class="row">
+        <button class="btn" data-r="show">Show the dots</button>
+        <form data-r="form" class="row" hidden><input class="field" data-r="guess" type="number" inputmode="numeric" min="1" max="9999" autocomplete="off" aria-label="Your guess" placeholder="guess"><button class="btn" type="submit">Guess</button></form>
+      </div>`;
+    const R = refs(s);
+    let F = fitCanvas(R.cv);
+    const pal = ['--tomato', '--sky', '--ink', '--sun', '--mint'].map(css);
+    function draw() {
+      const { ctx, W, H } = F;
+      ctx.clearRect(0, 0, W, H);
+      for (const d of dots) { ctx.fillStyle = d.c; ctx.beginPath(); ctx.arc(d.x * W, d.y * H, d.r * W, 0, 7); ctx.fill(); }
+    }
+    api.on(window, 'resize', () => { F = fitCanvas(R.cv); draw(); });
+    function bar() { R.round.textContent = `Round ${Math.min(round + 1, 8)} of 8`; R.score.textContent = `Score ${score} / 800`; }
+    function generate() {
+      const [a, b] = RANGES[round];
+      count = randInt(a, b);
+      const base = clamp(Math.sqrt(1 / count) * 0.2, 0.006, 0.045);
+      dots = [];
+      for (let i = 0; i < count; i++) {
+        const r = base * rand(0.6, 1.25); let c;
+        for (let k = 0; k < 40; k++) {
+          c = { x: rand(0.04, 0.96), y: rand(0.05, 0.95), r };
+          if (dots.every(d => Math.hypot((d.x - c.x) * 1.5, d.y - c.y) > (d.r + c.r) * 1.15)) break;
+        }
+        c.c = pal[Math.floor(Math.random() * (round < 2 ? 2 : pal.length))];
+        dots.push(c);
+      }
+    }
+    function showDots() {
+      generate(); draw();
+      R.cover.hidden = true; R.show.hidden = true; R.msg.textContent = 'Look!';
+      api.later(() => {
+        R.cover.hidden = false; R.form.hidden = false; R.guess.value = '';
+        R.msg.textContent = 'How many were there?'; R.guess.focus();
+      }, 1500);
+    }
+    api.on(R.show, 'click', showDots);
+    api.on(R.form, 'submit', e => {
+      e.preventDefault();
+      const g = parseInt(R.guess.value, 10);
+      if (!g || g < 1) { R.msg.textContent = 'Type a number above zero, then press Guess.'; return; }
+      const pts = Math.round(100 * Math.exp(-3 * Math.abs(Math.log(g / count))));
+      score += pts;
+      const pct = Math.round(Math.abs(g - count) / count * 100);
+      const line = g === count ? 'Exactly right!' : pct <= 10 ? 'So close.' : pct <= 25 ? 'Not bad.' : pct <= 50 ? 'In the neighborhood.' : 'Way off. Dots are sneaky.';
+      R.msg.innerHTML = `<strong>${line} +${pts}</strong>You said <span class="num">${g}</span>. There were <span class="num">${count}</span>${g === count ? '' : ` (off by ${pct}%)`}.`;
+      R.cover.hidden = true; R.form.hidden = true;
+      round++; bar();
+      if (round >= 8) api.later(() => api.finish(score), 1800);
+      else { R.show.hidden = false; R.show.textContent = 'Next round'; R.show.focus(); }
+    });
+    bar(); draw();
+  }
+});
+
+/* 3. Green Light (reaction time) */
+game({
+  id: 'reflex', title: 'Green Light', tag: 'Reflexes · 5 rounds', tint: 'green',
+  desc: 'Tap the instant the pad turns green. Yellow is a trap.',
+  intro: 'The pad turns red, then green after a random wait. Tap as soon as it turns green. Sometimes it flashes yellow first to bait you, so don’t fall for it.',
+  fact: 'Light takes about 20 milliseconds just to travel from your retina to your visual cortex. Most of the rest is your brain deciding to move.',
+  better: 'low', label: 'average reaction', fmt: v => Math.round(v) + ' ms',
+  curve: { mid: 220, p: 2.5, off: 100 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><rect x="38" y="8" width="44" height="104" rx="14" class="f-ink"/><circle cx="60" cy="32" r="12" class="f-tom" opacity=".35"/><circle cx="60" cy="60" r="12" class="f-sun" opacity=".35"/><circle cx="60" cy="88" r="12" class="f-mint"/></svg>`,
+  mount(s, api) {
+    const N = 5; let times = [], state = 'ready', goAt = 0, tok = 0;
+    s.innerHTML = `<button class="pad" data-r="pad" data-state="ready"><span class="pad-big" data-r="big">Tap to start</span><span data-r="small">Wait for green, then tap as fast as you can.</span></button><div class="pips" data-r="pips"></div>`;
+    const R = refs(s);
+    const set = (st, big, small) => { R.pad.dataset.state = st; R.big.textContent = big; R.small.textContent = small; };
+    const draw = () => pips(R.pips, N, times.map(t => t < 280 ? 'good' : t < 400 ? 'ok' : 'bad'));
+    function arm() {
+      const my = ++tok; state = 'wait'; set('wait', 'Wait for green…', '');
+      const delay = rand(1300, 4200);
+      if (Math.random() < 0.4) api.later(() => { if (my === tok && state === 'wait') { state = 'decoy'; set('decoy', 'Not yet…', ''); api.later(() => { if (my === tok && state === 'decoy') { state = 'wait'; set('wait', 'Wait for green…', ''); } }, 450); } }, delay * rand(0.3, 0.6));
+      api.later(() => { if (my === tok && (state === 'wait' || state === 'decoy')) { state = 'go'; goAt = performance.now(); set('go', 'TAP!', ''); } }, delay);
+    }
+    function hit() {
+      if (state === 'ready' || state === 'shown') arm();
+      else if (state === 'wait' || state === 'decoy') {
+        tok++; state = 'shown';
+        set('early', R.pad.dataset.state === 'decoy' ? 'That was yellow!' : 'Too soon!', 'Tap to try that round again.');
+      } else if (state === 'go') {
+        const t = performance.now() - goAt; times.push(t); draw();
+        if (times.length >= N) {
+          state = 'over'; set('shown', Math.round(t) + ' ms', 'Done!');
+          api.later(() => api.finish(avg(times), [[Math.round(Math.min(...times)) + ' ms', 'fastest']]), 1100);
+        } else { state = 'shown'; set('shown', Math.round(t) + ' ms', `Round ${times.length} of ${N}. Tap to keep going.`); }
+      }
+    }
+    api.on(R.pad, 'pointerdown', e => { e.preventDefault(); hit(); });
+    api.key(e => { if (e.code === 'Space' && !e.repeat) { e.preventDefault(); hit(); } });
+    draw();
+  }
+});
+
+/* 4. Odd Hue */
+game({
+  id: 'hue', title: 'Odd Hue', tag: 'Color vision · 3 lives', tint: 'yellow',
+  desc: 'One square is a slightly different shade. The difference keeps shrinking.',
+  intro: 'Find the square that doesn’t match. Every level the grid grows and the difference gets smaller. Three wrong taps and you’re done.',
+  fact: 'People can tell apart roughly a million colors. Your screen’s brightness and night-mode settings change how well you’ll do here.',
+  better: 'high', label: 'levels cleared', fmt: v => v + (v === 1 ? ' level' : ' levels'),
+  curve: { mid: 12, p: 2.5 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><g>${[0, 1, 2].map(r => [0, 1, 2].map(c => `<rect x="${12 + c * 34}" y="${12 + r * 34}" width="28" height="28" rx="6" style="fill:${r === 1 && c === 2 ? 'hsl(220 70% 66%)' : 'hsl(220 70% 58%)'}"/>`).join('')).join('')}</g></svg>`,
+  mount(s, api) {
+    let level = 1, lives = 3, lock = false;
+    s.innerHTML = `<div class="hud" style="max-width:440px"><span data-r="lvl"></span><span class="pips" data-r="lives"></span></div><div class="tgrid" data-r="grid"></div><div class="msg" data-r="msg">Tap the square that’s a different shade.</div>`;
+    const R = refs(s);
+    function build() {
+      lock = false;
+      const n = Math.min(8, 2 + Math.floor((level - 1) / 3));
+      const d = Math.max(1, 20 * Math.pow(0.87, level - 1));
+      const h = rand(0, 360), sa = rand(45, 75), l = rand(38, 62), sign = Math.random() < 0.5 ? -1 : 1, odd = Math.floor(Math.random() * n * n);
+      R.lvl.textContent = `Level ${level}`; hearts(R.lives, 3, lives);
+      R.grid.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+      R.grid.innerHTML = Array.from({ length: n * n }, (_, i) => `<button class="cell" data-i="${i}" aria-label="Square ${i + 1}" style="background:hsl(${h.toFixed(0)} ${sa.toFixed(0)}% ${(i === odd ? l + sign * d : l).toFixed(2)}%)"></button>`).join('');
+      R.grid.onclick = e => {
+        const b = e.target.closest('.cell'); if (!b || lock) return; lock = true;
+        if (+b.dataset.i === odd) { level++; R.msg.textContent = 'Got it.'; build(); return; }
+        lives--; hearts(R.lives, 3, lives);
+        R.grid.children[odd].classList.add('reveal');
+        R.msg.textContent = lives ? 'Nope, it was that one. New grid coming.' : 'Out of lives.';
+        api.later(() => lives ? build() : api.finish(level - 1, [[d.toFixed(1) + '%', 'last lightness gap']]), 1100);
+      };
+    }
+    build();
+  }
+});
+
+/* 5. Digit Span */
+game({
+  id: 'span', title: 'Digit Span', tag: 'Memory · 2 strikes', tint: 'blue',
+  desc: 'Numbers appear one at a time. Type them back. The list keeps growing.',
+  intro: 'Watch the digits appear one by one, then type the whole sequence. Each success adds a digit. Two misses at the same length ends the test.',
+  fact: 'In 1956, psychologist George Miller noticed people hold about “seven, plus or minus two” items in short-term memory. Phone numbers were designed around it.',
+  better: 'high', label: 'longest sequence', fmt: v => v + ' digits',
+  curve: { mid: 6.5, p: 4 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><rect x="8" y="34" width="104" height="52" rx="12" class="f-surf s-ink" stroke-width="5"/><text x="60" y="72" text-anchor="middle" style="font-family:var(--mono);font-size:28px;font-weight:700" class="f-ink">7 2 9</text><rect x="86" y="50" width="4" height="22" class="f-sky"/></svg>`,
+  mount(s, api) {
+    let len = 3, strikes = 0, best = 0, seq = '';
+    s.innerHTML = `<div class="hud" style="max-width:560px"><span data-r="len"></span><span class="pips" data-r="lives"></span></div>
+      <div class="flash-box" data-r="box">…</div>
+      <button class="btn" data-r="go">Start</button>
+      <form data-r="form" class="row" hidden><input class="field" style="width:220px" data-r="in" inputmode="numeric" autocomplete="off" aria-label="Type the digits"><button class="btn" type="submit">Submit</button></form>
+      <div class="msg" data-r="msg">Focus on the box. Digits appear one at a time.</div>`;
+    const R = refs(s);
+    const hud = () => { R.len.textContent = `${len} digits`; hearts(R.lives, 2, 2 - strikes); };
+    function play() {
+      R.go.hidden = true; R.form.hidden = true; R.msg.textContent = 'Watch…';
+      seq = '';
+      for (let i = 0; i < len; i++) { let d; do d = randInt(0, 9); while (String(d) === seq.slice(-1)); seq += d; }
+      [...seq].forEach((d, i) => {
+        api.later(() => { R.box.textContent = d; }, 400 + i * 900);
+        api.later(() => { R.box.textContent = ''; }, 400 + i * 900 + 700);
+      });
+      api.later(() => {
+        R.box.textContent = '?'; R.form.hidden = false; R.in.value = ''; R.in.focus();
+        R.msg.textContent = 'Type the digits in order.';
+      }, 400 + len * 900);
+    }
+    api.on(R.go, 'click', play);
+    api.on(R.form, 'submit', e => {
+      e.preventDefault();
+      const a = R.in.value.replace(/\D/g, '');
+      R.form.hidden = true; R.box.textContent = seq;
+      if (a === seq) {
+        best = len; len++; strikes = 0;
+        R.msg.innerHTML = `<strong>Correct!</strong>Next one is ${len} digits long.`;
+      } else {
+        strikes++;
+        R.msg.innerHTML = `<strong>Not quite.</strong>You typed <span class="num">${a || 'nothing'}</span>.`;
+        if (strikes >= 2) { api.later(() => api.finish(best), 1600); return; }
+      }
+      hud(); R.go.hidden = false; R.go.textContent = 'Next sequence'; R.go.focus();
+    });
+    hud();
+  }
+});
+
+/* 6. Rhythm Keeper */
+game({
+  id: 'rhythm', title: 'Rhythm Keeper', tag: 'Rhythm · 3 rounds · sound on', tint: 'red',
+  desc: 'Hear four beats, then keep the tempo going in silence.',
+  intro: 'You’ll hear four clicks. Keep tapping that same beat for eight more taps after the sound stops. We measure how far each tap lands from where the beat should be.',
+  fact: 'Without a reference, most people drift toward a tempo of about 100 to 120 beats per minute. It’s close to the pace of a relaxed walk.',
+  better: 'low', label: 'average offset', fmt: v => Math.round(v) + ' ms',
+  curve: { mid: 60, p: 1.8 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M42 12h36l20 96H22z" class="f-surf s-ink" stroke-width="5" stroke-linejoin="round"/><path d="M60 84 82 24" class="s-tom" stroke-width="5" stroke-linecap="round"/><circle cx="74" cy="46" r="7" class="f-ink"/><path d="M22 108h76" class="s-ink" stroke-width="5"/></svg>`,
+  mount(s, api) {
+    const ROUNDS = 3; let r = 0, errs = [], state = 'ready', iv = 500, beats = [], taps = [], lit = 0, tok = 0;
+    s.innerHTML = `<div class="hud" style="max-width:680px"><span data-r="round">Round 1 of 3</span><span data-r="bpm"></span></div>
+      <button class="pad" data-r="pad" data-state="ready"><span class="pad-big" data-r="big">Tap to start</span><span data-r="small">Turn your sound on. 4 clicks, then 8 silent taps.</span></button>
+      <div class="pips" data-r="beats"></div><div class="msg" data-r="msg">Tap the pad or press the space bar.</div>`;
+    const R = refs(s);
+    const marks = () => pips(R.beats, 12, Array.from({ length: 12 }, (_, i) => i < 4 ? (i < lit ? 'on' : '') : (i - 4 < taps.length ? 'ok' : '')));
+    function startRound() {
+      const my = ++tok; state = 'count'; taps = []; lit = 0;
+      const bpm = randInt(78, 128); iv = 60000 / bpm;
+      R.bpm.textContent = bpm + ' BPM'; R.big.textContent = 'Listen…'; R.small.textContent = '';
+      const lead = 500, t0 = performance.now() + lead;
+      beats = Array.from({ length: 12 }, (_, k) => t0 + k * iv);
+      for (let k = 0; k < 4; k++) {
+        tone(k === 0 ? 1320 : 880, 0.06, { type: 'square', vol: 0.12, at: (lead + k * iv) / 1000 });
+        api.later(() => {
+          if (my !== tok) return;
+          lit = k + 1; marks(); R.pad.dataset.state = 'pulse'; R.big.textContent = String(k + 1);
+          api.later(() => { if (my === tok) R.pad.dataset.state = 'ready'; }, 110);
+          if (k === 3) { state = 'tap'; R.small.textContent = 'Now keep tapping the beat…'; }
+        }, lead + k * iv);
+      }
+      api.later(() => { if (my === tok) evaluate(); }, lead + 12 * iv + 300);
+      marks();
+    }
+    function evaluate() {
+      if (state !== 'count' && state !== 'tap') return;
+      tok++;
+      if (taps.length < 4) { state = 'between'; R.big.textContent = 'Missed it'; R.small.textContent = 'Not enough taps. Tap to retry this round.'; return; }
+      const signed = taps.map(t => {
+        let k = 4; for (let j = 5; j < 12; j++) if (Math.abs(t - beats[j]) < Math.abs(t - beats[k])) k = j;
+        return t - beats[k];
+      });
+      const m = avg(signed.map(Math.abs));
+      const half = Math.floor(signed.length / 2), drift = avg(signed.slice(half)) - avg(signed.slice(0, half));
+      const dtext = Math.abs(drift) < 15 ? 'Rock steady tempo.' : drift < 0 ? 'You sped up toward the end.' : 'You slowed down toward the end.';
+      errs.push(m); r++;
+      R.big.textContent = Math.round(m) + ' ms off';
+      if (r >= ROUNDS) { state = 'over'; R.small.textContent = dtext; api.later(() => api.finish(avg(errs), [[Math.round(Math.min(...errs)) + ' ms', 'best round']]), 1500); }
+      else { state = 'between'; R.small.textContent = dtext + ' Tap for the next round.'; R.round.textContent = `Round ${r + 1} of ${ROUNDS}`; }
+    }
+    function tap() {
+      if (state === 'ready' || state === 'between') { startRound(); return; }
+      if (state !== 'count' && state !== 'tap') return;
+      const now = performance.now();
+      if (now < beats[3] + iv * 0.4) return;
+      taps.push(now); marks();
+      R.pad.dataset.state = 'pulse'; api.later(() => { if (state === 'tap') R.pad.dataset.state = 'ready'; }, 80);
+      R.big.textContent = `${taps.length} / 8`;
+      if (taps.length >= 8) evaluate();
+    }
+    api.on(R.pad, 'pointerdown', e => { e.preventDefault(); tap(); });
+    api.key(e => { if (e.code === 'Space' && !e.repeat) { e.preventDefault(); tap(); } });
+    marks();
+  }
+});
+
+/* 7. Ink, Not Ink (Stroop) */
+game({
+  id: 'stroop', title: 'Ink, Not Ink', tag: 'Focus · 20 words', tint: 'green',
+  desc: 'Pick the color of the ink, not the word. Harder than it sounds.',
+  intro: 'A color word appears in a colored ink. Choose the ink color as fast as you can. Wrong answers add a one-second penalty.',
+  fact: 'This is the Stroop effect, first published in 1935. Reading is so automatic that your brain reads the word before it can stop itself.',
+  better: 'low', label: 'per word', fmt: v => Math.round(v) + ' ms',
+  curve: { mid: 650, p: 2, off: 400 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><text x="60" y="74" text-anchor="middle" style="font-family:var(--display);font-size:40px" class="f-sky">RED</text><path d="M24 90h72" class="s-ink" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 9"/></svg>`,
+  mount(s, api) {
+    const C = [['RED', '--tomato', 'KeyR'], ['BLUE', '--sky', 'KeyB'], ['GREEN', '--mint', 'KeyG'], ['YELLOW', '--sun', 'KeyY']];
+    const N = 20; let k = 0, mistakes = 0, t0 = 0, ink = 0, word = -1, running = false;
+    s.innerHTML = `<div class="hud" style="max-width:560px"><span data-r="prog">0 / ${N}</span><span class="num" data-r="time">0.0 s</span></div>
+      <div class="word" data-r="word">Ready?</div>
+      <div class="row" data-r="opts" hidden>${C.map((c, i) => `<button class="btn ghost" data-i="${i}">${c[0].toLowerCase()} <kbd>${c[0][0]}</kbd></button>`).join('')}</div>
+      <button class="btn" data-r="go">Start</button>
+      <div class="msg" data-r="msg">Choose the ink color, not the word. Keys R, B, G and Y work too.</div>`;
+    const R = refs(s);
+    function next() {
+      let w; do w = randInt(0, 3); while (w === word); word = w;
+      ink = Math.random() < 0.25 ? w : (w + randInt(1, 3)) % 4;
+      R.word.textContent = C[w][0]; R.word.style.color = `var(${C[ink][1]})`;
+      R.prog.textContent = `${k} / ${N}`;
+    }
+    function answer(i) {
+      if (!running) return;
+      if (i === ink) {
+        k++;
+        if (k >= N) {
+          running = false;
+          const total = performance.now() - t0 + mistakes * 1000;
+          R.word.textContent = 'Done!'; R.word.style.color = '';
+          api.later(() => api.finish(total / N, [[mistakes, mistakes === 1 ? 'mistake' : 'mistakes']]), 900);
+          return;
+        }
+        next();
+      } else {
+        mistakes++;
+        R.msg.textContent = `Wrong ink! +1 s penalty (${mistakes} so far)`;
+        R.word.classList.remove('shake'); void R.word.offsetWidth; R.word.classList.add('shake');
+      }
+    }
+    api.on(R.go, 'click', () => {
+      R.go.hidden = true; R.opts.hidden = false; running = true; t0 = performance.now(); next();
+      api.loop(now => { if (running) R.time.textContent = ((now - t0) / 1000).toFixed(1) + ' s'; });
+    });
+    api.on(R.opts, 'click', e => { const b = e.target.closest('[data-i]'); if (b) answer(+b.dataset.i); });
+    api.key(e => { const i = C.findIndex(c => c[2] === e.code); if (i >= 0 && !e.repeat) { e.preventDefault(); answer(i); } });
+  }
+});
+
+/* 8. Angle Eye */
+game({
+  id: 'angle', title: 'Angle Eye', tag: 'Geometry · 6 rounds', tint: 'yellow',
+  desc: 'Two lines meet at a corner. Name the angle in degrees.',
+  intro: 'Look at the angle between the two lines and type your best guess in degrees. No protractors.',
+  fact: 'People are best at judging angles near 0°, 90° and 180°, because we compare everything to straight lines and right angles. The in-between ones are hardest.',
+  better: 'low', label: 'average error', fmt: v => v.toFixed(1) + '°',
+  curve: { mid: 8, p: 1.6 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M20 96h86M20 96 88 30" class="s-ink f-none" stroke-width="6" stroke-linecap="round"/><path d="M58 96a38 38 0 0 0-11-27" class="s-tom f-none" stroke-width="5" stroke-linecap="round"/><circle cx="20" cy="96" r="6" class="f-ink"/></svg>`,
+  mount(s, api) {
+    const N = 6; let round = 0, errs = [], ang = 0, rot = 0;
+    s.innerHTML = `<div class="hud"><span data-r="round"></span><span data-r="err"></span></div>
+      <div class="canvas-box"><canvas data-r="cv"></canvas></div>
+      <form data-r="form" class="row"><input class="field" data-r="in" type="number" inputmode="decimal" min="0" max="180" step="any" autocomplete="off" aria-label="Angle in degrees" placeholder="degrees"><button class="btn" type="submit">Guess</button></form>
+      <div class="msg" data-r="msg">How many degrees between the two lines?</div>`;
+    const R = refs(s);
+    let F = fitCanvas(R.cv);
+    const col = { ink: css('--ink'), sky: css('--sky'), tom: css('--tomato') };
+    let revealed = false;
+    function draw() {
+      const { ctx, W, H } = F, cx = W / 2, cy = H / 2, L = Math.min(W, H) * 0.42;
+      ctx.clearRect(0, 0, W, H);
+      ctx.lineCap = 'round'; ctx.strokeStyle = col.ink; ctx.lineWidth = 6;
+      const a1 = rot, a2 = rot + ang * Math.PI / 180;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a1) * L, cy - Math.sin(a1) * L); ctx.lineTo(cx, cy); ctx.lineTo(cx + Math.cos(a2) * L, cy - Math.sin(a2) * L);
+      ctx.stroke();
+      ctx.fillStyle = col.ink; ctx.beginPath(); ctx.arc(cx, cy, 6, 0, 7); ctx.fill();
+      if (revealed) {
+        ctx.strokeStyle = col.tom; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.arc(cx, cy, L * 0.32, -a1, -a2, true); ctx.stroke();
+        const mid = (a1 + a2) / 2;
+        ctx.fillStyle = col.tom; ctx.font = `700 22px ${css('--mono')}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(ang + '°', cx + Math.cos(mid) * L * 0.55, cy - Math.sin(mid) * L * 0.55);
+      }
+    }
+    function newRound() {
+      revealed = false; ang = randInt(8, 172); rot = rand(0, Math.PI * 2);
+      R.round.textContent = `Round ${round + 1} of ${N}`;
+      R.form.hidden = false; R.in.value = ''; R.in.focus();
+      R.msg.textContent = 'How many degrees between the two lines?';
+      draw();
+    }
+    api.on(window, 'resize', () => { F = fitCanvas(R.cv); draw(); });
+    api.on(R.form, 'submit', e => {
+      e.preventDefault();
+      const g = parseFloat(R.in.value);
+      if (isNaN(g)) { R.msg.textContent = 'Type a number of degrees, like 45.'; return; }
+      const err = Math.abs(g - ang); errs.push(err); round++;
+      revealed = true; draw(); R.form.hidden = true;
+      R.msg.innerHTML = `<strong>${err < 3 ? 'Spot on!' : err < 8 ? 'Close.' : err < 15 ? 'Not bad.' : 'Way off.'}</strong>You said ${g}°. It was ${ang}°.`;
+      R.err.textContent = `Average error ${avg(errs).toFixed(1)}°`;
+      api.later(() => round >= N ? api.finish(avg(errs)) : newRound(), 1700);
+    });
+    newRound();
+  }
+});
+
+/* 9. Pattern Recall */
+game({
+  id: 'pattern', title: 'Pattern Recall', tag: 'Visual memory · 3 lives', tint: 'blue',
+  desc: 'Tiles light up for a moment. Tap every one you saw.',
+  intro: 'A few tiles light up, then go dark. Tap all of them. Each level adds one more tile. A wrong tap costs a life.',
+  fact: 'Visual memory works in chunks. People who do well here often see shapes in the pattern, like “an L in the corner”, instead of remembering single tiles.',
+  better: 'high', label: 'most tiles remembered', fmt: v => v + ' tiles',
+  curve: { mid: 8, p: 3 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true">${Array.from({ length: 16 }, (_, i) => `<rect x="${10 + (i % 4) * 26}" y="${10 + Math.floor(i / 4) * 26}" width="22" height="22" rx="5" class="${[1, 6, 7, 12].includes(i) ? 'f-sky' : 'f-surf'}"/>`).join('')}</svg>`,
+  mount(s, api) {
+    let N = 3, lives = 3, best = 0, phase = 'show', targets = new Set(), found = 0;
+    s.innerHTML = `<div class="hud" style="max-width:440px"><span data-r="lvl"></span><span class="pips" data-r="lives"></span></div><div class="tgrid" data-r="grid"></div><div class="msg" data-r="msg"></div>`;
+    const R = refs(s);
+    function build() {
+      const n = N <= 4 ? 4 : N <= 8 ? 5 : N <= 13 ? 6 : 7;
+      targets = new Set(); while (targets.size < N) targets.add(randInt(0, n * n - 1));
+      found = 0; phase = 'show';
+      R.lvl.textContent = `${N} tiles`; hearts(R.lives, 3, lives);
+      R.grid.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+      R.grid.innerHTML = Array.from({ length: n * n }, (_, i) => `<button class="cell ${targets.has(i) ? 'lit' : ''}" data-i="${i}" aria-label="Tile ${i + 1}"></button>`).join('');
+      R.msg.textContent = 'Memorize…';
+      api.later(() => {
+        [...R.grid.children].forEach(c => c.classList.remove('lit'));
+        phase = 'input'; R.msg.textContent = 'Now tap the tiles that were lit.';
+      }, 1000 + N * 70);
+    }
+    api.on(R.grid, 'click', e => {
+      const b = e.target.closest('.cell');
+      if (!b || phase !== 'input' || b.classList.contains('hit')) return;
+      if (targets.has(+b.dataset.i)) {
+        b.classList.add('hit'); found++;
+        if (found === N) { phase = 'done'; best = N; R.msg.textContent = 'Perfect! One more tile next time.'; N++; api.later(build, 800); }
+      } else {
+        b.classList.add('miss'); lives--; phase = 'done'; hearts(R.lives, 3, lives);
+        targets.forEach(i => { const c = R.grid.children[i]; if (!c.classList.contains('hit')) c.classList.add('lit'); });
+        R.msg.textContent = lives ? 'Missed one. Same size, new pattern.' : 'Out of lives.';
+        api.later(() => lives ? build() : api.finish(best), 1300);
+      }
+    });
+    build();
+  }
+});
+
+/* 10. Higher or Lower (pitch) */
+game({
+  id: 'pitch', title: 'Higher or Lower', tag: 'Hearing · 3 lives · sound on', tint: 'red',
+  desc: 'Two notes play. Which was higher? They keep getting closer.',
+  intro: 'Listen to two short notes and choose which one was higher. After each right answer the notes get closer together. Headphones help a lot.',
+  fact: 'A semitone, the gap between two piano keys, is 100 cents. Trained musicians can often hear differences of 5 to 10 cents.',
+  better: 'low', label: 'smallest gap heard', fmt: v => v >= 400 ? 'none' : (v < 10 ? v.toFixed(1) : Math.round(v)) + ' cents',
+  curve: { mid: 40, p: 1.2 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M8 50q13-26 26 0t26 0 26 0 26 0" class="f-none s-sky" stroke-width="6" stroke-linecap="round"/><path d="M8 82q9-18 18 0t18 0 18 0 18 0 18 0 18 0" class="f-none s-tom" stroke-width="6" stroke-linecap="round"/></svg>`,
+  mount(s, api) {
+    let cents = 200, lives = 3, best = 400, ans = 1, phase = 'idle';
+    s.innerHTML = `<div class="hud" style="max-width:520px"><span data-r="gap"></span><span class="pips" data-r="lives"></span></div>
+      <div class="flash-box" data-r="box" style="font-size:clamp(28px,6vw,44px)">♪ ♪</div>
+      <div class="row"><button class="btn" data-r="play">Play the notes</button></div>
+      <div class="row" data-r="choices" hidden><button class="btn ghost" data-a="1">First was higher <kbd>1</kbd></button><button class="btn ghost" data-a="2">Second was higher <kbd>2</kbd></button></div>
+      <div class="msg" data-r="msg">Turn your sound on, then press play.</div>`;
+    const R = refs(s);
+    let f1 = 0, f2 = 0;
+    const hud = () => { R.gap.textContent = `Gap: ${cents < 10 ? cents.toFixed(1) : Math.round(cents)} cents`; hearts(R.lives, 3, lives); };
+    function newPair() {
+      const base = rand(260, 520), hi = base * Math.pow(2, cents / 1200);
+      ans = Math.random() < 0.5 ? 1 : 2;
+      [f1, f2] = ans === 1 ? [hi, base] : [base, hi];
+    }
+    function playPair() {
+      phase = 'playing'; R.choices.hidden = true;
+      tone(f1, 0.5, { vol: 0.22 }); tone(f2, 0.5, { vol: 0.22, at: 0.75 });
+      R.box.textContent = '♪ 1'; api.later(() => { R.box.textContent = '♪ 2'; }, 750);
+      api.later(() => { phase = 'choose'; R.box.textContent = '1 or 2?'; R.choices.hidden = false; R.play.textContent = 'Replay'; R.msg.textContent = 'Which note was higher?'; }, 1350);
+    }
+    function choose(a) {
+      if (phase !== 'choose') return;
+      phase = 'wait'; R.choices.hidden = true;
+      if (a === ans) {
+        best = Math.min(best, cents);
+        R.msg.innerHTML = `<strong>Correct!</strong>Getting closer…`;
+        cents = Math.max(1, cents * 0.7);
+      } else {
+        lives--;
+        R.msg.innerHTML = `<strong>Nope.</strong>The ${ans === 1 ? 'first' : 'second'} one was higher.`;
+        if (!lives) { hud(); api.later(() => api.finish(best), 1300); return; }
+        cents = Math.min(300, cents * 1.25);
+      }
+      hud(); newPair(); api.later(playPair, 1100);
+    }
+    api.on(R.play, 'click', () => { if (phase === 'idle' || phase === 'choose') playPair(); });
+    api.on(R.choices, 'click', e => { const b = e.target.closest('[data-a]'); if (b) choose(+b.dataset.a); });
+    api.key(e => { if (e.key === '1' || e.key === '2') choose(+e.key); });
+    newPair(); hud();
+  }
+});
+
+/* 11. What Changed? */
+game({
+  id: 'change', title: 'What Changed?', tag: 'Attention · 8 rounds', tint: 'green',
+  desc: 'Study the grid. It blinks. Something is different. Find it.',
+  intro: 'Memorize the grid of shapes. It blinks off for a moment, and when it comes back one thing has changed: a color, a shape, or a shape appearing or vanishing. Tap where it happened.',
+  fact: 'This is change blindness. A short blink wipes out the motion signal your eyes use to spot changes, so you have to rely on memory alone.',
+  better: 'high', label: 'changes spotted out of 8', fmt: v => v + ' / 8',
+  curve: { mid: 4.5, p: 2.5 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="32" cy="34" r="16" class="f-tom"/><rect x="72" y="18" width="32" height="32" rx="5" class="f-sky"/><path d="M32 70l18 32H14z" class="f-mint"/><circle cx="88" cy="88" r="16" class="f-surf s-ink" stroke-width="4" stroke-dasharray="6 5"/></svg>`,
+  mount(s, api) {
+    const SH = ['circle', 'square', 'tri', 'diamond'], CO = ['--tomato', '--sky', '--mint', '--sun'];
+    const shape = c => {
+      if (!c) return '';
+      const st = `style="fill:var(${c.c})"`;
+      return `<svg viewBox="0 0 10 10">${c.s === 'circle' ? `<circle cx="5" cy="5" r="3.7" ${st}/>` : c.s === 'square' ? `<rect x="1.5" y="1.5" width="7" height="7" rx=".8" ${st}/>` : c.s === 'tri' ? `<path d="M5 1 9.2 8.6H.8z" ${st}/>` : `<path d="M5 .8 9.2 5 5 9.2 .8 5z" ${st}/>`}</svg>`;
+    };
+    let round = 0, score = 0, changed = -1, phase = 'idle';
+    s.innerHTML = `<div class="hud" style="max-width:440px"><span data-r="round"></span><span data-r="score"></span></div><div class="tgrid" data-r="grid"></div><button class="btn" data-r="go">Show the grid</button><div class="msg" data-r="msg">You’ll get about 3 seconds to memorize it.</div>`;
+    const R = refs(s);
+    const hud = () => { R.round.textContent = `Round ${Math.min(round + 1, 8)} of 8`; R.score.textContent = `Spotted ${score}`; };
+    function render(scene, n) {
+      R.grid.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+      R.grid.innerHTML = scene.map((c, i) => `<button class="cell" data-i="${i}" aria-label="Cell ${i + 1}">${shape(c)}</button>`).join('');
+    }
+    function play() {
+      R.go.hidden = true; phase = 'memo';
+      const n = [4, 4, 4, 5, 5, 5, 6, 6][round];
+      const A = Array.from({ length: n * n }, () => Math.random() < 0.22 ? null : { s: pick(SH), c: pick(CO) });
+      const B = A.map(c => c && { ...c });
+      changed = randInt(0, n * n - 1);
+      const c = B[changed];
+      if (!c) B[changed] = { s: pick(SH), c: pick(CO) };
+      else {
+        const kind = pick(['color', 'shape', 'vanish']);
+        if (kind === 'vanish') B[changed] = null;
+        else if (kind === 'color') c.c = pick(CO.filter(x => x !== c.c));
+        else c.s = pick(SH.filter(x => x !== c.s));
+      }
+      render(A, n); R.msg.textContent = 'Memorize the grid…';
+      api.later(() => { R.grid.classList.add('blank'); R.msg.textContent = '…'; }, 2600 + n * 120);
+      api.later(() => { render(B, n); R.grid.classList.remove('blank'); phase = 'pick'; R.msg.textContent = 'What changed? Tap it.'; }, 3200 + n * 120);
+    }
+    api.on(R.go, 'click', play);
+    api.on(R.grid, 'click', e => {
+      const b = e.target.closest('.cell'); if (!b || phase !== 'pick') return;
+      phase = 'idle';
+      const ok = +b.dataset.i === changed;
+      if (ok) score++;
+      b.classList.add(ok ? 'hit' : 'miss');
+      R.grid.children[changed].classList.add('reveal');
+      R.msg.innerHTML = ok ? '<strong>Got it!</strong>' : '<strong>Missed.</strong>The outlined one changed.';
+      round++; hud();
+      if (round >= 8) api.later(() => api.finish(score), 1500);
+      else { R.go.hidden = false; R.go.textContent = 'Next grid'; }
+    });
+    hud(); render(Array(16).fill(null), 4);
+  }
+});
+
+/* 12. Dead Center */
+game({
+  id: 'center', title: 'Dead Center', tag: 'Balance · 6 rounds', tint: 'yellow',
+  desc: 'Tap the exact balance point of a lopsided shape.',
+  intro: 'Every shape has a balance point, where it would sit level on the tip of a pencil. Tap where you think it is.',
+  fact: 'The balance point, or centroid, of a lopsided shape is pulled toward its heaviest region. People tend to pick the middle of the outline instead, which is often wrong.',
+  better: 'low', label: 'average miss (% of shape size)', fmt: v => v.toFixed(1) + '%',
+  curve: { mid: 10, p: 1.6 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M18 92 40 18l66 34-22 54z" class="f-surf s-ink" stroke-width="5" stroke-linejoin="round"/><path d="M62 48v28M48 62h28" class="s-tom" stroke-width="5" stroke-linecap="round"/></svg>`,
+  mount(s, api) {
+    const N = 6; let round = 0, errs = [], poly = [], cen = [0, 0], area = 1, guess = null, phase = 'pick';
+    s.innerHTML = `<div class="hud"><span data-r="round"></span><span data-r="err"></span></div>
+      <div class="canvas-box"><canvas data-r="cv" style="cursor:crosshair;touch-action:manipulation"></canvas></div>
+      <div class="msg" data-r="msg">Tap the balance point.</div>`;
+    const R = refs(s);
+    let F = fitCanvas(R.cv);
+    const col = { ink: css('--ink'), tint: css('--tint-yellow'), tom: css('--tomato'), sky: css('--sky') };
+    const geo = () => ({ cx: F.W / 2, cy: F.H / 2, S: Math.min(F.W, F.H) * 0.42 });
+    function newPoly() {
+      const k = randInt(3, 6);
+      const angs = Array.from({ length: k }, (_, i) => (i + rand(0.1, 0.9)) / k * Math.PI * 2).sort((a, b) => a - b);
+      let pts = angs.map(a => { const r = rand(0.35, 1); return [Math.cos(a) * r, Math.sin(a) * r]; });
+      let A = 0, cx = 0, cy = 0;
+      pts.forEach(([x0, y0], i) => { const [x1, y1] = pts[(i + 1) % k]; const c = x0 * y1 - x1 * y0; A += c; cx += (x0 + x1) * c; cy += (y0 + y1) * c; });
+      A /= 2; cx /= 6 * A; cy /= 6 * A;
+      if (Math.abs(A) < 0.6) return newPoly();
+      const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+      const ox = (Math.min(...xs) + Math.max(...xs)) / 2, oy = (Math.min(...ys) + Math.max(...ys)) / 2;
+      const sc = 2 / Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys));
+      poly = pts.map(([x, y]) => [(x - ox) * sc, (y - oy) * sc]);
+      cen = [(cx - ox) * sc, (cy - oy) * sc]; area = Math.abs(A) * sc * sc;
+    }
+    function draw() {
+      const { ctx, W, H } = F, { cx, cy, S } = geo();
+      ctx.clearRect(0, 0, W, H);
+      ctx.beginPath(); poly.forEach(([x, y], i) => i ? ctx.lineTo(cx + x * S, cy + y * S) : ctx.moveTo(cx + x * S, cy + y * S)); ctx.closePath();
+      ctx.fillStyle = col.tint; ctx.fill(); ctx.strokeStyle = col.ink; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.stroke();
+      if (guess) {
+        const gx = cx + guess[0] * S, gy = cy + guess[1] * S, tx = cx + cen[0] * S, ty = cy + cen[1] * S;
+        ctx.setLineDash([5, 5]); ctx.lineWidth = 2; ctx.strokeStyle = col.ink;
+        ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(tx, ty); ctx.stroke(); ctx.setLineDash([]);
+        ctx.strokeStyle = col.sky; ctx.lineWidth = 4; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(gx - 9, gy - 9); ctx.lineTo(gx + 9, gy + 9); ctx.moveTo(gx + 9, gy - 9); ctx.lineTo(gx - 9, gy + 9); ctx.stroke();
+        ctx.fillStyle = col.tom; ctx.beginPath(); ctx.arc(tx, ty, 8, 0, 7); ctx.fill();
+      }
+    }
+    function newRound() {
+      newPoly(); guess = null; phase = 'pick';
+      R.round.textContent = `Round ${round + 1} of ${N}`; R.msg.textContent = 'Tap the balance point.';
+      draw();
+    }
+    api.on(window, 'resize', () => { F = fitCanvas(R.cv); draw(); });
+    api.on(R.cv, 'pointerdown', e => {
+      if (phase !== 'pick') return;
+      phase = 'shown';
+      const b = R.cv.getBoundingClientRect(), { cx, cy, S } = geo();
+      guess = [(e.clientX - b.left - cx) / S, (e.clientY - b.top - cy) / S];
+      const err = Math.hypot(guess[0] - cen[0], guess[1] - cen[1]) / Math.sqrt(area) * 100;
+      errs.push(err); round++; draw();
+      R.msg.innerHTML = `<strong>${err < 4 ? 'Perfectly balanced!' : err < 9 ? 'Close.' : err < 16 ? 'A bit off.' : 'It would tip over.'}</strong>Blue X is your tap, red dot is the real balance point.`;
+      R.err.textContent = `Average miss ${avg(errs).toFixed(1)}%`;
+      api.later(() => round >= N ? api.finish(avg(errs)) : newRound(), 1900);
+    });
+    newRound();
+  }
+});
+
+/* 13. Word Flash */
+game({
+  id: 'flash', title: 'Word Flash', tag: 'Speed reading · 3 lives', tint: 'blue',
+  desc: 'A word flashes for a split second. Can you read it?',
+  intro: 'Look at the + sign. A word flashes and is covered up. Type the word you saw. Each correct answer makes the next flash shorter.',
+  fact: 'Your eyes only need about 50 milliseconds to take in a familiar word. Most screens refresh every 16.7 ms, so that’s the shortest flash possible here.',
+  better: 'low', label: 'shortest flash read', fmt: v => v >= 1000 ? 'none' : Math.round(v) + ' ms',
+  curve: { mid: 110, p: 1.5 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><rect x="8" y="34" width="104" height="52" rx="12" class="f-surf s-ink" stroke-width="5"/><text x="60" y="70" text-anchor="middle" style="font-family:var(--mono);font-size:24px;font-weight:700" class="f-ink">wo<tspan class="f-tom">###</tspan></text></svg>`,
+  mount(s, api) {
+    const WORDS = 'apple river candle garden pocket silver planet butter window rocket forest mirror jungle pencil castle ticket orange banana guitar zipper turtle wizard cactus spider island marble pepper bottle carpet hammer violin donkey parrot wallet cookie basket ladder helmet anchor frozen magnet tunnel puzzle saddle velvet lizard tomato'.split(' ');
+    const MASK = '#@%&$#@%&';
+    let ms = 250, lives = 3, best = 1000, word = '', phase = 'idle', last = '';
+    s.innerHTML = `<div class="hud" style="max-width:560px"><span data-r="ms"></span><span class="pips" data-r="lives"></span></div>
+      <div class="flash-box" data-r="box">+</div>
+      <button class="btn" data-r="go">Flash a word</button>
+      <form data-r="form" class="row" hidden><input class="field" style="width:220px" data-r="in" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="The word you saw"><button class="btn" type="submit">Submit</button></form>
+      <div class="msg" data-r="msg">Keep your eyes on the + sign.</div>`;
+    const R = refs(s);
+    const hud = () => { R.ms.textContent = `Flash: ${Math.round(ms)} ms`; hearts(R.lives, 3, lives); };
+    function flash() {
+      R.go.hidden = true; phase = 'flash'; R.box.textContent = '+'; R.msg.textContent = 'Get ready…';
+      do word = pick(WORDS); while (word === last); last = word;
+      api.later(() => {
+        let start = 0;
+        const stop = api.loop(now => {
+          if (!start) { start = now; R.box.textContent = word; return; }
+          if (now - start >= ms - 6) {
+            R.box.textContent = MASK.slice(0, word.length); stop();
+            phase = 'type'; R.form.hidden = false; R.in.value = ''; R.in.focus(); R.msg.textContent = 'What was the word?';
+          }
+        });
+      }, 800);
+    }
+    api.on(R.go, 'click', flash);
+    api.on(R.form, 'submit', e => {
+      e.preventDefault();
+      if (phase !== 'type') return;
+      phase = 'idle'; R.form.hidden = true;
+      const a = R.in.value.trim().toLowerCase();
+      R.box.textContent = word;
+      if (a === word) {
+        best = Math.min(best, ms);
+        R.msg.innerHTML = `<strong>Correct!</strong>Next flash is shorter.`;
+        ms = Math.max(17, ms * 0.72);
+      } else {
+        lives--;
+        R.msg.innerHTML = `<strong>Not quite.</strong>The word was “${word}”.`;
+        if (!lives) { hud(); api.later(() => api.finish(best), 1500); return; }
+      }
+      hud(); R.go.hidden = false; R.go.textContent = 'Next word'; R.go.focus();
+    });
+    hud();
+  }
+});
+
+/* 14. Steady Hand */
+game({
+  id: 'steady', title: 'Steady Hand', tag: 'Motor control · 15 seconds', tint: 'green',
+  desc: 'Keep your cursor inside a wandering, shrinking ring.',
+  intro: 'Move your cursor or finger into the ring to start. For 15 seconds the ring drifts, speeds up and shrinks. Stay inside it as much as you can.',
+  fact: 'Everyone’s hand has a tiny natural tremor of about 8 to 12 shakes per second. Coffee, cold and nerves all make it bigger.',
+  better: 'high', label: 'time inside the ring', fmt: v => Math.round(v) + '%',
+  curve: { mid: 65, p: 5 },
+  art: `<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="70" cy="52" r="26" class="f-none s-mint" stroke-width="7"/><path d="M14 104c10-8 14-30 26-26s6 22 18 8 2-30 12-34" class="f-none s-ink" stroke-width="4" stroke-linecap="round"/></svg>`,
+  mount(s, api) {
+    const DUR = 15;
+    s.innerHTML = `<div class="canvas-box"><canvas data-r="cv" style="touch-action:none;cursor:crosshair"></canvas></div><div class="msg" data-r="msg">Put your cursor or finger inside the ring to begin.</div>`;
+    const R = refs(s);
+    let F = fitCanvas(R.cv);
+    api.on(window, 'resize', () => { F = fitCanvas(R.cv); });
+    const col = { ok: css('--mint'), bad: css('--tomato'), ink: css('--ink'), muted: css('--muted'), line: css('--line') };
+    let px = -1e9, py = -1e9, started = false, t0 = 0, last = 0, inside = 0, total = 0;
+    const setP = e => { const b = R.cv.getBoundingClientRect(); px = e.clientX - b.left; py = e.clientY - b.top; };
+    api.on(R.cv, 'pointermove', setP); api.on(R.cv, 'pointerdown', setP);
+    api.on(R.cv, 'pointerleave', () => { px = py = -1e9; });
+    api.on(R.cv, 'pointerup', e => { if (e.pointerType !== 'mouse') px = py = -1e9; });
+    const pos = (t, W, H) => { const p = t + t * t / 30; return [W / 2 + W * 0.32 * (0.6 * Math.sin(p * 0.8) + 0.4 * Math.sin(p * 1.9)), H / 2 + H * 0.28 * (0.6 * Math.sin(p * 1.1) + 0.4 * Math.sin(p * 2.3))]; };
+    api.loop(now => {
+      const { ctx, W, H } = F, m = Math.min(W, H);
+      const t = started ? (now - t0) / 1000 : 0;
+      const [x, y] = pos(t, W, H), r = m * (0.14 - 0.08 * Math.min(1, t / DUR));
+      const inR = Math.hypot(px - x, py - y) < r;
+      if (!started && inR) { started = true; t0 = now; last = now; R.msg.textContent = 'Stay inside!'; }
+      if (started) { const dt = (now - last) / 1000; last = now; total += dt; if (inR) inside += dt; }
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = col.line; ctx.fillRect(0, 0, W, 6);
+      ctx.fillStyle = col.ok; ctx.fillRect(0, 0, W * Math.min(1, t / DUR), 6);
+      ctx.globalAlpha = 0.18; ctx.fillStyle = started ? (inR ? col.ok : col.bad) : col.ok;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.lineWidth = 6; ctx.strokeStyle = started ? (inR ? col.ok : col.bad) : col.ink;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke();
+      ctx.fillStyle = col.muted; ctx.font = `600 15px ${css('--mono')}`; ctx.textAlign = 'left';
+      ctx.fillText(started ? `${Math.max(0, DUR - t).toFixed(1)} s · ${total ? Math.round(inside / total * 100) : 100}% inside` : 'move into the ring', 14, 30);
+      if (started && t >= DUR) api.finish(inside / total * 100);
+    });
+  }
+});
+
+$('start-run').addEventListener('click', startRun);
+$('mute').addEventListener('click', e => {
+  muted = !muted; store.set('muted', muted); syncMute();
+});
+addEventListener('keydown', e => {
+  if (['Space', 'ArrowUp', 'ArrowDown'].includes(e.code) && !e.target.closest('input, textarea, button')) e.preventDefault();
+});
+function syncMute() { $('mute').setAttribute('aria-pressed', muted); $('mute').textContent = muted ? 'Sound off' : 'Sound on'; }
+muted = !!store.get('muted'); syncMute();
+show(location.hash.slice(1) || 'home');
+initSdk().then(() => {
+  if (!CG.ready) return;
+  muted = !!store.get('muted'); syncMute();
+  if (current === 'home') renderShelf(); else if (current === 'report') renderReport();
+});
+</script>
+
+</body>
+</html>
