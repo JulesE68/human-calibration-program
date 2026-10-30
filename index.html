@@ -82,6 +82,8 @@ kbd { font-family: var(--mono); font-size: 12px; border: 1.5px solid var(--line)
 .logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-weight: 700; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
 .logo-mark { font-family: var(--display); font-weight: 400; font-size: 20px; letter-spacing: 0; background: var(--tomato); color: var(--on-accent); padding: 2px 10px 0; border-radius: 8px; }
 .brand small { color: var(--muted); font-size: 15px; }
+.lang { background: var(--surface); color: var(--ink); border: 2px solid var(--line); border-radius: 999px; padding: 4px 10px; font: inherit; font-size: 14px; cursor: pointer; }
+.lang:hover { border-color: var(--ink); }
 
 /* Scorecard: the big gauge + estimated age */
 .scorecard {
@@ -299,31 +301,32 @@ a.scorecard:hover { transform: translateY(-4px) rotate(-.5deg); }
 <div class="wrap">
   <header class="brand">
     <a class="logo" href="#home" data-go="home"><span class="logo-mark">HCP</span>Human Calibration Program</a>
-    <small>Fourteen tests. One number. Your true age.</small>
+    <small data-i18n>Fourteen tests. One number. Your true age.</small>
+    <select id="lang" class="lang" aria-label="Language"></select>
     <button class="mute" id="mute" aria-pressed="false">Sound on</button>
   </header>
 
   <main id="view-home">
     <div class="wrap">
       <section class="hero">
-        <h1>How old are you, <em>really?</em></h1>
-        <p>Take 5 quick tests. Get one number: your real age.</p>
+        <h1 data-i18n>How old are you, <em>really?</em></h1>
+        <p data-i18n>Take 5 quick tests. Get one number: your real age.</p>
         <div class="start-row">
-          <button class="btn big" id="start-run">▶ Start calibration</button>
-          <span class="hint">5 random tests · about 4 minutes</span>
+          <button class="btn big" id="start-run" data-i18n>▶ Start calibration</button>
+          <span class="hint" data-i18n>5 random tests · about 4 minutes</span>
         </div>
       </section>
       <a class="scorecard" id="scorecard" href="#report" data-go="report" aria-label="Your calibration score and estimated age. Open full results."></a>
-      <h2 class="shelf-h">Or practice one test</h2>
+      <h2 class="shelf-h" data-i18n>Or practice one test</h2>
       <section class="shelf" id="shelf" aria-label="Tests"></section>
-      <p class="foot">For entertainment only. Not a medical test. Screens, speakers and mice add their own small delays, which may age you further.</p>
+      <p class="foot" data-i18n>For entertainment only. Not a medical test. Screens, speakers and mice add their own small delays, which may age you further.</p>
     </div>
   </main>
 
   <main id="view-play" hidden>
     <div class="wrap">
       <div class="toyhead">
-        <button class="back" data-go="home">← All tests</button>
+        <button class="back" data-go="home" data-i18n>← All tests</button>
         <span class="tag" id="pl-tag"></span>
         <h1 id="pl-title"></h1>
         <p id="pl-intro"></p>
@@ -336,18 +339,30 @@ a.scorecard:hover { transform: translateY(-4px) rotate(-.5deg); }
   <main id="view-report" hidden>
     <div class="wrap">
       <div class="toyhead">
-        <button class="back" data-go="home">← All tests</button>
-        <h1>Calibration Results</h1>
+        <button class="back" data-go="home" data-i18n>← All tests</button>
+        <h1 data-i18n>Calibration Results</h1>
       </div>
       <div class="scorecard static" id="rp-card"></div>
-      <div class="row real-age"><label for="real-age">Your real age (optional, so we can compare)</label><input id="real-age" class="field" type="number" min="5" max="120" inputmode="numeric" placeholder="age" autocomplete="off"></div>
+      <div class="row real-age"><label for="real-age" data-i18n>Your real age (optional, so we can compare)</label><input id="real-age" class="field" type="number" min="5" max="120" inputmode="numeric" placeholder="age" autocomplete="off"></div>
       <div class="stage report-list" id="rp-list"></div>
-      <div class="row" style="justify-content:flex-start"><button class="btn ghost" id="rp-reset">Clear my results</button></div>
+      <div class="row" style="justify-content:flex-start"><button class="btn ghost" id="rp-reset" data-i18n>Clear my results</button></div>
     </div>
   </main>
 </div>
 
 <script>
+/* ---------- Language ---------- */
+const LANGS = { en: 'English', fr: 'Français', es: 'Español', de: 'Deutsch', pt: 'Português', it: 'Italiano' };
+const I18N = {"fr":{"__words":"pomme rivière bougie jardin poche argent planète beurre fenêtre fusée forêt miroir jungle crayon château billet orange banane guitare tortue sorcier cactus araignée marbre poivre bouteille tapis marteau violon perroquet biscuit panier échelle casque ancre aimant tunnel tomate citron nuage","{n} years older than you":"{n} ans de plus que toi","{n} years younger than you":"{n} ans de moins que toi","exactly your real age":"pile ton âge réel","calibration score":"score de calibrage","Subject #{n} · estimated age":"Sujet n°{n} · âge estimé","No data yet. Press Start calibration to find out.":"Aucune donnée. Appuie sur Lancer le calibrage pour le découvrir.","Based on {n} of {total} tests":"Basé sur {n} tests sur {total}","Tap for every score":"Touche pour voir tous les scores","{name} score":"Score · {name}","Test age":"Âge au test","new record!":"nouveau record !","your best":"ton record","Overall estimate: <b>age {age}</b> from {n} of {total} tests":"Estimation globale : <b>{age} ans</b> d’après {n} tests sur {total}","Next test ({n} of {total}) →":"Test suivant ({n} sur {total}) →","Reveal my age →":"Révéler mon âge →","Play again":"Rejouer","Next: {name}":"Suivant : {name}","All results":"Tous les résultats","Calibration complete":"Calibrage terminé","Your Results":"Tes résultats","Each run picks 5 of the 14 tests at random, so your age changes from run to run. Try again to see if you can get younger.":"Chaque session tire 5 des 14 tests au hasard, donc ton âge change d’une fois à l’autre. Recommence pour voir si tu rajeunis.","Your calibrated age":"Ton âge calibré","age {n}":"{n} ans","Calibration score":"Score de calibrage","Calibrate again":"Recommencer","Main menu":"Menu principal","Calibration · test {n} of {total}":"Calibrage · test {n} sur {total}","Test {n}":"Test {n}","not taken":"pas fait","Not taken yet":"Pas encore fait","take it":"à faire","Click again to clear everything":"Clique encore pour tout effacer","Results cleared":"Résultats effacés","Stop at":"Arrête à","Tip: the space bar works too.":"Astuce : la barre d’espace marche aussi.","tap to start":"touche pour lancer","tap to stop":"touche pour arrêter","Counting… in your head.":"Compte… dans ta tête.","best round":"meilleure manche","next round":"manche suivante","Round {n} of {total}. New target.":"Manche {n} sur {total}. Nouvelle cible.","{n} pts":"{n} pts","Ready when you are.":"Prêt quand tu veux.","Show the dots":"Montrer les points","Guess":"Valider","Round {n} of {total}":"Manche {n} sur {total}","Score {n} / 800":"Score {n} / 800","Look!":"Regarde !","How many were there?":"Combien y en avait-il ?","Type a number above zero, then press Guess.":"Tape un nombre supérieur à zéro, puis appuie sur Valider.","Next round":"Manche suivante","Tap to start":"Touche pour commencer","Wait for green, then tap as fast as you can.":"Attends le vert, puis touche le plus vite possible.","Wait for green…":"Attends le vert…","Not yet…":"Pas encore…","TAP!":"VAS-Y !","Tap to try that round again.":"Touche pour refaire cette manche.","Done!":"Terminé !","fastest":"le plus rapide","Round {n} of {total}. Tap to keep going.":"Manche {n} sur {total}. Touche pour continuer.","Tap the square that’s a different shade.":"Touche le carré d’une teinte différente.","Level {n}":"Niveau {n}","Got it.":"Trouvé.","Nope, it was that one. New grid coming.":"Raté, c’était celui-là. Nouvelle grille.","Out of lives.":"Plus de vies.","last lightness gap":"dernier écart de luminosité","{n} digits":"{n} chiffres","Start":"Commencer","Submit":"Valider","Focus on the box. Digits appear one at a time.":"Fixe la case. Les chiffres apparaissent un par un.","Watch…":"Regarde…","Type the digits in order.":"Tape les chiffres dans l’ordre.","<strong>Correct!</strong>Next one is {n} digits long.":"<strong>Correct !</strong>La prochaine fait {n} chiffres.","<strong>Not quite.</strong>You typed {x}.":"<strong>Pas tout à fait.</strong>Tu as tapé {x}.","nothing":"rien","Next sequence":"Séquence suivante","Turn your sound on. 4 clicks, then 8 silent taps.":"Active le son. 4 clics, puis 8 frappes en silence.","Tap the pad or press the space bar.":"Touche le pavé ou appuie sur la barre d’espace.","Listen…":"Écoute…","Now keep tapping the beat…":"Maintenant, garde le rythme…","Missed it":"Raté","Not enough taps. Tap to retry this round.":"Pas assez de frappes. Touche pour refaire la manche.","{n} ms off":"{n} ms d’écart","Tap for the next round.":"Touche pour la manche suivante.","Ready?":"Prêt ?","Choose the ink color, not the word. Keys 1 to 4 work too.":"Choisis la couleur de l’encre, pas le mot. Les touches 1 à 4 marchent aussi.","Wrong ink! +1 s penalty ({n} so far)":"Mauvaise encre ! +1 s de pénalité ({n} jusqu’ici)","How many degrees between the two lines?":"Combien de degrés entre les deux lignes ?","Type a number of degrees, like 45.":"Tape un nombre de degrés, par exemple 45.","You said {g}°. It was {a}°.":"Tu as dit {g}°. C’était {a}°.","Average error {n}°":"Erreur moyenne {n}°","{n} tiles":"{n} cases","Memorize…":"Mémorise…","Now tap the tiles that were lit.":"Touche maintenant les cases qui étaient allumées.","Perfect! One more tile next time.":"Parfait ! Une case de plus la prochaine fois.","Missed one. Same size, new pattern.":"Raté. Même taille, nouveau motif.","none":"aucun","{n} cents":"{n} cents","Play the notes":"Jouer les notes","First was higher":"La 1re était plus aiguë","Second was higher":"La 2e était plus aiguë","Turn your sound on, then press play.":"Active le son, puis appuie sur Jouer.","Gap: {n} cents":"Écart : {n} cents","1 or 2?":"1 ou 2 ?","Replay":"Réécouter","Which note was higher?":"Quelle note était la plus aiguë ?","<strong>Correct!</strong>Getting closer…":"<strong>Correct !</strong>Ça se resserre…","Show the grid":"Montrer la grille","You’ll get about 3 seconds to memorize it.":"Tu auras environ 3 secondes pour la mémoriser.","Spotted {n}":"Trouvés : {n}","Memorize the grid…":"Mémorise la grille…","What changed? Tap it.":"Qu’est-ce qui a changé ? Touche-le.","Next grid":"Grille suivante","Tap the balance point.":"Touche le point d’équilibre.","Blue X is your tap, red dot is the real balance point.":"La croix bleue est ton choix, le point rouge est le vrai point d’équilibre.","Average miss {n}%":"Écart moyen {n}%","Flash a word":"Afficher un mot","Keep your eyes on the + sign.":"Garde les yeux sur le signe +.","Flash: {n} ms":"Flash : {n} ms","Get ready…":"Prépare-toi…","What was the word?":"Quel était le mot ?","<strong>Correct!</strong>Next flash is shorter.":"<strong>Correct !</strong>Le prochain flash sera plus court.","<strong>Not quite.</strong>The word was “{w}”.":"<strong>Pas tout à fait.</strong>Le mot était « {w} ».","Next word":"Mot suivant","Put your cursor or finger inside the ring to begin.":"Place ton curseur ou ton doigt dans l’anneau pour commencer.","Stay inside!":"Reste dedans !","{s} s · {p}% inside":"{s} s · {p}% dedans","move into the ring":"entre dans l’anneau","Unreal. Are you made of quartz?":"Irréel. Tu es fait de quartz ?","Superb timing.":"Timing superbe.","Nicely done.":"Bien joué.","Close!":"Presque !","A little drifty.":"Un peu flottant.","Time got away from you.":"Le temps t’a échappé.","Exactly right!":"Pile juste !","So close.":"Tout près.","Not bad.":"Pas mal.","In the neighborhood.":"Dans les parages.","Way off. Dots are sneaky.":"Loin du compte. Les points sont sournois.","That was yellow!":"C’était jaune !","Too soon!":"Trop tôt !","{n} level":"{n} niveau","{n} levels":"{n} niveaux","mistake":"erreur","mistakes":"erreurs","Spot on!":"En plein dans le mille !","Close.":"Pas loin.","Way off.":"Loin du compte.","<strong>Nope.</strong>The first one was higher.":"<strong>Non.</strong>La première était plus aiguë.","<strong>Nope.</strong>The second one was higher.":"<strong>Non.</strong>La deuxième était plus aiguë.","<strong>Got it!</strong>":"<strong>Trouvé !</strong>","<strong>Missed.</strong>The outlined one changed.":"<strong>Raté.</strong>C’est celle entourée qui a changé.","Perfectly balanced!":"Parfaitement équilibré !","A bit off.":"Un peu à côté.","It would tip over.":"Ça basculerait.","Inner Clock":"Horloge interne","Time · 5 rounds":"Temps · 5 manches","average miss":"écart moyen","How Many Dots?":"Combien de points ?","Estimation · 8 rounds":"Estimation · 8 manches","points out of 800":"points sur 800","Green Light":"Feu vert","Reflexes · 5 rounds":"Réflexes · 5 manches","average reaction":"réaction moyenne","Odd Hue":"Teinte intruse","Color vision · 3 lives":"Vision des couleurs · 3 vies","levels cleared":"niveaux réussis","Digit Span":"Empan de chiffres","Memory · 2 strikes":"Mémoire · 2 essais","longest sequence":"plus longue séquence","Rhythm Keeper":"Gardien du rythme","Rhythm · 3 rounds · sound on":"Rythme · 3 manches · son activé","average offset":"décalage moyen","Ink, Not Ink":"L’encre, pas le mot","Focus · 20 words":"Concentration · 20 mots","per word":"par mot","Angle Eye":"Œil d’angle","Geometry · 6 rounds":"Géométrie · 6 manches","average error":"erreur moyenne","Pattern Recall":"Mémoire des motifs","Visual memory · 3 lives":"Mémoire visuelle · 3 vies","most tiles remembered":"max de cases retenues","Higher or Lower":"Plus aigu ou plus grave","Hearing · 3 lives · sound on":"Audition · 3 vies · son activé","smallest gap heard":"plus petit écart entendu","What Changed?":"Qu’est-ce qui a changé ?","Attention · 8 rounds":"Attention · 8 manches","changes spotted out of 8":"changements repérés sur 8","Dead Center":"Plein centre","Balance · 6 rounds":"Équilibre · 6 manches","average miss (% of shape size)":"écart moyen (% de la forme)","Word Flash":"Mot éclair","Speed reading · 3 lives":"Lecture rapide · 3 vies","shortest flash read":"flash le plus court lu","Steady Hand":"Main sûre","Motor control · 15 seconds":"Contrôle moteur · 15 secondes","time inside the ring":"temps dans l’anneau","The clock vanishes after one second. Stop it on the exact target anyway.":"L’horloge disparaît après une seconde. Arrête-la pile sur la cible quand même.","You get a target time. Press the dial to start and again when you think the time is up. The numbers fade after one second, so you are on your own.":"Tu reçois un temps cible. Appuie sur le cadran pour lancer, puis encore quand tu penses que c’est l’heure. Les chiffres s’effacent après une seconde : tu es seul.","Most people drift 5 to 15% on intervals like these. Excitement makes internal clocks run fast, so nervous players often stop early.":"La plupart des gens dérivent de 5 à 15 % sur ces durées. L’excitation accélère l’horloge interne, donc les joueurs nerveux s’arrêtent souvent trop tôt.","A cloud of dots flashes for a moment. Guess how many you saw.":"Un nuage de points s’affiche un instant. Devine combien tu en as vu.","Dots appear for 1.5 seconds, far too short to count, so trust your gut. Each round gets more crowded.":"Les points restent 1,5 seconde, bien trop peu pour compter : fie-toi à ton instinct. Chaque manche est plus chargée.","You can see up to about four things at once without counting. Psychologists call it subitizing. Past that, your brain switches to estimating, and the error grows with the number.":"On peut voir jusqu’à environ quatre objets d’un coup sans compter. Les psychologues appellent ça la subitisation. Au-delà, le cerveau estime, et l’erreur grandit avec le nombre.","Tap the instant the pad turns green. Yellow is a trap.":"Touche dès que le pavé devient vert. Le jaune est un piège.","The pad turns red, then green after a random wait. Tap as soon as it turns green. Sometimes it flashes yellow first to bait you, so don’t fall for it.":"Le pavé devient rouge, puis vert après une attente aléatoire. Touche dès qu’il passe au vert. Parfois il clignote en jaune pour te piéger : ne tombe pas dans le panneau.","Light takes about 20 milliseconds just to travel from your retina to your visual cortex. Most of the rest is your brain deciding to move.":"La lumière met environ 20 millisecondes pour aller de ta rétine à ton cortex visuel. Le reste, c’est surtout ton cerveau qui décide de bouger.","One square is a slightly different shade. The difference keeps shrinking.":"Un carré a une teinte légèrement différente. L’écart ne cesse de diminuer.","Find the square that doesn’t match. Every level the grid grows and the difference gets smaller. Three wrong taps and you’re done.":"Trouve le carré qui ne va pas avec les autres. À chaque niveau la grille grandit et l’écart diminue. Trois erreurs et c’est fini.","People can tell apart roughly a million colors. Your screen’s brightness and night-mode settings change how well you’ll do here.":"L’humain distingue environ un million de couleurs. La luminosité de ton écran et le mode nuit influencent ton résultat ici.","Numbers appear one at a time. Type them back. The list keeps growing.":"Des chiffres apparaissent un par un. Retape-les. La liste s’allonge.","Watch the digits appear one by one, then type the whole sequence. Each success adds a digit. Two misses at the same length ends the test.":"Regarde les chiffres apparaître un par un, puis tape toute la séquence. Chaque réussite ajoute un chiffre. Deux erreurs à la même longueur et le test s’arrête.","In 1956, psychologist George Miller noticed people hold about “seven, plus or minus two” items in short-term memory. Phone numbers were designed around it.":"En 1956, le psychologue George Miller a remarqué qu’on retient environ « sept, plus ou moins deux » éléments en mémoire à court terme. Les numéros de téléphone ont été pensés autour de ça.","Hear four beats, then keep the tempo going in silence.":"Écoute quatre temps, puis garde le tempo en silence.","You’ll hear four clicks. Keep tapping that same beat for eight more taps after the sound stops. We measure how far each tap lands from where the beat should be.":"Tu vas entendre quatre clics. Continue ce même rythme pendant huit frappes après l’arrêt du son. On mesure l’écart entre chaque frappe et le temps attendu.","Without a reference, most people drift toward a tempo of about 100 to 120 beats per minute. It’s close to the pace of a relaxed walk.":"Sans repère, la plupart des gens dérivent vers 100 à 120 battements par minute, proche du rythme d’une marche tranquille.","Pick the color of the ink, not the word. Harder than it sounds.":"Choisis la couleur de l’encre, pas le mot. Plus dur qu’il n’y paraît.","A color word appears in a colored ink. Choose the ink color as fast as you can. Wrong answers add a one-second penalty.":"Un nom de couleur s’affiche dans une encre colorée. Choisis la couleur de l’encre le plus vite possible. Chaque erreur ajoute une seconde de pénalité.","This is the Stroop effect, first published in 1935. Reading is so automatic that your brain reads the word before it can stop itself.":"C’est l’effet Stroop, publié pour la première fois en 1935. Lire est si automatique que ton cerveau lit le mot avant de pouvoir s’en empêcher.","Two lines meet at a corner. Name the angle in degrees.":"Deux lignes se rejoignent. Donne l’angle en degrés.","Look at the angle between the two lines and type your best guess in degrees. No protractors.":"Regarde l’angle entre les deux lignes et tape ton estimation en degrés. Pas de rapporteur.","People are best at judging angles near 0°, 90° and 180°, because we compare everything to straight lines and right angles. The in-between ones are hardest.":"On juge mieux les angles proches de 0°, 90° et 180°, car on compare tout aux lignes droites et aux angles droits. Ceux entre les deux sont les plus durs.","Tiles light up for a moment. Tap every one you saw.":"Des cases s’allument un instant. Touche toutes celles que tu as vues.","A few tiles light up, then go dark. Tap all of them. Each level adds one more tile. A wrong tap costs a life.":"Quelques cases s’allument puis s’éteignent. Touche-les toutes. Chaque niveau ajoute une case. Une erreur coûte une vie.","Visual memory works in chunks. People who do well here often see shapes in the pattern, like “an L in the corner”, instead of remembering single tiles.":"La mémoire visuelle fonctionne par blocs. Ceux qui réussissent voient souvent des formes, comme « un L dans le coin », au lieu de retenir chaque case.","Two notes play. Which was higher? They keep getting closer.":"Deux notes sont jouées. Laquelle était plus aiguë ? Elles se rapprochent sans cesse.","Listen to two short notes and choose which one was higher. After each right answer the notes get closer together. Headphones help a lot.":"Écoute deux notes courtes et choisis la plus aiguë. Après chaque bonne réponse, les notes se rapprochent. Un casque aide beaucoup.","A semitone, the gap between two piano keys, is 100 cents. Trained musicians can often hear differences of 5 to 10 cents.":"Un demi-ton, l’écart entre deux touches de piano, vaut 100 cents. Les musiciens entraînés perçoivent souvent 5 à 10 cents.","Study the grid. It blinks. Something is different. Find it.":"Observe la grille. Elle clignote. Quelque chose a changé. Trouve-le.","Memorize the grid of shapes. It blinks off for a moment, and when it comes back one thing has changed: a color, a shape, or a shape appearing or vanishing. Tap where it happened.":"Mémorise la grille de formes. Elle s’éteint un instant, et à son retour une chose a changé : une couleur, une forme, ou une forme qui apparaît ou disparaît. Touche l’endroit.","This is change blindness. A short blink wipes out the motion signal your eyes use to spot changes, so you have to rely on memory alone.":"C’est la cécité au changement. Un bref clignement efface le signal de mouvement que tes yeux utilisent pour repérer les changements : il ne reste que ta mémoire.","Tap the exact balance point of a lopsided shape.":"Touche le point d’équilibre exact d’une forme bancale.","Every shape has a balance point, where it would sit level on the tip of a pencil. Tap where you think it is.":"Chaque forme a un point d’équilibre, où elle tiendrait à plat sur la pointe d’un crayon. Touche là où tu penses qu’il est.","The balance point, or centroid, of a lopsided shape is pulled toward its heaviest region. People tend to pick the middle of the outline instead, which is often wrong.":"Le point d’équilibre, ou centroïde, d’une forme bancale est attiré vers sa partie la plus lourde. On a tendance à viser le milieu du contour, ce qui est souvent faux.","A word flashes for a split second. Can you read it?":"Un mot s’affiche une fraction de seconde. Arriveras-tu à le lire ?","Look at the + sign. A word flashes and is covered up. Type the word you saw. Each correct answer makes the next flash shorter.":"Regarde le signe +. Un mot apparaît puis est masqué. Tape le mot que tu as vu. Chaque bonne réponse raccourcit le flash suivant.","Your eyes only need about 50 milliseconds to take in a familiar word. Most screens refresh every 16.7 ms, so that’s the shortest flash possible here.":"Tes yeux n’ont besoin que d’environ 50 millisecondes pour saisir un mot familier. La plupart des écrans se rafraîchissent toutes les 16,7 ms : c’est le flash le plus court possible ici.","Keep your cursor inside a wandering, shrinking ring.":"Garde ton curseur dans un anneau qui se balade et rétrécit.","Move your cursor or finger into the ring to start. For 15 seconds the ring drifts, speeds up and shrinks. Stay inside it as much as you can.":"Place ton curseur ou ton doigt dans l’anneau pour commencer. Pendant 15 secondes, il dérive, accélère et rétrécit. Reste dedans le plus possible.","Everyone’s hand has a tiny natural tremor of about 8 to 12 shakes per second. Coffee, cold and nerves all make it bigger.":"Toutes les mains ont un léger tremblement naturel de 8 à 12 oscillations par seconde. Le café, le froid et le stress l’amplifient.","Peak human. Suspiciously peak.":"Humain au sommet. Étrangement au sommet.","Fresh out of the box.":"Tout juste sorti de la boîte.","Still under warranty.":"Encore sous garantie.","Mild wear and tear.":"Légère usure.","Starts sentences with “back in my day”.":"Commence ses phrases par « de mon temps ».","Asks the grandkids to fix the Wi-Fi.":"Demande aux petits-enfants de réparer le Wi-Fi.","Has strong opinions about the thermostat.":"A des avis tranchés sur le thermostat.","Remembers when all this was fields.":"Se souvient quand tout ça, c’était des champs.","Technically a historical artifact.":"Techniquement, un objet historique.","Should be studied by science.":"Devrait être étudié par la science.","RED":"ROUGE","BLUE":"BLEU","GREEN":"VERT","YELLOW":"JAUNE","Fourteen tests. One number. Your true age.":"Quatorze tests. Un chiffre. Ton vrai âge.","How old are you, <em>really?</em>":"Quel âge as-tu, <em>vraiment ?</em>","Take 5 quick tests. Get one number: your real age.":"Fais 5 tests rapides. Obtiens un chiffre : ton vrai âge.","▶ Start calibration":"▶ Lancer le calibrage","5 random tests · about 4 minutes":"5 tests au hasard · environ 4 minutes","Or practice one test":"Ou entraîne-toi sur un test","For entertainment only. Not a medical test. Screens, speakers and mice add their own small delays, which may age you further.":"Pour le fun uniquement. Ce n’est pas un test médical. Écrans, haut-parleurs et souris ajoutent leurs propres petits délais, qui peuvent te vieillir encore un peu.","← All tests":"← Tous les tests","Calibration Results":"Résultats du calibrage","Your real age (optional, so we can compare)":"Ton vrai âge (facultatif, pour comparer)","Clear my results":"Effacer mes résultats","Sound on":"Son activé","Sound off":"Son coupé"},"es":{"__words":"manzana río vela jardín bolsillo plata planeta ventana cohete bosque espejo selva lápiz castillo billete naranja plátano guitarra tortuga mago cactus araña isla mármol pimienta botella alfombra martillo violín burro loro galleta cesta escalera casco ancla imán túnel tomate limón nube","{n} years older than you":"{n} años más que tú","{n} years younger than you":"{n} años menos que tú","exactly your real age":"justo tu edad real","calibration score":"puntuación de calibración","Subject #{n} · estimated age":"Sujeto n.º {n} · edad estimada","No data yet. Press Start calibration to find out.":"Aún no hay datos. Pulsa Empezar calibración para descubrirlo.","Based on {n} of {total} tests":"Basado en {n} de {total} pruebas","Tap for every score":"Toca para ver todas las puntuaciones","{name} score":"Puntuación · {name}","Test age":"Edad en la prueba","new record!":"¡nuevo récord!","your best":"tu récord","Overall estimate: <b>age {age}</b> from {n} of {total} tests":"Estimación global: <b>{age} años</b> según {n} de {total} pruebas","Next test ({n} of {total}) →":"Siguiente prueba ({n} de {total}) →","Reveal my age →":"Revelar mi edad →","Play again":"Jugar otra vez","Next: {name}":"Siguiente: {name}","All results":"Todos los resultados","Calibration complete":"Calibración completa","Your Results":"Tus resultados","Each run picks 5 of the 14 tests at random, so your age changes from run to run. Try again to see if you can get younger.":"Cada sesión elige 5 de las 14 pruebas al azar, así que tu edad cambia cada vez. Vuelve a intentarlo para ver si rejuveneces.","Your calibrated age":"Tu edad calibrada","age {n}":"{n} años","Calibration score":"Puntuación de calibración","Calibrate again":"Calibrar otra vez","Main menu":"Menú principal","Calibration · test {n} of {total}":"Calibración · prueba {n} de {total}","Test {n}":"Prueba {n}","not taken":"sin hacer","Not taken yet":"Aún sin hacer","take it":"hazla","Click again to clear everything":"Haz clic otra vez para borrarlo todo","Results cleared":"Resultados borrados","Stop at":"Para en","Tip: the space bar works too.":"Truco: la barra espaciadora también sirve.","tap to start":"toca para empezar","tap to stop":"toca para parar","Counting… in your head.":"Contando… en tu cabeza.","best round":"mejor ronda","next round":"siguiente ronda","Round {n} of {total}. New target.":"Ronda {n} de {total}. Nuevo objetivo.","{n} pts":"{n} pts","Ready when you are.":"Cuando quieras.","Show the dots":"Mostrar los puntos","Guess":"Adivinar","Round {n} of {total}":"Ronda {n} de {total}","Score {n} / 800":"Puntos {n} / 800","Look!":"¡Mira!","How many were there?":"¿Cuántos había?","Type a number above zero, then press Guess.":"Escribe un número mayor que cero y pulsa Adivinar.","Next round":"Siguiente ronda","Tap to start":"Toca para empezar","Wait for green, then tap as fast as you can.":"Espera al verde y toca lo más rápido que puedas.","Wait for green…":"Espera al verde…","Not yet…":"Todavía no…","TAP!":"¡YA!","Tap to try that round again.":"Toca para repetir esa ronda.","Done!":"¡Hecho!","fastest":"más rápida","Round {n} of {total}. Tap to keep going.":"Ronda {n} de {total}. Toca para seguir.","Tap the square that’s a different shade.":"Toca el cuadrado de un tono distinto.","Level {n}":"Nivel {n}","Got it.":"Acertaste.","Nope, it was that one. New grid coming.":"No, era ese. Llega una nueva cuadrícula.","Out of lives.":"Sin vidas.","last lightness gap":"última diferencia de brillo","{n} digits":"{n} dígitos","Start":"Empezar","Submit":"Enviar","Focus on the box. Digits appear one at a time.":"Mira la casilla. Los dígitos aparecen de uno en uno.","Watch…":"Mira…","Type the digits in order.":"Escribe los dígitos en orden.","<strong>Correct!</strong>Next one is {n} digits long.":"<strong>¡Correcto!</strong>La siguiente tiene {n} dígitos.","<strong>Not quite.</strong>You typed {x}.":"<strong>Casi.</strong>Escribiste {x}.","nothing":"nada","Next sequence":"Siguiente secuencia","Turn your sound on. 4 clicks, then 8 silent taps.":"Activa el sonido. 4 clics y luego 8 toques en silencio.","Tap the pad or press the space bar.":"Toca el panel o pulsa la barra espaciadora.","Listen…":"Escucha…","Now keep tapping the beat…":"Ahora sigue el ritmo…","Missed it":"Fallaste","Not enough taps. Tap to retry this round.":"No hubo suficientes toques. Toca para repetir la ronda.","{n} ms off":"{n} ms de desfase","Tap for the next round.":"Toca para la siguiente ronda.","Ready?":"¿Listo?","Choose the ink color, not the word. Keys 1 to 4 work too.":"Elige el color de la tinta, no la palabra. Las teclas 1 a 4 también sirven.","Wrong ink! +1 s penalty ({n} so far)":"¡Tinta equivocada! +1 s de penalización ({n} hasta ahora)","How many degrees between the two lines?":"¿Cuántos grados hay entre las dos líneas?","Type a number of degrees, like 45.":"Escribe un número de grados, por ejemplo 45.","You said {g}°. It was {a}°.":"Dijiste {g}°. Eran {a}°.","Average error {n}°":"Error medio {n}°","{n} tiles":"{n} casillas","Memorize…":"Memoriza…","Now tap the tiles that were lit.":"Ahora toca las casillas que estaban encendidas.","Perfect! One more tile next time.":"¡Perfecto! Una casilla más la próxima vez.","Missed one. Same size, new pattern.":"Fallaste una. Mismo tamaño, nuevo patrón.","none":"ninguno","{n} cents":"{n} cents","Play the notes":"Tocar las notas","First was higher":"La 1.ª era más aguda","Second was higher":"La 2.ª era más aguda","Turn your sound on, then press play.":"Activa el sonido y pulsa Tocar.","Gap: {n} cents":"Diferencia: {n} cents","1 or 2?":"¿1 o 2?","Replay":"Repetir","Which note was higher?":"¿Qué nota era más aguda?","<strong>Correct!</strong>Getting closer…":"<strong>¡Correcto!</strong>Cada vez más cerca…","Show the grid":"Mostrar la cuadrícula","You’ll get about 3 seconds to memorize it.":"Tendrás unos 3 segundos para memorizarla.","Spotted {n}":"Encontrados: {n}","Memorize the grid…":"Memoriza la cuadrícula…","What changed? Tap it.":"¿Qué cambió? Tócalo.","Next grid":"Siguiente cuadrícula","Tap the balance point.":"Toca el punto de equilibrio.","Blue X is your tap, red dot is the real balance point.":"La X azul es tu toque, el punto rojo es el verdadero punto de equilibrio.","Average miss {n}%":"Desvío medio {n}%","Flash a word":"Mostrar una palabra","Keep your eyes on the + sign.":"Mantén la vista en el signo +.","Flash: {n} ms":"Destello: {n} ms","Get ready…":"Prepárate…","What was the word?":"¿Cuál era la palabra?","<strong>Correct!</strong>Next flash is shorter.":"<strong>¡Correcto!</strong>El próximo destello será más corto.","<strong>Not quite.</strong>The word was “{w}”.":"<strong>Casi.</strong>La palabra era «{w}».","Next word":"Siguiente palabra","Put your cursor or finger inside the ring to begin.":"Pon el cursor o el dedo dentro del anillo para empezar.","Stay inside!":"¡Quédate dentro!","{s} s · {p}% inside":"{s} s · {p}% dentro","move into the ring":"entra en el anillo","Unreal. Are you made of quartz?":"Increíble. ¿Estás hecho de cuarzo?","Superb timing.":"Sincronía perfecta.","Nicely done.":"Bien hecho.","Close!":"¡Casi!","A little drifty.":"Un poco desviado.","Time got away from you.":"El tiempo se te escapó.","Exactly right!":"¡Exacto!","So close.":"Muy cerca.","Not bad.":"Nada mal.","In the neighborhood.":"Por ahí anda.","Way off. Dots are sneaky.":"Muy lejos. Los puntos engañan.","That was yellow!":"¡Eso era amarillo!","Too soon!":"¡Demasiado pronto!","{n} level":"{n} nivel","{n} levels":"{n} niveles","mistake":"error","mistakes":"errores","Spot on!":"¡Clavado!","Close.":"Cerca.","Way off.":"Muy lejos.","<strong>Nope.</strong>The first one was higher.":"<strong>No.</strong>La primera era más aguda.","<strong>Nope.</strong>The second one was higher.":"<strong>No.</strong>La segunda era más aguda.","<strong>Got it!</strong>":"<strong>¡Acertaste!</strong>","<strong>Missed.</strong>The outlined one changed.":"<strong>Fallaste.</strong>Cambió la que está marcada.","Perfectly balanced!":"¡Perfectamente equilibrado!","A bit off.":"Un poco desviado.","It would tip over.":"Se caería.","Inner Clock":"Reloj interno","Time · 5 rounds":"Tiempo · 5 rondas","average miss":"desvío medio","How Many Dots?":"¿Cuántos puntos?","Estimation · 8 rounds":"Estimación · 8 rondas","points out of 800":"puntos de 800","Green Light":"Luz verde","Reflexes · 5 rounds":"Reflejos · 5 rondas","average reaction":"reacción media","Odd Hue":"Tono intruso","Color vision · 3 lives":"Visión del color · 3 vidas","levels cleared":"niveles superados","Digit Span":"Memoria de dígitos","Memory · 2 strikes":"Memoria · 2 fallos","longest sequence":"secuencia más larga","Rhythm Keeper":"Guardián del ritmo","Rhythm · 3 rounds · sound on":"Ritmo · 3 rondas · con sonido","average offset":"desfase medio","Ink, Not Ink":"La tinta, no la palabra","Focus · 20 words":"Concentración · 20 palabras","per word":"por palabra","Angle Eye":"Ojo para ángulos","Geometry · 6 rounds":"Geometría · 6 rondas","average error":"error medio","Pattern Recall":"Memoria de patrones","Visual memory · 3 lives":"Memoria visual · 3 vidas","most tiles remembered":"máximo de casillas recordadas","Higher or Lower":"¿Más agudo o más grave?","Hearing · 3 lives · sound on":"Oído · 3 vidas · con sonido","smallest gap heard":"menor diferencia oída","What Changed?":"¿Qué cambió?","Attention · 8 rounds":"Atención · 8 rondas","changes spotted out of 8":"cambios detectados de 8","Dead Center":"Justo en el centro","Balance · 6 rounds":"Equilibrio · 6 rondas","average miss (% of shape size)":"desvío medio (% de la figura)","Word Flash":"Palabra relámpago","Speed reading · 3 lives":"Lectura rápida · 3 vidas","shortest flash read":"destello más corto leído","Steady Hand":"Pulso firme","Motor control · 15 seconds":"Control motor · 15 segundos","time inside the ring":"tiempo dentro del anillo","The clock vanishes after one second. Stop it on the exact target anyway.":"El reloj desaparece tras un segundo. Páralo justo en el objetivo de todos modos.","You get a target time. Press the dial to start and again when you think the time is up. The numbers fade after one second, so you are on your own.":"Recibes un tiempo objetivo. Pulsa el dial para empezar y otra vez cuando creas que se ha cumplido. Los números se desvanecen tras un segundo, así que estás solo.","Most people drift 5 to 15% on intervals like these. Excitement makes internal clocks run fast, so nervous players often stop early.":"La mayoría se desvía entre un 5 y un 15 % en intervalos así. La emoción acelera el reloj interno, por eso los jugadores nerviosos suelen parar antes.","A cloud of dots flashes for a moment. Guess how many you saw.":"Una nube de puntos aparece un momento. Adivina cuántos viste.","Dots appear for 1.5 seconds, far too short to count, so trust your gut. Each round gets more crowded.":"Los puntos aparecen 1,5 segundos, demasiado poco para contarlos, así que fíate de tu instinto. Cada ronda hay más.","You can see up to about four things at once without counting. Psychologists call it subitizing. Past that, your brain switches to estimating, and the error grows with the number.":"Puedes ver hasta unos cuatro objetos a la vez sin contar. Los psicólogos lo llaman subitización. Más allá, el cerebro estima, y el error crece con la cantidad.","Tap the instant the pad turns green. Yellow is a trap.":"Toca en cuanto el panel se ponga verde. El amarillo es una trampa.","The pad turns red, then green after a random wait. Tap as soon as it turns green. Sometimes it flashes yellow first to bait you, so don’t fall for it.":"El panel se pone rojo y, tras una espera aleatoria, verde. Toca en cuanto se ponga verde. A veces parpadea en amarillo para engañarte: no caigas.","Light takes about 20 milliseconds just to travel from your retina to your visual cortex. Most of the rest is your brain deciding to move.":"La luz tarda unos 20 milisegundos solo en ir de la retina a la corteza visual. El resto es sobre todo tu cerebro decidiendo moverse.","One square is a slightly different shade. The difference keeps shrinking.":"Un cuadrado tiene un tono ligeramente distinto. La diferencia no deja de reducirse.","Find the square that doesn’t match. Every level the grid grows and the difference gets smaller. Three wrong taps and you’re done.":"Encuentra el cuadrado que no encaja. En cada nivel la cuadrícula crece y la diferencia se reduce. Tres fallos y se acabó.","People can tell apart roughly a million colors. Your screen’s brightness and night-mode settings change how well you’ll do here.":"Las personas distinguen alrededor de un millón de colores. El brillo de tu pantalla y el modo nocturno influyen en tu resultado.","Numbers appear one at a time. Type them back. The list keeps growing.":"Aparecen números de uno en uno. Escríbelos. La lista no para de crecer.","Watch the digits appear one by one, then type the whole sequence. Each success adds a digit. Two misses at the same length ends the test.":"Mira cómo aparecen los dígitos uno a uno y escribe la secuencia completa. Cada acierto añade un dígito. Dos fallos con la misma longitud terminan la prueba.","In 1956, psychologist George Miller noticed people hold about “seven, plus or minus two” items in short-term memory. Phone numbers were designed around it.":"En 1956, el psicólogo George Miller observó que retenemos unos «siete, más o menos dos» elementos en la memoria a corto plazo. Los números de teléfono se diseñaron según eso.","Hear four beats, then keep the tempo going in silence.":"Escucha cuatro pulsos y mantén el tempo en silencio.","You’ll hear four clicks. Keep tapping that same beat for eight more taps after the sound stops. We measure how far each tap lands from where the beat should be.":"Oirás cuatro clics. Sigue ese mismo ritmo durante ocho toques más cuando pare el sonido. Medimos lo lejos que cae cada toque del pulso esperado.","Without a reference, most people drift toward a tempo of about 100 to 120 beats per minute. It’s close to the pace of a relaxed walk.":"Sin referencia, la mayoría tiende a un tempo de 100 a 120 pulsaciones por minuto, parecido al ritmo de un paseo tranquilo.","Pick the color of the ink, not the word. Harder than it sounds.":"Elige el color de la tinta, no la palabra. Más difícil de lo que parece.","A color word appears in a colored ink. Choose the ink color as fast as you can. Wrong answers add a one-second penalty.":"Aparece el nombre de un color escrito en una tinta de color. Elige el color de la tinta lo más rápido posible. Cada error suma un segundo de penalización.","This is the Stroop effect, first published in 1935. Reading is so automatic that your brain reads the word before it can stop itself.":"Es el efecto Stroop, publicado por primera vez en 1935. Leer es tan automático que tu cerebro lee la palabra antes de poder evitarlo.","Two lines meet at a corner. Name the angle in degrees.":"Dos líneas se unen en una esquina. Di el ángulo en grados.","Look at the angle between the two lines and type your best guess in degrees. No protractors.":"Mira el ángulo entre las dos líneas y escribe tu estimación en grados. Sin transportador.","People are best at judging angles near 0°, 90° and 180°, because we compare everything to straight lines and right angles. The in-between ones are hardest.":"Juzgamos mejor los ángulos cercanos a 0°, 90° y 180°, porque lo comparamos todo con líneas rectas y ángulos rectos. Los intermedios son los más difíciles.","Tiles light up for a moment. Tap every one you saw.":"Unas casillas se encienden un momento. Toca todas las que viste.","A few tiles light up, then go dark. Tap all of them. Each level adds one more tile. A wrong tap costs a life.":"Algunas casillas se encienden y se apagan. Tócalas todas. Cada nivel añade una casilla. Un fallo cuesta una vida.","Visual memory works in chunks. People who do well here often see shapes in the pattern, like “an L in the corner”, instead of remembering single tiles.":"La memoria visual funciona por bloques. Quienes lo hacen bien suelen ver formas, como «una L en la esquina», en vez de recordar casillas sueltas.","Two notes play. Which was higher? They keep getting closer.":"Suenan dos notas. ¿Cuál era más aguda? Cada vez están más cerca.","Listen to two short notes and choose which one was higher. After each right answer the notes get closer together. Headphones help a lot.":"Escucha dos notas cortas y elige la más aguda. Tras cada acierto, las notas se acercan. Los auriculares ayudan mucho.","A semitone, the gap between two piano keys, is 100 cents. Trained musicians can often hear differences of 5 to 10 cents.":"Un semitono, la distancia entre dos teclas de piano, son 100 cents. Los músicos entrenados suelen oír diferencias de 5 a 10 cents.","Study the grid. It blinks. Something is different. Find it.":"Estudia la cuadrícula. Parpadea. Algo es distinto. Encuéntralo.","Memorize the grid of shapes. It blinks off for a moment, and when it comes back one thing has changed: a color, a shape, or a shape appearing or vanishing. Tap where it happened.":"Memoriza la cuadrícula de figuras. Se apaga un momento y, al volver, algo ha cambiado: un color, una forma, o una figura que aparece o desaparece. Toca dónde ocurrió.","This is change blindness. A short blink wipes out the motion signal your eyes use to spot changes, so you have to rely on memory alone.":"Es la ceguera al cambio. Un breve parpadeo borra la señal de movimiento que tus ojos usan para detectar cambios, así que solo te queda la memoria.","Tap the exact balance point of a lopsided shape.":"Toca el punto de equilibrio exacto de una figura irregular.","Every shape has a balance point, where it would sit level on the tip of a pencil. Tap where you think it is.":"Toda figura tiene un punto de equilibrio, donde se sostendría plana sobre la punta de un lápiz. Toca donde creas que está.","The balance point, or centroid, of a lopsided shape is pulled toward its heaviest region. People tend to pick the middle of the outline instead, which is often wrong.":"El punto de equilibrio, o centroide, de una figura irregular se desplaza hacia su zona más pesada. Solemos elegir el centro del contorno, que a menudo es incorrecto.","A word flashes for a split second. Can you read it?":"Una palabra aparece una fracción de segundo. ¿Puedes leerla?","Look at the + sign. A word flashes and is covered up. Type the word you saw. Each correct answer makes the next flash shorter.":"Mira el signo +. Una palabra aparece y se tapa. Escribe la palabra que viste. Cada acierto acorta el siguiente destello.","Your eyes only need about 50 milliseconds to take in a familiar word. Most screens refresh every 16.7 ms, so that’s the shortest flash possible here.":"Tus ojos solo necesitan unos 50 milisegundos para captar una palabra conocida. La mayoría de pantallas se refrescan cada 16,7 ms: es el destello más corto posible aquí.","Keep your cursor inside a wandering, shrinking ring.":"Mantén el cursor dentro de un anillo que se mueve y encoge.","Move your cursor or finger into the ring to start. For 15 seconds the ring drifts, speeds up and shrinks. Stay inside it as much as you can.":"Lleva el cursor o el dedo al anillo para empezar. Durante 15 segundos el anillo se desplaza, acelera y encoge. Quédate dentro todo lo que puedas.","Everyone’s hand has a tiny natural tremor of about 8 to 12 shakes per second. Coffee, cold and nerves all make it bigger.":"Todas las manos tienen un pequeño temblor natural de 8 a 12 oscilaciones por segundo. El café, el frío y los nervios lo aumentan.","Peak human. Suspiciously peak.":"Humano en su mejor momento. Sospechosamente bueno.","Fresh out of the box.":"Recién salido de la caja.","Still under warranty.":"Todavía en garantía.","Mild wear and tear.":"Algo de desgaste.","Starts sentences with “back in my day”.":"Empieza las frases con «en mis tiempos».","Asks the grandkids to fix the Wi-Fi.":"Pide a los nietos que arreglen el wifi.","Has strong opinions about the thermostat.":"Tiene opiniones firmes sobre el termostato.","Remembers when all this was fields.":"Recuerda cuando todo esto era campo.","Technically a historical artifact.":"Técnicamente, una pieza de museo.","Should be studied by science.":"Debería estudiarlo la ciencia.","RED":"ROJO","BLUE":"AZUL","GREEN":"VERDE","YELLOW":"AMARILLO","Fourteen tests. One number. Your true age.":"Catorce pruebas. Un número. Tu verdadera edad.","How old are you, <em>really?</em>":"¿Cuántos años tienes, <em>de verdad?</em>","Take 5 quick tests. Get one number: your real age.":"Haz 5 pruebas rápidas. Obtén un número: tu edad real.","▶ Start calibration":"▶ Empezar calibración","5 random tests · about 4 minutes":"5 pruebas al azar · unos 4 minutos","Or practice one test":"O practica una prueba","For entertainment only. Not a medical test. Screens, speakers and mice add their own small delays, which may age you further.":"Solo para divertirse. No es una prueba médica. Pantallas, altavoces y ratones añaden pequeños retrasos que pueden envejecerte un poco más.","← All tests":"← Todas las pruebas","Calibration Results":"Resultados de calibración","Your real age (optional, so we can compare)":"Tu edad real (opcional, para comparar)","Clear my results":"Borrar mis resultados","Sound on":"Sonido activado","Sound off":"Sonido desactivado"},"de":{"__words":"Apfel Fluss Kerze Garten Tasche Silber Planet Butter Fenster Rakete Wald Spiegel Bleistift Schloss Ticket Orange Banane Gitarre Zauberer Kaktus Spinne Insel Marmor Pfeffer Flasche Teppich Hammer Geige Esel Papagei Keks Korb Leiter Helm Anker Magnet Tunnel Tomate Zitrone Wolke Kissen Nudel","{n} years older than you":"{n} Jahre älter als du","{n} years younger than you":"{n} Jahre jünger als du","exactly your real age":"genau dein echtes Alter","calibration score":"Kalibrierungswert","Subject #{n} · estimated age":"Proband Nr. {n} · geschätztes Alter","No data yet. Press Start calibration to find out.":"Noch keine Daten. Drück auf Kalibrierung starten, um es herauszufinden.","Based on {n} of {total} tests":"Basierend auf {n} von {total} Tests","Tap for every score":"Tippen für alle Ergebnisse","{name} score":"Ergebnis · {name}","Test age":"Testalter","new record!":"neuer Rekord!","your best":"dein Rekord","Overall estimate: <b>age {age}</b> from {n} of {total} tests":"Gesamtschätzung: <b>{age} Jahre</b> aus {n} von {total} Tests","Next test ({n} of {total}) →":"Nächster Test ({n} von {total}) →","Reveal my age →":"Mein Alter enthüllen →","Play again":"Nochmal spielen","Next: {name}":"Weiter: {name}","All results":"Alle Ergebnisse","Calibration complete":"Kalibrierung abgeschlossen","Your Results":"Deine Ergebnisse","Each run picks 5 of the 14 tests at random, so your age changes from run to run. Try again to see if you can get younger.":"Jede Runde wählt zufällig 5 der 14 Tests, daher ändert sich dein Alter jedes Mal. Versuch es nochmal und schau, ob du jünger wirst.","Your calibrated age":"Dein kalibriertes Alter","age {n}":"{n} Jahre","Calibration score":"Kalibrierungswert","Calibrate again":"Neu kalibrieren","Main menu":"Hauptmenü","Calibration · test {n} of {total}":"Kalibrierung · Test {n} von {total}","Test {n}":"Test {n}","not taken":"offen","Not taken yet":"Noch nicht gemacht","take it":"jetzt machen","Click again to clear everything":"Nochmal klicken, um alles zu löschen","Results cleared":"Ergebnisse gelöscht","Stop at":"Stopp bei","Tip: the space bar works too.":"Tipp: Die Leertaste geht auch.","tap to start":"tippen zum Starten","tap to stop":"tippen zum Stoppen","Counting… in your head.":"Zähl mit… im Kopf.","best round":"beste Runde","next round":"nächste Runde","Round {n} of {total}. New target.":"Runde {n} von {total}. Neues Ziel.","{n} pts":"{n} Pkt.","Ready when you are.":"Bereit, wenn du es bist.","Show the dots":"Punkte zeigen","Guess":"Raten","Round {n} of {total}":"Runde {n} von {total}","Score {n} / 800":"Punkte {n} / 800","Look!":"Schau!","How many were there?":"Wie viele waren es?","Type a number above zero, then press Guess.":"Gib eine Zahl über null ein und drück auf Raten.","Next round":"Nächste Runde","Tap to start":"Tippen zum Starten","Wait for green, then tap as fast as you can.":"Warte auf Grün und tippe dann so schnell du kannst.","Wait for green…":"Warte auf Grün…","Not yet…":"Noch nicht…","TAP!":"JETZT!","Tap to try that round again.":"Tippen, um die Runde zu wiederholen.","Done!":"Fertig!","fastest":"schnellste","Round {n} of {total}. Tap to keep going.":"Runde {n} von {total}. Tippen zum Weitermachen.","Tap the square that’s a different shade.":"Tippe auf das Quadrat mit dem anderen Farbton.","Level {n}":"Level {n}","Got it.":"Richtig.","Nope, it was that one. New grid coming.":"Nein, es war dieses. Neues Raster kommt.","Out of lives.":"Keine Leben mehr.","last lightness gap":"letzter Helligkeitsunterschied","{n} digits":"{n} Ziffern","Start":"Start","Submit":"Absenden","Focus on the box. Digits appear one at a time.":"Schau auf das Feld. Die Ziffern erscheinen einzeln.","Watch…":"Aufpassen…","Type the digits in order.":"Gib die Ziffern der Reihe nach ein.","<strong>Correct!</strong>Next one is {n} digits long.":"<strong>Richtig!</strong>Die nächste hat {n} Ziffern.","<strong>Not quite.</strong>You typed {x}.":"<strong>Nicht ganz.</strong>Du hast {x} eingegeben.","nothing":"nichts","Next sequence":"Nächste Folge","Turn your sound on. 4 clicks, then 8 silent taps.":"Ton an. 4 Klicks, dann 8 stille Taps.","Tap the pad or press the space bar.":"Tippe auf das Feld oder drück die Leertaste.","Listen…":"Hör zu…","Now keep tapping the beat…":"Jetzt halte den Takt…","Missed it":"Verpasst","Not enough taps. Tap to retry this round.":"Zu wenige Taps. Tippen, um die Runde zu wiederholen.","{n} ms off":"{n} ms daneben","Tap for the next round.":"Tippen für die nächste Runde.","Ready?":"Bereit?","Choose the ink color, not the word. Keys 1 to 4 work too.":"Wähle die Farbe der Schrift, nicht das Wort. Die Tasten 1 bis 4 gehen auch.","Wrong ink! +1 s penalty ({n} so far)":"Falsche Farbe! +1 s Strafe (bisher {n})","How many degrees between the two lines?":"Wie viel Grad liegen zwischen den beiden Linien?","Type a number of degrees, like 45.":"Gib eine Gradzahl ein, zum Beispiel 45.","You said {g}°. It was {a}°.":"Du hast {g}° gesagt. Es waren {a}°.","Average error {n}°":"Mittlerer Fehler {n}°","{n} tiles":"{n} Felder","Memorize…":"Einprägen…","Now tap the tiles that were lit.":"Tippe jetzt auf die Felder, die geleuchtet haben.","Perfect! One more tile next time.":"Perfekt! Nächstes Mal ein Feld mehr.","Missed one. Same size, new pattern.":"Eins verfehlt. Gleiche Größe, neues Muster.","none":"keine","{n} cents":"{n} Cent","Play the notes":"Töne abspielen","First was higher":"Der 1. war höher","Second was higher":"Der 2. war höher","Turn your sound on, then press play.":"Mach den Ton an und drück auf Abspielen.","Gap: {n} cents":"Abstand: {n} Cent","1 or 2?":"1 oder 2?","Replay":"Nochmal hören","Which note was higher?":"Welcher Ton war höher?","<strong>Correct!</strong>Getting closer…":"<strong>Richtig!</strong>Es wird enger…","Show the grid":"Raster zeigen","You’ll get about 3 seconds to memorize it.":"Du hast etwa 3 Sekunden, um es dir einzuprägen.","Spotted {n}":"Gefunden: {n}","Memorize the grid…":"Präge dir das Raster ein…","What changed? Tap it.":"Was hat sich verändert? Tippe darauf.","Next grid":"Nächstes Raster","Tap the balance point.":"Tippe auf den Schwerpunkt.","Blue X is your tap, red dot is the real balance point.":"Das blaue X ist dein Tipp, der rote Punkt ist der echte Schwerpunkt.","Average miss {n}%":"Mittlere Abweichung {n}%","Flash a word":"Wort einblenden","Keep your eyes on the + sign.":"Behalte das +-Zeichen im Blick.","Flash: {n} ms":"Blitz: {n} ms","Get ready…":"Mach dich bereit…","What was the word?":"Wie lautete das Wort?","<strong>Correct!</strong>Next flash is shorter.":"<strong>Richtig!</strong>Der nächste Blitz ist kürzer.","<strong>Not quite.</strong>The word was “{w}”.":"<strong>Nicht ganz.</strong>Das Wort war „{w}“.","Next word":"Nächstes Wort","Put your cursor or finger inside the ring to begin.":"Bring den Cursor oder Finger in den Ring, um zu starten.","Stay inside!":"Bleib drin!","{s} s · {p}% inside":"{s} s · {p}% drin","move into the ring":"geh in den Ring","Unreal. Are you made of quartz?":"Unglaublich. Bist du aus Quarz?","Superb timing.":"Perfektes Timing.","Nicely done.":"Gut gemacht.","Close!":"Knapp!","A little drifty.":"Etwas daneben.","Time got away from you.":"Die Zeit ist dir davongelaufen.","Exactly right!":"Genau richtig!","So close.":"Ganz knapp.","Not bad.":"Nicht schlecht.","In the neighborhood.":"In der Nähe.","Way off. Dots are sneaky.":"Weit daneben. Punkte sind hinterhältig.","That was yellow!":"Das war Gelb!","Too soon!":"Zu früh!","{n} level":"{n} Level","{n} levels":"{n} Level","mistake":"Fehler","mistakes":"Fehler","Spot on!":"Volltreffer!","Close.":"Knapp.","Way off.":"Weit daneben.","<strong>Nope.</strong>The first one was higher.":"<strong>Nein.</strong>Der erste war höher.","<strong>Nope.</strong>The second one was higher.":"<strong>Nein.</strong>Der zweite war höher.","<strong>Got it!</strong>":"<strong>Richtig!</strong>","<strong>Missed.</strong>The outlined one changed.":"<strong>Verpasst.</strong>Das markierte hat sich verändert.","Perfectly balanced!":"Perfekt ausbalanciert!","A bit off.":"Etwas daneben.","It would tip over.":"Das würde umkippen.","Inner Clock":"Innere Uhr","Time · 5 rounds":"Zeit · 5 Runden","average miss":"mittlere Abweichung","How Many Dots?":"Wie viele Punkte?","Estimation · 8 rounds":"Schätzen · 8 Runden","points out of 800":"Punkte von 800","Green Light":"Grünes Licht","Reflexes · 5 rounds":"Reflexe · 5 Runden","average reaction":"mittlere Reaktion","Odd Hue":"Falscher Farbton","Color vision · 3 lives":"Farbsehen · 3 Leben","levels cleared":"geschaffte Level","Digit Span":"Zahlenspanne","Memory · 2 strikes":"Gedächtnis · 2 Versuche","longest sequence":"längste Folge","Rhythm Keeper":"Taktgefühl","Rhythm · 3 rounds · sound on":"Rhythmus · 3 Runden · Ton an","average offset":"mittlere Abweichung","Ink, Not Ink":"Farbe, nicht Wort","Focus · 20 words":"Konzentration · 20 Wörter","per word":"pro Wort","Angle Eye":"Winkelauge","Geometry · 6 rounds":"Geometrie · 6 Runden","average error":"mittlerer Fehler","Pattern Recall":"Mustergedächtnis","Visual memory · 3 lives":"Visuelles Gedächtnis · 3 Leben","most tiles remembered":"meiste gemerkte Felder","Higher or Lower":"Höher oder tiefer","Hearing · 3 lives · sound on":"Hören · 3 Leben · Ton an","smallest gap heard":"kleinster gehörter Abstand","What Changed?":"Was ist anders?","Attention · 8 rounds":"Aufmerksamkeit · 8 Runden","changes spotted out of 8":"erkannte Änderungen von 8","Dead Center":"Genau mittig","Balance · 6 rounds":"Gleichgewicht · 6 Runden","average miss (% of shape size)":"mittlere Abweichung (% der Formgröße)","Word Flash":"Wortblitz","Speed reading · 3 lives":"Schnelllesen · 3 Leben","shortest flash read":"kürzester gelesener Blitz","Steady Hand":"Ruhige Hand","Motor control · 15 seconds":"Motorik · 15 Sekunden","time inside the ring":"Zeit im Ring","The clock vanishes after one second. Stop it on the exact target anyway.":"Die Uhr verschwindet nach einer Sekunde. Stopp sie trotzdem genau auf dem Ziel.","You get a target time. Press the dial to start and again when you think the time is up. The numbers fade after one second, so you are on your own.":"Du bekommst eine Zielzeit. Drück auf das Zifferblatt zum Starten und nochmal, wenn du glaubst, die Zeit ist um. Die Zahlen verblassen nach einer Sekunde, du bist also auf dich allein gestellt.","Most people drift 5 to 15% on intervals like these. Excitement makes internal clocks run fast, so nervous players often stop early.":"Die meisten Menschen liegen bei solchen Zeiten 5 bis 15 % daneben. Aufregung lässt die innere Uhr schneller laufen, darum stoppen nervöse Spieler oft zu früh.","A cloud of dots flashes for a moment. Guess how many you saw.":"Eine Wolke aus Punkten blitzt kurz auf. Schätze, wie viele du gesehen hast.","Dots appear for 1.5 seconds, far too short to count, so trust your gut. Each round gets more crowded.":"Die Punkte erscheinen 1,5 Sekunden lang, viel zu kurz zum Zählen. Vertrau also deinem Bauchgefühl. Jede Runde wird voller.","You can see up to about four things at once without counting. Psychologists call it subitizing. Past that, your brain switches to estimating, and the error grows with the number.":"Bis zu etwa vier Dinge erkennst du auf einen Blick, ohne zu zählen. Psychologen nennen das Subitizing. Darüber schätzt das Gehirn, und der Fehler wächst mit der Zahl.","Tap the instant the pad turns green. Yellow is a trap.":"Tippe in dem Moment, in dem das Feld grün wird. Gelb ist eine Falle.","The pad turns red, then green after a random wait. Tap as soon as it turns green. Sometimes it flashes yellow first to bait you, so don’t fall for it.":"Das Feld wird rot und nach einer zufälligen Pause grün. Tippe, sobald es grün wird. Manchmal blitzt es vorher gelb auf, um dich zu ködern. Fall nicht darauf rein.","Light takes about 20 milliseconds just to travel from your retina to your visual cortex. Most of the rest is your brain deciding to move.":"Licht braucht etwa 20 Millisekunden allein von der Netzhaut bis zur Sehrinde. Der Rest ist größtenteils dein Gehirn, das sich entscheidet, dich zu bewegen.","One square is a slightly different shade. The difference keeps shrinking.":"Ein Quadrat hat einen leicht anderen Farbton. Der Unterschied wird immer kleiner.","Find the square that doesn’t match. Every level the grid grows and the difference gets smaller. Three wrong taps and you’re done.":"Finde das Quadrat, das nicht passt. Mit jedem Level wird das Raster größer und der Unterschied kleiner. Drei falsche Taps und es ist vorbei.","People can tell apart roughly a million colors. Your screen’s brightness and night-mode settings change how well you’ll do here.":"Menschen können etwa eine Million Farben unterscheiden. Die Helligkeit deines Bildschirms und der Nachtmodus beeinflussen dein Ergebnis.","Numbers appear one at a time. Type them back. The list keeps growing.":"Zahlen erscheinen einzeln. Gib sie wieder ein. Die Liste wird immer länger.","Watch the digits appear one by one, then type the whole sequence. Each success adds a digit. Two misses at the same length ends the test.":"Sieh zu, wie die Ziffern einzeln erscheinen, und gib dann die ganze Folge ein. Jeder Erfolg fügt eine Ziffer hinzu. Zwei Fehler bei gleicher Länge beenden den Test.","In 1956, psychologist George Miller noticed people hold about “seven, plus or minus two” items in short-term memory. Phone numbers were designed around it.":"1956 stellte der Psychologe George Miller fest, dass wir etwa „sieben plus oder minus zwei“ Dinge im Kurzzeitgedächtnis behalten. Telefonnummern wurden danach gestaltet.","Hear four beats, then keep the tempo going in silence.":"Hör vier Schläge und halte dann das Tempo in der Stille.","You’ll hear four clicks. Keep tapping that same beat for eight more taps after the sound stops. We measure how far each tap lands from where the beat should be.":"Du hörst vier Klicks. Tippe denselben Takt noch acht Mal weiter, nachdem der Ton aufhört. Wir messen, wie weit jeder Tap vom richtigen Schlag entfernt ist.","Without a reference, most people drift toward a tempo of about 100 to 120 beats per minute. It’s close to the pace of a relaxed walk.":"Ohne Vorgabe landen die meisten bei etwa 100 bis 120 Schlägen pro Minute. Das entspricht ungefähr einem gemütlichen Spaziergang.","Pick the color of the ink, not the word. Harder than it sounds.":"Wähle die Farbe der Schrift, nicht das Wort. Schwerer als gedacht.","A color word appears in a colored ink. Choose the ink color as fast as you can. Wrong answers add a one-second penalty.":"Ein Farbwort erscheint in einer farbigen Schrift. Wähle die Schriftfarbe so schnell du kannst. Falsche Antworten kosten eine Sekunde Strafe.","This is the Stroop effect, first published in 1935. Reading is so automatic that your brain reads the word before it can stop itself.":"Das ist der Stroop-Effekt, erstmals 1935 veröffentlicht. Lesen läuft so automatisch, dass dein Gehirn das Wort liest, bevor es sich bremsen kann.","Two lines meet at a corner. Name the angle in degrees.":"Zwei Linien treffen sich in einer Ecke. Nenne den Winkel in Grad.","Look at the angle between the two lines and type your best guess in degrees. No protractors.":"Schau dir den Winkel zwischen den Linien an und gib deine Schätzung in Grad ein. Kein Geodreieck.","People are best at judging angles near 0°, 90° and 180°, because we compare everything to straight lines and right angles. The in-between ones are hardest.":"Am besten schätzen wir Winkel nahe 0°, 90° und 180°, weil wir alles mit Geraden und rechten Winkeln vergleichen. Die dazwischen sind am schwersten.","Tiles light up for a moment. Tap every one you saw.":"Felder leuchten kurz auf. Tippe auf alle, die du gesehen hast.","A few tiles light up, then go dark. Tap all of them. Each level adds one more tile. A wrong tap costs a life.":"Ein paar Felder leuchten auf und erlöschen. Tippe auf alle. Jedes Level fügt ein Feld hinzu. Ein falscher Tap kostet ein Leben.","Visual memory works in chunks. People who do well here often see shapes in the pattern, like “an L in the corner”, instead of remembering single tiles.":"Das visuelle Gedächtnis arbeitet in Blöcken. Wer hier gut ist, sieht oft Formen im Muster, etwa „ein L in der Ecke“, statt sich einzelne Felder zu merken.","Two notes play. Which was higher? They keep getting closer.":"Zwei Töne erklingen. Welcher war höher? Sie rücken immer näher zusammen.","Listen to two short notes and choose which one was higher. After each right answer the notes get closer together. Headphones help a lot.":"Hör dir zwei kurze Töne an und wähle den höheren. Nach jeder richtigen Antwort liegen sie näher beieinander. Kopfhörer helfen sehr.","A semitone, the gap between two piano keys, is 100 cents. Trained musicians can often hear differences of 5 to 10 cents.":"Ein Halbton, der Abstand zwischen zwei Klaviertasten, sind 100 Cent. Geübte Musiker hören oft Unterschiede von 5 bis 10 Cent.","Study the grid. It blinks. Something is different. Find it.":"Präge dir das Raster ein. Es blinkt. Etwas ist anders. Finde es.","Memorize the grid of shapes. It blinks off for a moment, and when it comes back one thing has changed: a color, a shape, or a shape appearing or vanishing. Tap where it happened.":"Präge dir das Raster aus Formen ein. Es verschwindet kurz, und danach hat sich eine Sache geändert: eine Farbe, eine Form oder eine Form ist aufgetaucht oder verschwunden. Tippe auf die Stelle.","This is change blindness. A short blink wipes out the motion signal your eyes use to spot changes, so you have to rely on memory alone.":"Das ist Veränderungsblindheit. Ein kurzes Blinken löscht das Bewegungssignal, mit dem deine Augen Änderungen bemerken. Dir bleibt nur dein Gedächtnis.","Tap the exact balance point of a lopsided shape.":"Tippe auf den genauen Schwerpunkt einer schiefen Form.","Every shape has a balance point, where it would sit level on the tip of a pencil. Tap where you think it is.":"Jede Form hat einen Schwerpunkt, an dem sie waagerecht auf einer Bleistiftspitze balancieren würde. Tippe dorthin, wo du ihn vermutest.","The balance point, or centroid, of a lopsided shape is pulled toward its heaviest region. People tend to pick the middle of the outline instead, which is often wrong.":"Der Schwerpunkt einer schiefen Form wird zu ihrem schwersten Bereich gezogen. Die meisten tippen stattdessen auf die Mitte des Umrisses, und das ist oft falsch.","A word flashes for a split second. Can you read it?":"Ein Wort blitzt für einen Sekundenbruchteil auf. Kannst du es lesen?","Look at the + sign. A word flashes and is covered up. Type the word you saw. Each correct answer makes the next flash shorter.":"Schau auf das +-Zeichen. Ein Wort blitzt auf und wird verdeckt. Gib das Wort ein, das du gesehen hast. Jede richtige Antwort macht den nächsten Blitz kürzer.","Your eyes only need about 50 milliseconds to take in a familiar word. Most screens refresh every 16.7 ms, so that’s the shortest flash possible here.":"Deine Augen brauchen nur etwa 50 Millisekunden, um ein bekanntes Wort zu erfassen. Die meisten Bildschirme aktualisieren alle 16,7 ms, das ist hier der kürzestmögliche Blitz.","Keep your cursor inside a wandering, shrinking ring.":"Halte deinen Cursor in einem wandernden, schrumpfenden Ring.","Move your cursor or finger into the ring to start. For 15 seconds the ring drifts, speeds up and shrinks. Stay inside it as much as you can.":"Bring Cursor oder Finger in den Ring, um zu starten. 15 Sekunden lang wandert der Ring, wird schneller und schrumpft. Bleib so viel wie möglich drin.","Everyone’s hand has a tiny natural tremor of about 8 to 12 shakes per second. Coffee, cold and nerves all make it bigger.":"Jede Hand hat ein winziges natürliches Zittern von etwa 8 bis 12 Schwingungen pro Sekunde. Kaffee, Kälte und Nervosität verstärken es.","Peak human. Suspiciously peak.":"Mensch in Bestform. Verdächtig gute Form.","Fresh out of the box.":"Frisch ausgepackt.","Still under warranty.":"Noch unter Garantie.","Mild wear and tear.":"Leichte Gebrauchsspuren.","Starts sentences with “back in my day”.":"Fängt Sätze mit „Früher war alles besser“ an.","Asks the grandkids to fix the Wi-Fi.":"Bittet die Enkel, das WLAN zu reparieren.","Has strong opinions about the thermostat.":"Hat feste Meinungen zum Thermostat.","Remembers when all this was fields.":"Weiß noch, als hier alles Felder waren.","Technically a historical artifact.":"Technisch gesehen ein Museumsstück.","Should be studied by science.":"Sollte von der Wissenschaft untersucht werden.","RED":"ROT","BLUE":"BLAU","GREEN":"GRÜN","YELLOW":"GELB","Fourteen tests. One number. Your true age.":"Vierzehn Tests. Eine Zahl. Dein wahres Alter.","How old are you, <em>really?</em>":"Wie alt bist du <em>wirklich?</em>","Take 5 quick tests. Get one number: your real age.":"Mach 5 schnelle Tests. Erhalte eine Zahl: dein echtes Alter.","▶ Start calibration":"▶ Kalibrierung starten","5 random tests · about 4 minutes":"5 zufällige Tests · etwa 4 Minuten","Or practice one test":"Oder übe einen einzelnen Test","For entertainment only. Not a medical test. Screens, speakers and mice add their own small delays, which may age you further.":"Nur zur Unterhaltung. Kein medizinischer Test. Bildschirme, Lautsprecher und Mäuse bringen eigene kleine Verzögerungen mit, die dich noch älter machen können.","← All tests":"← Alle Tests","Calibration Results":"Kalibrierungsergebnisse","Your real age (optional, so we can compare)":"Dein echtes Alter (optional, zum Vergleichen)","Clear my results":"Meine Ergebnisse löschen","Sound on":"Ton an","Sound off":"Ton aus"},"pt":{"__words":"maçã rio vela jardim bolso prata planeta manteiga janela foguete floresta espelho selva lápis castelo bilhete laranja banana violão tartaruga mago cacto aranha ilha mármore pimenta garrafa tapete martelo violino burro papagaio biscoito cesta escada capacete âncora túnel tomate limão nuvem","{n} years older than you":"{n} anos mais velho que você","{n} years younger than you":"{n} anos mais novo que você","exactly your real age":"exatamente sua idade real","calibration score":"pontuação de calibração","Subject #{n} · estimated age":"Cobaia nº {n} · idade estimada","No data yet. Press Start calibration to find out.":"Ainda sem dados. Toque em Iniciar calibração para descobrir.","Based on {n} of {total} tests":"Com base em {n} de {total} testes","Tap for every score":"Toque para ver todas as pontuações","{name} score":"Pontuação · {name}","Test age":"Idade no teste","new record!":"novo recorde!","your best":"seu recorde","Overall estimate: <b>age {age}</b> from {n} of {total} tests":"Estimativa geral: <b>{age} anos</b> com base em {n} de {total} testes","Next test ({n} of {total}) →":"Próximo teste ({n} de {total}) →","Reveal my age →":"Revelar minha idade →","Play again":"Jogar de novo","Next: {name}":"Próximo: {name}","All results":"Todos os resultados","Calibration complete":"Calibração concluída","Your Results":"Seus resultados","Each run picks 5 of the 14 tests at random, so your age changes from run to run. Try again to see if you can get younger.":"Cada rodada sorteia 5 dos 14 testes, então sua idade muda a cada vez. Tente de novo para ver se você rejuvenesce.","Your calibrated age":"Sua idade calibrada","age {n}":"{n} anos","Calibration score":"Pontuação de calibração","Calibrate again":"Calibrar de novo","Main menu":"Menu principal","Calibration · test {n} of {total}":"Calibração · teste {n} de {total}","Test {n}":"Teste {n}","not taken":"não feito","Not taken yet":"Ainda não feito","take it":"fazer","Click again to clear everything":"Clique de novo para apagar tudo","Results cleared":"Resultados apagados","Stop at":"Pare em","Tip: the space bar works too.":"Dica: a barra de espaço também funciona.","tap to start":"toque para começar","tap to stop":"toque para parar","Counting… in your head.":"Contando… de cabeça.","best round":"melhor rodada","next round":"próxima rodada","Round {n} of {total}. New target.":"Rodada {n} de {total}. Novo alvo.","{n} pts":"{n} pts","Ready when you are.":"Quando quiser.","Show the dots":"Mostrar os pontos","Guess":"Chutar","Round {n} of {total}":"Rodada {n} de {total}","Score {n} / 800":"Pontos {n} / 800","Look!":"Olhe!","How many were there?":"Quantos eram?","Type a number above zero, then press Guess.":"Digite um número maior que zero e toque em Chutar.","Next round":"Próxima rodada","Tap to start":"Toque para começar","Wait for green, then tap as fast as you can.":"Espere o verde e toque o mais rápido possível.","Wait for green…":"Espere o verde…","Not yet…":"Ainda não…","TAP!":"JÁ!","Tap to try that round again.":"Toque para repetir essa rodada.","Done!":"Pronto!","fastest":"mais rápida","Round {n} of {total}. Tap to keep going.":"Rodada {n} de {total}. Toque para continuar.","Tap the square that’s a different shade.":"Toque no quadrado de tom diferente.","Level {n}":"Nível {n}","Got it.":"Acertou.","Nope, it was that one. New grid coming.":"Não, era aquele. Lá vem uma nova grade.","Out of lives.":"Sem vidas.","last lightness gap":"última diferença de brilho","{n} digits":"{n} dígitos","Start":"Começar","Submit":"Enviar","Focus on the box. Digits appear one at a time.":"Olhe para a caixa. Os dígitos aparecem um de cada vez.","Watch…":"Observe…","Type the digits in order.":"Digite os dígitos na ordem.","<strong>Correct!</strong>Next one is {n} digits long.":"<strong>Certo!</strong>A próxima tem {n} dígitos.","<strong>Not quite.</strong>You typed {x}.":"<strong>Quase.</strong>Você digitou {x}.","nothing":"nada","Next sequence":"Próxima sequência","Turn your sound on. 4 clicks, then 8 silent taps.":"Ligue o som. 4 cliques, depois 8 toques em silêncio.","Tap the pad or press the space bar.":"Toque no painel ou aperte a barra de espaço.","Listen…":"Escute…","Now keep tapping the beat…":"Agora mantenha o ritmo…","Missed it":"Errou","Not enough taps. Tap to retry this round.":"Poucos toques. Toque para repetir a rodada.","{n} ms off":"{n} ms de desvio","Tap for the next round.":"Toque para a próxima rodada.","Ready?":"Pronto?","Choose the ink color, not the word. Keys 1 to 4 work too.":"Escolha a cor da tinta, não a palavra. As teclas 1 a 4 também funcionam.","Wrong ink! +1 s penalty ({n} so far)":"Tinta errada! +1 s de penalidade ({n} até agora)","How many degrees between the two lines?":"Quantos graus entre as duas linhas?","Type a number of degrees, like 45.":"Digite um número de graus, como 45.","You said {g}°. It was {a}°.":"Você disse {g}°. Eram {a}°.","Average error {n}°":"Erro médio {n}°","{n} tiles":"{n} casas","Memorize…":"Memorize…","Now tap the tiles that were lit.":"Agora toque nas casas que estavam acesas.","Perfect! One more tile next time.":"Perfeito! Uma casa a mais na próxima.","Missed one. Same size, new pattern.":"Errou uma. Mesmo tamanho, novo padrão.","none":"nenhum","{n} cents":"{n} cents","Play the notes":"Tocar as notas","First was higher":"A 1ª era mais aguda","Second was higher":"A 2ª era mais aguda","Turn your sound on, then press play.":"Ligue o som e toque em Tocar.","Gap: {n} cents":"Diferença: {n} cents","1 or 2?":"1 ou 2?","Replay":"Ouvir de novo","Which note was higher?":"Qual nota era mais aguda?","<strong>Correct!</strong>Getting closer…":"<strong>Certo!</strong>Cada vez mais perto…","Show the grid":"Mostrar a grade","You’ll get about 3 seconds to memorize it.":"Você terá uns 3 segundos para memorizar.","Spotted {n}":"Achados: {n}","Memorize the grid…":"Memorize a grade…","What changed? Tap it.":"O que mudou? Toque nele.","Next grid":"Próxima grade","Tap the balance point.":"Toque no ponto de equilíbrio.","Blue X is your tap, red dot is the real balance point.":"O X azul é o seu toque, o ponto vermelho é o verdadeiro ponto de equilíbrio.","Average miss {n}%":"Desvio médio {n}%","Flash a word":"Mostrar uma palavra","Keep your eyes on the + sign.":"Mantenha os olhos no sinal +.","Flash: {n} ms":"Flash: {n} ms","Get ready…":"Prepare-se…","What was the word?":"Qual era a palavra?","<strong>Correct!</strong>Next flash is shorter.":"<strong>Certo!</strong>O próximo flash será mais curto.","<strong>Not quite.</strong>The word was “{w}”.":"<strong>Quase.</strong>A palavra era “{w}”.","Next word":"Próxima palavra","Put your cursor or finger inside the ring to begin.":"Coloque o cursor ou o dedo dentro do anel para começar.","Stay inside!":"Fique dentro!","{s} s · {p}% inside":"{s} s · {p}% dentro","move into the ring":"entre no anel","Unreal. Are you made of quartz?":"Inacreditável. Você é feito de quartzo?","Superb timing.":"Timing perfeito.","Nicely done.":"Muito bem.","Close!":"Quase!","A little drifty.":"Um pouco fora.","Time got away from you.":"O tempo escapou de você.","Exactly right!":"Na mosca!","So close.":"Bem perto.","Not bad.":"Nada mal.","In the neighborhood.":"Por aí.","Way off. Dots are sneaky.":"Muito longe. Os pontos enganam.","That was yellow!":"Era amarelo!","Too soon!":"Cedo demais!","{n} level":"{n} nível","{n} levels":"{n} níveis","mistake":"erro","mistakes":"erros","Spot on!":"Na mosca!","Close.":"Perto.","Way off.":"Muito longe.","<strong>Nope.</strong>The first one was higher.":"<strong>Não.</strong>A primeira era mais aguda.","<strong>Nope.</strong>The second one was higher.":"<strong>Não.</strong>A segunda era mais aguda.","<strong>Got it!</strong>":"<strong>Acertou!</strong>","<strong>Missed.</strong>The outlined one changed.":"<strong>Errou.</strong>A destacada foi a que mudou.","Perfectly balanced!":"Perfeitamente equilibrado!","A bit off.":"Um pouco fora.","It would tip over.":"Isso tombaria.","Inner Clock":"Relógio interno","Time · 5 rounds":"Tempo · 5 rodadas","average miss":"desvio médio","How Many Dots?":"Quantos pontos?","Estimation · 8 rounds":"Estimativa · 8 rodadas","points out of 800":"pontos de 800","Green Light":"Sinal verde","Reflexes · 5 rounds":"Reflexos · 5 rodadas","average reaction":"reação média","Odd Hue":"Tom intruso","Color vision · 3 lives":"Visão de cores · 3 vidas","levels cleared":"níveis concluídos","Digit Span":"Memória de dígitos","Memory · 2 strikes":"Memória · 2 erros","longest sequence":"maior sequência","Rhythm Keeper":"Guardião do ritmo","Rhythm · 3 rounds · sound on":"Ritmo · 3 rodadas · som ligado","average offset":"desvio médio","Ink, Not Ink":"A tinta, não a palavra","Focus · 20 words":"Foco · 20 palavras","per word":"por palavra","Angle Eye":"Olho para ângulos","Geometry · 6 rounds":"Geometria · 6 rodadas","average error":"erro médio","Pattern Recall":"Memória de padrões","Visual memory · 3 lives":"Memória visual · 3 vidas","most tiles remembered":"máximo de casas lembradas","Higher or Lower":"Mais aguda ou mais grave","Hearing · 3 lives · sound on":"Audição · 3 vidas · som ligado","smallest gap heard":"menor diferença ouvida","What Changed?":"O que mudou?","Attention · 8 rounds":"Atenção · 8 rodadas","changes spotted out of 8":"mudanças achadas de 8","Dead Center":"Bem no centro","Balance · 6 rounds":"Equilíbrio · 6 rodadas","average miss (% of shape size)":"desvio médio (% da forma)","Word Flash":"Palavra relâmpago","Speed reading · 3 lives":"Leitura rápida · 3 vidas","shortest flash read":"flash mais curto lido","Steady Hand":"Mão firme","Motor control · 15 seconds":"Controle motor · 15 segundos","time inside the ring":"tempo dentro do anel","The clock vanishes after one second. Stop it on the exact target anyway.":"O relógio some depois de um segundo. Pare-o exatamente no alvo mesmo assim.","You get a target time. Press the dial to start and again when you think the time is up. The numbers fade after one second, so you are on your own.":"Você recebe um tempo-alvo. Toque no mostrador para começar e de novo quando achar que o tempo acabou. Os números somem após um segundo, então é com você.","Most people drift 5 to 15% on intervals like these. Excitement makes internal clocks run fast, so nervous players often stop early.":"A maioria das pessoas erra de 5 a 15% em intervalos assim. A empolgação acelera o relógio interno, por isso jogadores nervosos costumam parar cedo.","A cloud of dots flashes for a moment. Guess how many you saw.":"Uma nuvem de pontos pisca por um instante. Chute quantos você viu.","Dots appear for 1.5 seconds, far too short to count, so trust your gut. Each round gets more crowded.":"Os pontos aparecem por 1,5 segundo, rápido demais para contar, então confie no instinto. Cada rodada fica mais cheia.","You can see up to about four things at once without counting. Psychologists call it subitizing. Past that, your brain switches to estimating, and the error grows with the number.":"Dá para ver até uns quatro objetos de uma vez sem contar. Os psicólogos chamam isso de subitização. Acima disso, o cérebro estima, e o erro cresce com a quantidade.","Tap the instant the pad turns green. Yellow is a trap.":"Toque assim que o painel ficar verde. O amarelo é uma armadilha.","The pad turns red, then green after a random wait. Tap as soon as it turns green. Sometimes it flashes yellow first to bait you, so don’t fall for it.":"O painel fica vermelho e, depois de uma espera aleatória, verde. Toque assim que ficar verde. Às vezes ele pisca amarelo antes para te enganar: não caia nessa.","Light takes about 20 milliseconds just to travel from your retina to your visual cortex. Most of the rest is your brain deciding to move.":"A luz leva uns 20 milissegundos só para ir da retina ao córtex visual. O resto é quase todo o seu cérebro decidindo se mexer.","One square is a slightly different shade. The difference keeps shrinking.":"Um quadrado tem um tom levemente diferente. A diferença só diminui.","Find the square that doesn’t match. Every level the grid grows and the difference gets smaller. Three wrong taps and you’re done.":"Ache o quadrado que não combina. A cada nível a grade cresce e a diferença diminui. Três erros e acabou.","People can tell apart roughly a million colors. Your screen’s brightness and night-mode settings change how well you’ll do here.":"As pessoas distinguem cerca de um milhão de cores. O brilho da tela e o modo noturno influenciam seu resultado.","Numbers appear one at a time. Type them back. The list keeps growing.":"Números aparecem um de cada vez. Digite-os de volta. A lista não para de crescer.","Watch the digits appear one by one, then type the whole sequence. Each success adds a digit. Two misses at the same length ends the test.":"Veja os dígitos aparecerem um a um e digite a sequência inteira. Cada acerto adiciona um dígito. Dois erros no mesmo tamanho encerram o teste.","In 1956, psychologist George Miller noticed people hold about “seven, plus or minus two” items in short-term memory. Phone numbers were designed around it.":"Em 1956, o psicólogo George Miller notou que guardamos cerca de “sete, mais ou menos dois” itens na memória de curto prazo. Os números de telefone foram pensados a partir disso.","Hear four beats, then keep the tempo going in silence.":"Ouça quatro batidas e mantenha o tempo em silêncio.","You’ll hear four clicks. Keep tapping that same beat for eight more taps after the sound stops. We measure how far each tap lands from where the beat should be.":"Você vai ouvir quatro cliques. Continue nesse mesmo ritmo por mais oito toques depois que o som parar. Medimos quanto cada toque se afasta da batida certa.","Without a reference, most people drift toward a tempo of about 100 to 120 beats per minute. It’s close to the pace of a relaxed walk.":"Sem referência, a maioria tende a um tempo de 100 a 120 batidas por minuto, perto do ritmo de uma caminhada tranquila.","Pick the color of the ink, not the word. Harder than it sounds.":"Escolha a cor da tinta, não a palavra. Mais difícil do que parece.","A color word appears in a colored ink. Choose the ink color as fast as you can. Wrong answers add a one-second penalty.":"Um nome de cor aparece escrito em uma tinta colorida. Escolha a cor da tinta o mais rápido possível. Cada erro soma um segundo de penalidade.","This is the Stroop effect, first published in 1935. Reading is so automatic that your brain reads the word before it can stop itself.":"Esse é o efeito Stroop, publicado pela primeira vez em 1935. Ler é tão automático que o cérebro lê a palavra antes de conseguir se segurar.","Two lines meet at a corner. Name the angle in degrees.":"Duas linhas se encontram em um canto. Diga o ângulo em graus.","Look at the angle between the two lines and type your best guess in degrees. No protractors.":"Olhe o ângulo entre as duas linhas e digite seu palpite em graus. Nada de transferidor.","People are best at judging angles near 0°, 90° and 180°, because we compare everything to straight lines and right angles. The in-between ones are hardest.":"Avaliamos melhor ângulos perto de 0°, 90° e 180°, porque comparamos tudo com retas e ângulos retos. Os intermediários são os mais difíceis.","Tiles light up for a moment. Tap every one you saw.":"Algumas casas acendem por um instante. Toque em todas que você viu.","A few tiles light up, then go dark. Tap all of them. Each level adds one more tile. A wrong tap costs a life.":"Algumas casas acendem e depois apagam. Toque em todas. Cada nível adiciona uma casa. Um toque errado custa uma vida.","Visual memory works in chunks. People who do well here often see shapes in the pattern, like “an L in the corner”, instead of remembering single tiles.":"A memória visual funciona em blocos. Quem vai bem aqui costuma ver formas no padrão, como “um L no canto”, em vez de lembrar casas soltas.","Two notes play. Which was higher? They keep getting closer.":"Duas notas tocam. Qual era mais aguda? Elas vão ficando cada vez mais próximas.","Listen to two short notes and choose which one was higher. After each right answer the notes get closer together. Headphones help a lot.":"Ouça duas notas curtas e escolha a mais aguda. Depois de cada acerto, as notas ficam mais próximas. Fones de ouvido ajudam muito.","A semitone, the gap between two piano keys, is 100 cents. Trained musicians can often hear differences of 5 to 10 cents.":"Um semitom, a distância entre duas teclas do piano, vale 100 cents. Músicos treinados costumam ouvir diferenças de 5 a 10 cents.","Study the grid. It blinks. Something is different. Find it.":"Observe a grade. Ela pisca. Algo mudou. Encontre.","Memorize the grid of shapes. It blinks off for a moment, and when it comes back one thing has changed: a color, a shape, or a shape appearing or vanishing. Tap where it happened.":"Memorize a grade de formas. Ela apaga por um instante e, quando volta, uma coisa mudou: uma cor, uma forma, ou uma forma que apareceu ou sumiu. Toque onde aconteceu.","This is change blindness. A short blink wipes out the motion signal your eyes use to spot changes, so you have to rely on memory alone.":"Isso é cegueira à mudança. Uma piscada curta apaga o sinal de movimento que seus olhos usam para notar mudanças, então só sobra a memória.","Tap the exact balance point of a lopsided shape.":"Toque no ponto de equilíbrio exato de uma forma torta.","Every shape has a balance point, where it would sit level on the tip of a pencil. Tap where you think it is.":"Toda forma tem um ponto de equilíbrio, onde ficaria nivelada na ponta de um lápis. Toque onde você acha que ele está.","The balance point, or centroid, of a lopsided shape is pulled toward its heaviest region. People tend to pick the middle of the outline instead, which is often wrong.":"O ponto de equilíbrio, ou centroide, de uma forma torta é puxado para a parte mais pesada. As pessoas tendem a escolher o meio do contorno, o que muitas vezes está errado.","A word flashes for a split second. Can you read it?":"Uma palavra pisca por uma fração de segundo. Você consegue ler?","Look at the + sign. A word flashes and is covered up. Type the word you saw. Each correct answer makes the next flash shorter.":"Olhe para o sinal +. Uma palavra aparece e é coberta. Digite a palavra que você viu. Cada acerto deixa o próximo flash mais curto.","Your eyes only need about 50 milliseconds to take in a familiar word. Most screens refresh every 16.7 ms, so that’s the shortest flash possible here.":"Seus olhos só precisam de uns 50 milissegundos para captar uma palavra conhecida. A maioria das telas atualiza a cada 16,7 ms, então esse é o flash mais curto possível aqui.","Keep your cursor inside a wandering, shrinking ring.":"Mantenha o cursor dentro de um anel que passeia e encolhe.","Move your cursor or finger into the ring to start. For 15 seconds the ring drifts, speeds up and shrinks. Stay inside it as much as you can.":"Coloque o cursor ou o dedo no anel para começar. Por 15 segundos o anel se move, acelera e encolhe. Fique dentro o máximo que puder.","Everyone’s hand has a tiny natural tremor of about 8 to 12 shakes per second. Coffee, cold and nerves all make it bigger.":"Toda mão tem um pequeno tremor natural de 8 a 12 oscilações por segundo. Café, frio e nervosismo aumentam esse tremor.","Peak human. Suspiciously peak.":"Humano no auge. Suspeitamente no auge.","Fresh out of the box.":"Acabou de sair da caixa.","Still under warranty.":"Ainda na garantia.","Mild wear and tear.":"Leve desgaste.","Starts sentences with “back in my day”.":"Começa frases com “no meu tempo”.","Asks the grandkids to fix the Wi-Fi.":"Pede aos netos para arrumar o Wi-Fi.","Has strong opinions about the thermostat.":"Tem opiniões fortes sobre o ar-condicionado.","Remembers when all this was fields.":"Lembra quando tudo isso era mato.","Technically a historical artifact.":"Tecnicamente, uma peça de museu.","Should be studied by science.":"Deveria ser estudado pela ciência.","RED":"VERMELHO","BLUE":"AZUL","GREEN":"VERDE","YELLOW":"AMARELO","Fourteen tests. One number. Your true age.":"Catorze testes. Um número. Sua idade de verdade.","How old are you, <em>really?</em>":"Quantos anos você tem, <em>de verdade?</em>","Take 5 quick tests. Get one number: your real age.":"Faça 5 testes rápidos. Receba um número: sua idade real.","▶ Start calibration":"▶ Iniciar calibração","5 random tests · about 4 minutes":"5 testes aleatórios · cerca de 4 minutos","Or practice one test":"Ou pratique um teste","For entertainment only. Not a medical test. Screens, speakers and mice add their own small delays, which may age you further.":"Só por diversão. Não é um exame médico. Telas, caixas de som e mouses têm seus próprios pequenos atrasos, que podem te envelhecer ainda mais.","← All tests":"← Todos os testes","Calibration Results":"Resultados da calibração","Your real age (optional, so we can compare)":"Sua idade real (opcional, para comparar)","Clear my results":"Apagar meus resultados","Sound on":"Som ligado","Sound off":"Som desligado"},"it":{"__words":"mela fiume candela giardino tasca argento pianeta burro finestra razzo foresta specchio giungla matita castello biglietto arancia banana chitarra tartaruga mago cactus ragno isola marmo pepe bottiglia tappeto martello violino asino biscotto cesto scala casco ancora magnete tunnel pomodoro limone nuvola","{n} years older than you":"{n} anni più di te","{n} years younger than you":"{n} anni meno di te","exactly your real age":"esattamente la tua età reale","calibration score":"punteggio di calibrazione","Subject #{n} · estimated age":"Soggetto n. {n} · età stimata","No data yet. Press Start calibration to find out.":"Nessun dato. Premi Avvia calibrazione per scoprirlo.","Based on {n} of {total} tests":"Basato su {n} test su {total}","Tap for every score":"Tocca per vedere tutti i punteggi","{name} score":"Punteggio · {name}","Test age":"Età al test","new record!":"nuovo record!","your best":"il tuo record","Overall estimate: <b>age {age}</b> from {n} of {total} tests":"Stima complessiva: <b>{age} anni</b> da {n} test su {total}","Next test ({n} of {total}) →":"Test successivo ({n} di {total}) →","Reveal my age →":"Rivela la mia età →","Play again":"Gioca ancora","Next: {name}":"Prossimo: {name}","All results":"Tutti i risultati","Calibration complete":"Calibrazione completata","Your Results":"I tuoi risultati","Each run picks 5 of the 14 tests at random, so your age changes from run to run. Try again to see if you can get younger.":"Ogni sessione sceglie a caso 5 dei 14 test, quindi la tua età cambia ogni volta. Riprova per vedere se ringiovanisci.","Your calibrated age":"La tua età calibrata","age {n}":"{n} anni","Calibration score":"Punteggio di calibrazione","Calibrate again":"Ricalibra","Main menu":"Menu principale","Calibration · test {n} of {total}":"Calibrazione · test {n} di {total}","Test {n}":"Test {n}","not taken":"da fare","Not taken yet":"Non ancora fatto","take it":"fallo","Click again to clear everything":"Clicca di nuovo per cancellare tutto","Results cleared":"Risultati cancellati","Stop at":"Fermati a","Tip: the space bar works too.":"Suggerimento: funziona anche la barra spaziatrice.","tap to start":"tocca per iniziare","tap to stop":"tocca per fermare","Counting… in your head.":"Conta… nella tua testa.","best round":"round migliore","next round":"round successivo","Round {n} of {total}. New target.":"Round {n} di {total}. Nuovo obiettivo.","{n} pts":"{n} pt","Ready when you are.":"Quando vuoi.","Show the dots":"Mostra i punti","Guess":"Indovina","Round {n} of {total}":"Round {n} di {total}","Score {n} / 800":"Punti {n} / 800","Look!":"Guarda!","How many were there?":"Quanti erano?","Type a number above zero, then press Guess.":"Scrivi un numero maggiore di zero, poi premi Indovina.","Next round":"Round successivo","Tap to start":"Tocca per iniziare","Wait for green, then tap as fast as you can.":"Aspetta il verde, poi tocca più veloce che puoi.","Wait for green…":"Aspetta il verde…","Not yet…":"Non ancora…","TAP!":"ORA!","Tap to try that round again.":"Tocca per ripetere il round.","Done!":"Fatto!","fastest":"più veloce","Round {n} of {total}. Tap to keep going.":"Round {n} di {total}. Tocca per continuare.","Tap the square that’s a different shade.":"Tocca il quadrato di una tonalità diversa.","Level {n}":"Livello {n}","Got it.":"Preso.","Nope, it was that one. New grid coming.":"No, era quello. Arriva una nuova griglia.","Out of lives.":"Vite finite.","last lightness gap":"ultima differenza di luminosità","{n} digits":"{n} cifre","Start":"Inizia","Submit":"Invia","Focus on the box. Digits appear one at a time.":"Guarda il riquadro. Le cifre appaiono una alla volta.","Watch…":"Guarda…","Type the digits in order.":"Scrivi le cifre in ordine.","<strong>Correct!</strong>Next one is {n} digits long.":"<strong>Giusto!</strong>La prossima ha {n} cifre.","<strong>Not quite.</strong>You typed {x}.":"<strong>Non proprio.</strong>Hai scritto {x}.","nothing":"niente","Next sequence":"Sequenza successiva","Turn your sound on. 4 clicks, then 8 silent taps.":"Attiva l’audio. 4 clic, poi 8 tocchi in silenzio.","Tap the pad or press the space bar.":"Tocca il pannello o premi la barra spaziatrice.","Listen…":"Ascolta…","Now keep tapping the beat…":"Ora tieni il ritmo…","Missed it":"Mancato","Not enough taps. Tap to retry this round.":"Tocchi insufficienti. Tocca per ripetere il round.","{n} ms off":"{n} ms di scarto","Tap for the next round.":"Tocca per il round successivo.","Ready?":"Pronto?","Choose the ink color, not the word. Keys 1 to 4 work too.":"Scegli il colore dell’inchiostro, non la parola. Funzionano anche i tasti da 1 a 4.","Wrong ink! +1 s penalty ({n} so far)":"Inchiostro sbagliato! +1 s di penalità ({n} finora)","How many degrees between the two lines?":"Quanti gradi tra le due linee?","Type a number of degrees, like 45.":"Scrivi un numero di gradi, per esempio 45.","You said {g}°. It was {a}°.":"Hai detto {g}°. Erano {a}°.","Average error {n}°":"Errore medio {n}°","{n} tiles":"{n} caselle","Memorize…":"Memorizza…","Now tap the tiles that were lit.":"Ora tocca le caselle che erano accese.","Perfect! One more tile next time.":"Perfetto! Una casella in più la prossima volta.","Missed one. Same size, new pattern.":"Ne hai mancata una. Stessa misura, nuovo schema.","none":"nessuno","{n} cents":"{n} cent","Play the notes":"Suona le note","First was higher":"La 1ª era più acuta","Second was higher":"La 2ª era più acuta","Turn your sound on, then press play.":"Attiva l’audio, poi premi Suona.","Gap: {n} cents":"Distanza: {n} cent","1 or 2?":"1 o 2?","Replay":"Riascolta","Which note was higher?":"Quale nota era più acuta?","<strong>Correct!</strong>Getting closer…":"<strong>Giusto!</strong>Sempre più vicine…","Show the grid":"Mostra la griglia","You’ll get about 3 seconds to memorize it.":"Avrai circa 3 secondi per memorizzarla.","Spotted {n}":"Trovati: {n}","Memorize the grid…":"Memorizza la griglia…","What changed? Tap it.":"Cosa è cambiato? Toccalo.","Next grid":"Griglia successiva","Tap the balance point.":"Tocca il punto di equilibrio.","Blue X is your tap, red dot is the real balance point.":"La X blu è il tuo tocco, il punto rosso è il vero punto di equilibrio.","Average miss {n}%":"Scarto medio {n}%","Flash a word":"Mostra una parola","Keep your eyes on the + sign.":"Tieni gli occhi sul segno +.","Flash: {n} ms":"Lampo: {n} ms","Get ready…":"Preparati…","What was the word?":"Qual era la parola?","<strong>Correct!</strong>Next flash is shorter.":"<strong>Giusto!</strong>Il prossimo lampo sarà più breve.","<strong>Not quite.</strong>The word was “{w}”.":"<strong>Non proprio.</strong>La parola era «{w}».","Next word":"Parola successiva","Put your cursor or finger inside the ring to begin.":"Metti il cursore o il dito dentro l’anello per iniziare.","Stay inside!":"Resta dentro!","{s} s · {p}% inside":"{s} s · {p}% dentro","move into the ring":"entra nell’anello","Unreal. Are you made of quartz?":"Incredibile. Sei fatto di quarzo?","Superb timing.":"Tempismo perfetto.","Nicely done.":"Ben fatto.","Close!":"Quasi!","A little drifty.":"Un po’ fuori tempo.","Time got away from you.":"Il tempo ti è sfuggito.","Exactly right!":"Esatto!","So close.":"Vicinissimo.","Not bad.":"Niente male.","In the neighborhood.":"Da quelle parti.","Way off. Dots are sneaky.":"Lontanissimo. I punti ingannano.","That was yellow!":"Era giallo!","Too soon!":"Troppo presto!","{n} level":"{n} livello","{n} levels":"{n} livelli","mistake":"errore","mistakes":"errori","Spot on!":"Centrato!","Close.":"Vicino.","Way off.":"Lontanissimo.","<strong>Nope.</strong>The first one was higher.":"<strong>No.</strong>La prima era più acuta.","<strong>Nope.</strong>The second one was higher.":"<strong>No.</strong>La seconda era più acuta.","<strong>Got it!</strong>":"<strong>Preso!</strong>","<strong>Missed.</strong>The outlined one changed.":"<strong>Mancato.</strong>È cambiata quella evidenziata.","Perfectly balanced!":"Perfettamente in equilibrio!","A bit off.":"Un po’ fuori.","It would tip over.":"Si ribalterebbe.","Inner Clock":"Orologio interno","Time · 5 rounds":"Tempo · 5 round","average miss":"scarto medio","How Many Dots?":"Quanti punti?","Estimation · 8 rounds":"Stima · 8 round","points out of 800":"punti su 800","Green Light":"Semaforo verde","Reflexes · 5 rounds":"Riflessi · 5 round","average reaction":"reazione media","Odd Hue":"Tonalità intrusa","Color vision · 3 lives":"Visione dei colori · 3 vite","levels cleared":"livelli superati","Digit Span":"Memoria di cifre","Memory · 2 strikes":"Memoria · 2 errori","longest sequence":"sequenza più lunga","Rhythm Keeper":"Custode del ritmo","Rhythm · 3 rounds · sound on":"Ritmo · 3 round · audio attivo","average offset":"scarto medio","Ink, Not Ink":"L’inchiostro, non la parola","Focus · 20 words":"Concentrazione · 20 parole","per word":"per parola","Angle Eye":"Occhio per gli angoli","Geometry · 6 rounds":"Geometria · 6 round","average error":"errore medio","Pattern Recall":"Memoria degli schemi","Visual memory · 3 lives":"Memoria visiva · 3 vite","most tiles remembered":"massimo di caselle ricordate","Higher or Lower":"Più acuta o più grave","Hearing · 3 lives · sound on":"Udito · 3 vite · audio attivo","smallest gap heard":"distanza minima sentita","What Changed?":"Cosa è cambiato?","Attention · 8 rounds":"Attenzione · 8 round","changes spotted out of 8":"cambiamenti notati su 8","Dead Center":"Centro perfetto","Balance · 6 rounds":"Equilibrio · 6 round","average miss (% of shape size)":"scarto medio (% della forma)","Word Flash":"Parola lampo","Speed reading · 3 lives":"Lettura veloce · 3 vite","shortest flash read":"lampo più breve letto","Steady Hand":"Mano ferma","Motor control · 15 seconds":"Controllo motorio · 15 secondi","time inside the ring":"tempo dentro l’anello","The clock vanishes after one second. Stop it on the exact target anyway.":"L’orologio sparisce dopo un secondo. Fermalo comunque esattamente sull’obiettivo.","You get a target time. Press the dial to start and again when you think the time is up. The numbers fade after one second, so you are on your own.":"Ricevi un tempo obiettivo. Premi il quadrante per iniziare e di nuovo quando pensi che il tempo sia scaduto. I numeri svaniscono dopo un secondo: sei da solo.","Most people drift 5 to 15% on intervals like these. Excitement makes internal clocks run fast, so nervous players often stop early.":"La maggior parte delle persone sbaglia del 5-15% su intervalli così. L’emozione fa correre l’orologio interno, quindi chi è nervoso spesso si ferma troppo presto.","A cloud of dots flashes for a moment. Guess how many you saw.":"Una nuvola di punti appare per un attimo. Indovina quanti ne hai visti.","Dots appear for 1.5 seconds, far too short to count, so trust your gut. Each round gets more crowded.":"I punti restano 1,5 secondi, troppo poco per contarli: fidati dell’istinto. Ogni round è più affollato.","You can see up to about four things at once without counting. Psychologists call it subitizing. Past that, your brain switches to estimating, and the error grows with the number.":"Puoi vedere fino a circa quattro oggetti insieme senza contarli. Gli psicologi la chiamano subitizzazione. Oltre, il cervello stima, e l’errore cresce con il numero.","Tap the instant the pad turns green. Yellow is a trap.":"Tocca appena il pannello diventa verde. Il giallo è una trappola.","The pad turns red, then green after a random wait. Tap as soon as it turns green. Sometimes it flashes yellow first to bait you, so don’t fall for it.":"Il pannello diventa rosso e, dopo un’attesa casuale, verde. Tocca appena diventa verde. A volte lampeggia giallo per ingannarti: non cascarci.","Light takes about 20 milliseconds just to travel from your retina to your visual cortex. Most of the rest is your brain deciding to move.":"La luce impiega circa 20 millisecondi solo per andare dalla retina alla corteccia visiva. Il resto è soprattutto il tuo cervello che decide di muoversi.","One square is a slightly different shade. The difference keeps shrinking.":"Un quadrato ha una tonalità leggermente diversa. La differenza continua a ridursi.","Find the square that doesn’t match. Every level the grid grows and the difference gets smaller. Three wrong taps and you’re done.":"Trova il quadrato che non c’entra. A ogni livello la griglia cresce e la differenza si riduce. Tre errori e hai finito.","People can tell apart roughly a million colors. Your screen’s brightness and night-mode settings change how well you’ll do here.":"Le persone distinguono circa un milione di colori. La luminosità dello schermo e la modalità notte influenzano il risultato.","Numbers appear one at a time. Type them back. The list keeps growing.":"I numeri appaiono uno alla volta. Riscrivili. La lista continua ad allungarsi.","Watch the digits appear one by one, then type the whole sequence. Each success adds a digit. Two misses at the same length ends the test.":"Guarda le cifre apparire una a una, poi scrivi tutta la sequenza. Ogni successo aggiunge una cifra. Due errori alla stessa lunghezza chiudono il test.","In 1956, psychologist George Miller noticed people hold about “seven, plus or minus two” items in short-term memory. Phone numbers were designed around it.":"Nel 1956 lo psicologo George Miller notò che teniamo circa «sette, più o meno due» elementi nella memoria a breve termine. I numeri di telefono sono stati pensati così.","Hear four beats, then keep the tempo going in silence.":"Ascolta quattro battiti, poi tieni il tempo in silenzio.","You’ll hear four clicks. Keep tapping that same beat for eight more taps after the sound stops. We measure how far each tap lands from where the beat should be.":"Sentirai quattro clic. Continua con lo stesso ritmo per altri otto tocchi dopo che il suono si ferma. Misuriamo quanto ogni tocco si allontana dal battito giusto.","Without a reference, most people drift toward a tempo of about 100 to 120 beats per minute. It’s close to the pace of a relaxed walk.":"Senza riferimento, la maggior parte delle persone tende a 100-120 battiti al minuto, simile al passo di una passeggiata tranquilla.","Pick the color of the ink, not the word. Harder than it sounds.":"Scegli il colore dell’inchiostro, non la parola. Più difficile di quanto sembri.","A color word appears in a colored ink. Choose the ink color as fast as you can. Wrong answers add a one-second penalty.":"Il nome di un colore appare scritto con un inchiostro colorato. Scegli il colore dell’inchiostro più in fretta che puoi. Ogni errore aggiunge un secondo di penalità.","This is the Stroop effect, first published in 1935. Reading is so automatic that your brain reads the word before it can stop itself.":"È l’effetto Stroop, pubblicato per la prima volta nel 1935. Leggere è così automatico che il cervello legge la parola prima di riuscire a fermarsi.","Two lines meet at a corner. Name the angle in degrees.":"Due linee si incontrano in un angolo. Indica l’ampiezza in gradi.","Look at the angle between the two lines and type your best guess in degrees. No protractors.":"Guarda l’angolo tra le due linee e scrivi la tua stima in gradi. Niente goniometro.","People are best at judging angles near 0°, 90° and 180°, because we compare everything to straight lines and right angles. The in-between ones are hardest.":"Valutiamo meglio gli angoli vicini a 0°, 90° e 180°, perché confrontiamo tutto con rette e angoli retti. Quelli intermedi sono i più difficili.","Tiles light up for a moment. Tap every one you saw.":"Alcune caselle si accendono per un attimo. Tocca tutte quelle che hai visto.","A few tiles light up, then go dark. Tap all of them. Each level adds one more tile. A wrong tap costs a life.":"Alcune caselle si accendono e poi si spengono. Toccale tutte. Ogni livello aggiunge una casella. Un tocco sbagliato costa una vita.","Visual memory works in chunks. People who do well here often see shapes in the pattern, like “an L in the corner”, instead of remembering single tiles.":"La memoria visiva lavora a blocchi. Chi va bene qui spesso vede forme nello schema, come «una L nell’angolo», invece di ricordare le singole caselle.","Two notes play. Which was higher? They keep getting closer.":"Suonano due note. Quale era più acuta? Diventano sempre più vicine.","Listen to two short notes and choose which one was higher. After each right answer the notes get closer together. Headphones help a lot.":"Ascolta due note brevi e scegli la più acuta. Dopo ogni risposta giusta le note si avvicinano. Le cuffie aiutano molto.","A semitone, the gap between two piano keys, is 100 cents. Trained musicians can often hear differences of 5 to 10 cents.":"Un semitono, la distanza tra due tasti del pianoforte, vale 100 cent. I musicisti allenati spesso sentono differenze di 5-10 cent.","Study the grid. It blinks. Something is different. Find it.":"Studia la griglia. Lampeggia. Qualcosa è diverso. Trovalo.","Memorize the grid of shapes. It blinks off for a moment, and when it comes back one thing has changed: a color, a shape, or a shape appearing or vanishing. Tap where it happened.":"Memorizza la griglia di forme. Si spegne per un attimo e, quando torna, una cosa è cambiata: un colore, una forma, o una forma che compare o sparisce. Tocca dove è successo.","This is change blindness. A short blink wipes out the motion signal your eyes use to spot changes, so you have to rely on memory alone.":"È la cecità al cambiamento. Un breve lampo cancella il segnale di movimento che gli occhi usano per notare i cambiamenti, quindi ti resta solo la memoria.","Tap the exact balance point of a lopsided shape.":"Tocca il punto di equilibrio esatto di una forma storta.","Every shape has a balance point, where it would sit level on the tip of a pencil. Tap where you think it is.":"Ogni forma ha un punto di equilibrio, dove starebbe in piano sulla punta di una matita. Tocca dove pensi che sia.","The balance point, or centroid, of a lopsided shape is pulled toward its heaviest region. People tend to pick the middle of the outline instead, which is often wrong.":"Il punto di equilibrio, o baricentro, di una forma storta è attirato verso la parte più pesante. Di solito si sceglie il centro del contorno, che spesso è sbagliato.","A word flashes for a split second. Can you read it?":"Una parola appare per una frazione di secondo. Riesci a leggerla?","Look at the + sign. A word flashes and is covered up. Type the word you saw. Each correct answer makes the next flash shorter.":"Guarda il segno +. Una parola appare e viene coperta. Scrivi la parola che hai visto. Ogni risposta giusta rende il lampo successivo più breve.","Your eyes only need about 50 milliseconds to take in a familiar word. Most screens refresh every 16.7 ms, so that’s the shortest flash possible here.":"Agli occhi bastano circa 50 millisecondi per cogliere una parola familiare. La maggior parte degli schermi si aggiorna ogni 16,7 ms: è il lampo più breve possibile qui.","Keep your cursor inside a wandering, shrinking ring.":"Tieni il cursore dentro un anello che vaga e si restringe.","Move your cursor or finger into the ring to start. For 15 seconds the ring drifts, speeds up and shrinks. Stay inside it as much as you can.":"Porta il cursore o il dito nell’anello per iniziare. Per 15 secondi l’anello si sposta, accelera e si restringe. Resta dentro il più possibile.","Everyone’s hand has a tiny natural tremor of about 8 to 12 shakes per second. Coffee, cold and nerves all make it bigger.":"Ogni mano ha un piccolo tremore naturale di 8-12 oscillazioni al secondo. Caffè, freddo e nervosismo lo aumentano.","Peak human. Suspiciously peak.":"Umano al top. Sospettosamente al top.","Fresh out of the box.":"Appena uscito dalla scatola.","Still under warranty.":"Ancora in garanzia.","Mild wear and tear.":"Leggera usura.","Starts sentences with “back in my day”.":"Inizia le frasi con «ai miei tempi».","Asks the grandkids to fix the Wi-Fi.":"Chiede ai nipoti di sistemare il Wi-Fi.","Has strong opinions about the thermostat.":"Ha opinioni forti sul termostato.","Remembers when all this was fields.":"Si ricorda quando qui era tutta campagna.","Technically a historical artifact.":"Tecnicamente un reperto storico.","Should be studied by science.":"Dovrebbe essere studiato dalla scienza.","RED":"ROSSO","BLUE":"BLU","GREEN":"VERDE","YELLOW":"GIALLO","Fourteen tests. One number. Your true age.":"Quattordici test. Un numero. La tua vera età.","How old are you, <em>really?</em>":"Quanti anni hai, <em>davvero?</em>","Take 5 quick tests. Get one number: your real age.":"Fai 5 test veloci. Ottieni un numero: la tua età reale.","▶ Start calibration":"▶ Avvia calibrazione","5 random tests · about 4 minutes":"5 test casuali · circa 4 minuti","Or practice one test":"Oppure allenati su un test","For entertainment only. Not a medical test. Screens, speakers and mice add their own small delays, which may age you further.":"Solo per divertimento. Non è un test medico. Schermi, altoparlanti e mouse aggiungono piccoli ritardi che possono invecchiarti ancora un po’.","← All tests":"← Tutti i test","Calibration Results":"Risultati della calibrazione","Your real age (optional, so we can compare)":"La tua età reale (facoltativa, per confrontare)","Clear my results":"Cancella i miei risultati","Sound on":"Audio attivo","Sound off":"Audio disattivato"}};
+let lang = 'en';
+// English text is the key; other languages look it up and fall back to English.
+function T(s, vars) {
+  let out = (lang !== 'en' && I18N[lang] && I18N[lang][s]) || s;
+  if (vars) out = out.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
+  return out;
+}
+const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
 /* ---------- Helpers ---------- */
 const $ = id => document.getElementById(id);
 /* ---------- CrazyGames SDK ---------- */
@@ -451,7 +466,7 @@ const AGE_NOTES = [
   [99, 'Technically a historical artifact.'],
   [Infinity, 'Should be studied by science.']
 ];
-const ageNote = a => AGE_NOTES.find(n => a <= n[0])[1];
+const ageNote = a => T(AGE_NOTES.find(n => a <= n[0])[1]);
 function profile() {
   const rows = GAMES.map(g => { const b = store.get('best:' + g.id); return { g, b, s: b == null ? null : scoreOf(g, b) }; });
   const done = rows.filter(r => r.s != null);
@@ -462,7 +477,7 @@ function ageDiff(age) {
   const real = store.get('realAge');
   if (!real || age == null) return '';
   const d = age - real;
-  return d > 0 ? `${d} years older than you` : d < 0 ? `${-d} years younger than you` : 'exactly your real age';
+  return d > 0 ? T('{n} years older than you', { n: d }) : d < 0 ? T('{n} years younger than you', { n: -d }) : T('exactly your real age');
 }
 function subjectNo() {
   let n = store.get('subject');
@@ -480,13 +495,13 @@ function gauge(S) {
 function renderCard(el) {
   const { S, age, done } = profile();
   const diff = ageDiff(age);
-  el.innerHTML = `<div class="sc-dial">${gauge(S)}<div class="sc-pct"><b>${S == null ? '??' : pct(S)}</b><span>%</span><small>calibration score</small></div></div>
+  el.innerHTML = `<div class="sc-dial">${gauge(S)}<div class="sc-pct"><b>${S == null ? '??' : pct(S)}</b><span>%</span><small>${T('calibration score')}</small></div></div>
     <div class="sc-text">
-      <span class="sc-tag">Subject #${subjectNo()} · estimated age</span>
+      <span class="sc-tag">${T('Subject #{n} · estimated age', { n: subjectNo() })}</span>
       <div class="sc-age">${age ?? '??'}</div>
       ${diff ? `<p class="sc-diff">${diff}</p>` : ''}
-      <p class="sc-note">${age == null ? 'No data yet. Press Start calibration to find out.' : ageNote(age)}</p>
-      <p class="sc-meta">Based on ${done.length} of ${GAMES.length} tests${el.dataset.go ? ' · Tap for every score' : ''}</p>
+      <p class="sc-note">${age == null ? T('No data yet. Press Start calibration to find out.') : ageNote(age)}</p>
+      <p class="sc-meta">${T('Based on {n} of {total} tests', { n: done.length, total: GAMES.length })}${el.dataset.go ? ' · ' + T('Tap for every score') : ''}</p>
     </div>`;
 }
 
@@ -533,22 +548,22 @@ function showResult(def, value, extra) {
   const next = GAMES[(GAMES.indexOf(def) + 1) % GAMES.length];
   const stage = $('pl-stage');
   stage.innerHTML = `<div class="final">
-    <span class="tag">${def.title} score</span>
+    <span class="tag">${T('{name} score', { name: T(def.title) })}</span>
     <div class="big-pct">${pct(s)}<small>%</small></div>
-    <p class="res-age">Test age <b>${age}</b></p>
+    <p class="res-age">${T('Test age')} <b>${age}</b></p>
     ${diff ? `<p class="res-diff">${diff}</p>` : ''}
     <p class="fact">${ageNote(age)}</p>
     <div class="stats">
-      <div><b class="num">${def.fmt(value)}</b>${def.label}</div>
+      <div><b class="num">${def.fmt(value)}</b>${T(def.label)}</div>
       ${extra.map(([v, l]) => `<div><b class="num">${v}</b>${l}</div>`).join('')}
-      <div><b class="num">${pct(scoreOf(def, isBest ? value : prev))}%</b>${isBest && prev != null ? 'new record!' : 'your best'}</div>
+      <div><b class="num">${pct(scoreOf(def, isBest ? value : prev))}%</b>${isBest && prev != null ? T('new record!') : T('your best')}</div>
     </div>
-    ${run ? '' : `<p class="overall">Overall estimate: <b>age ${all.age}</b> from ${all.done.length} of ${GAMES.length} tests</p>`}
+    ${run ? '' : `<p class="overall">${T('Overall estimate: <b>age {age}</b> from {n} of {total} tests', { age: all.age, n: all.done.length, total: GAMES.length })}</p>`}
     <div class="row">${run
-      ? `<button class="btn big" id="again">${run.i + 1 < run.ids.length ? `Next test (${run.i + 2} of ${run.ids.length}) →` : 'Reveal my age →'}</button>`
-      : `<button class="btn" id="again">Play again</button>
-      <button class="btn ghost" data-go="${next.id}">Next: ${next.title}</button>
-      <button class="btn ghost" data-go="report">All results</button>`}
+      ? `<button class="btn big" id="again">${run.i + 1 < run.ids.length ? T('Next test ({n} of {total}) →', { n: run.i + 2, total: run.ids.length }) : T('Reveal my age →')}</button>`
+      : `<button class="btn" id="again">${T('Play again')}</button>
+      <button class="btn ghost" data-go="${next.id}">${T('Next: {name}', { name: T(next.title) })}</button>
+      <button class="btn ghost" data-go="report">${T('All results')}</button>`}
     </div>
   </div>`;
   if (run) {
@@ -572,18 +587,18 @@ function showRunSummary() {
   const S = avg(run.scores.map(r => r.s)), age = ageOf(S), diff = ageDiff(age);
   const rows = run.scores;
   run = null;
-  $('pl-tag').textContent = 'Calibration complete';
-  $('pl-title').textContent = 'Your Results';
+  $('pl-tag').textContent = T('Calibration complete');
+  $('pl-title').textContent = T('Your Results');
   $('pl-intro').textContent = '';
-  $('pl-fact').textContent = 'Each run picks 5 of the 14 tests at random, so your age changes from run to run. Try again to see if you can get younger.';
+  $('pl-fact').textContent = T('Each run picks 5 of the 14 tests at random, so your age changes from run to run. Try again to see if you can get younger.');
   $('pl-stage').innerHTML = `<div class="final">
-    <span class="tag">Your calibrated age</span>
+    <span class="tag">${T('Your calibrated age')}</span>
     <div class="big-pct reveal">${age}</div>
     ${diff ? `<p class="res-diff">${diff}</p>` : ''}
     <p class="res-age">${ageNote(age)}</p>
-    <div class="run-list">${rows.map(r => `<div><span>${r.def.title}</span><b>${pct(r.s)}%</b><small>age ${ageOf(r.s)}</small></div>`).join('')}</div>
-    <p class="overall">Calibration score <b>${pct(S)}%</b></p>
-    <div class="row"><button class="btn big" id="run-again">Calibrate again</button><button class="btn ghost" data-go="home">Main menu</button></div>
+    <div class="run-list">${rows.map(r => `<div><span>${T(r.def.title)}</span><b>${pct(r.s)}%</b><small>${T('age {n}', { n: ageOf(r.s) })}</small></div>`).join('')}</div>
+    <p class="overall">${T('Calibration score')} <b>${pct(S)}%</b></p>
+    <div class="row"><button class="btn big" id="run-again">${T('Calibrate again')}</button><button class="btn ghost" data-go="home">${T('Main menu')}</button></div>
   </div>`;
   $('run-again').addEventListener('click', startRun);
   $('run-again').focus({ preventScroll: true });
@@ -606,10 +621,10 @@ function show(name) {
   if (name === 'home') renderShelf();
   if (name === 'report') renderReport();
   if (def) {
-    $('pl-tag').textContent = run ? `Calibration · test ${run.i + 1} of ${run.ids.length}` : def.tag;
-    $('pl-title').textContent = def.title;
-    $('pl-intro').textContent = def.intro;
-    $('pl-fact').textContent = def.fact;
+    $('pl-tag').textContent = run ? T('Calibration · test {n} of {total}', { n: run.i + 1, total: run.ids.length }) : T(def.tag);
+    $('pl-title').textContent = T(def.title);
+    $('pl-intro').textContent = T(def.intro);
+    $('pl-fact').textContent = T(def.fact);
     mountGame(def);
   }
   window.scrollTo(0, 0);
@@ -635,10 +650,10 @@ function renderShelf() {
     return `<a class="tile" href="#${g.id}" data-go="${g.id}">
       <div class="art" style="background: var(${TINT[g.tint]})">${g.art}</div>
       <div class="meta">
-        <span class="tag">Test ${String(i + 1).padStart(2, '0')} · ${g.tag}</span>
-        <h2>${g.title}</h2><p>${g.desc}</p>
+        <span class="tag">${T('Test {n}', { n: String(i + 1).padStart(2, '0') })} · ${T(g.tag)}</span>
+        <h2>${T(g.title)}</h2><p>${T(g.desc)}</p>
       </div>
-      <span class="best ${b == null ? 'none' : ''}">${b == null ? 'not taken' : pct(scoreOf(g, b)) + '%'}</span>
+      <span class="best ${b == null ? 'none' : ''}">${b == null ? T('not taken') : pct(scoreOf(g, b)) + '%'}</span>
     </a>`;
   }).join('');
 }
@@ -649,10 +664,10 @@ function renderReport() {
   const { rows } = profile();
   $('rp-list').innerHTML = rows.map(({ g, b, s }) => `<a class="rp-row" href="#${g.id}" data-go="${g.id}">
       <span class="sw" style="background: var(${TINT[g.tint]})"></span>
-      <span class="rp-name">${g.title}<small>${b != null ? g.fmt(b) + ' ' + g.label : 'Not taken yet'}</small></span>
+      <span class="rp-name">${T(g.title)}<small>${b != null ? g.fmt(b) + ' ' + T(g.label) : T('Not taken yet')}</small></span>
       <span class="rp-bar">${s != null ? `<i style="width:${s.toFixed(1)}%"></i>` : ''}</span>
       <span class="rp-pct">${s != null ? pct(s) + '%' : '—'}</span>
-      <span class="rp-age">${s != null ? 'age ' + ageOf(s) : 'take it'}</span>
+      <span class="rp-age">${s != null ? T('age {n}', { n: ageOf(s) }) : T('take it')}</span>
     </a>`).join('');
 }
 $('real-age').addEventListener('input', e => {
@@ -662,9 +677,9 @@ $('real-age').addEventListener('input', e => {
 });
 let resetArmed = false;
 $('rp-reset').addEventListener('click', e => {
-  if (!resetArmed) { resetArmed = true; e.currentTarget.textContent = 'Click again to clear everything'; return; }
+  if (!resetArmed) { resetArmed = true; e.currentTarget.textContent = T('Click again to clear everything'); return; }
   GAMES.forEach(g => store.del('best:' + g.id));
-  resetArmed = false; e.currentTarget.textContent = 'Results cleared';
+  resetArmed = false; e.currentTarget.textContent = T('Results cleared');
   renderReport();
 });
 
@@ -683,18 +698,18 @@ game({
   art: `<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" class="f-surf s-ink" stroke-width="5"/><g class="s-ink" stroke-width="4" stroke-linecap="round"><path d="M60 18v8M102 60h-8M60 102v-8M18 60h8"/></g><path d="M60 60V32" class="s-ink" stroke-width="6" stroke-linecap="round"/><path d="M60 60l22 12" class="s-sky" stroke-width="4" stroke-linecap="round"/><circle cx="60" cy="60" r="5" class="f-tom"/></svg>`,
   mount(s, api) {
     const ROUNDS = 5; let state = 'idle', target = 0, t0 = 0, errs = [], stopTick = null;
-    s.innerHTML = `<div class="ck-target">Stop at <b><span class="num" data-r="target"></span> s</b></div>
+    s.innerHTML = `<div class="ck-target">${T('Stop at')} <b><span class="num" data-r="target"></span> s</b></div>
       <button class="dial" data-r="dial" aria-label="Start or stop the timer"><span class="num" data-r="disp">0.00</span><span class="lbl" data-r="lbl"></span></button>
-      <div class="msg" data-r="msg">Tip: the space bar works too.</div><div class="pips" data-r="pips"></div>`;
+      <div class="msg" data-r="msg">${T('Tip: the space bar works too.')}</div><div class="pips" data-r="pips"></div>`;
     const R = refs(s);
     const draw = () => pips(R.pips, ROUNDS, errs.map(e => e < 120 ? 'good' : e < 500 ? 'ok' : 'bad'));
     const newTarget = () => { let t; do t = randInt(3, 10); while (t === target); target = t; R.target.textContent = t.toFixed(2); };
-    const idle = () => { state = 'idle'; R.dial.dataset.state = 'idle'; R.disp.textContent = '0.00'; R.disp.classList.remove('fog'); R.lbl.textContent = 'tap to start'; };
-    const verdict = e => e < 30 ? 'Unreal. Are you made of quartz?' : e < 100 ? 'Superb timing.' : e < 250 ? 'Nicely done.' : e < 500 ? 'Close!' : e < 1000 ? 'A little drifty.' : 'Time got away from you.';
+    const idle = () => { state = 'idle'; R.dial.dataset.state = 'idle'; R.disp.textContent = '0.00'; R.disp.classList.remove('fog'); R.lbl.textContent = T('tap to start'); };
+    const verdict = e => T(e < 30 ? 'Unreal. Are you made of quartz?' : e < 100 ? 'Superb timing.' : e < 250 ? 'Nicely done.' : e < 500 ? 'Close!' : e < 1000 ? 'A little drifty.' : 'Time got away from you.');
     function press() {
       if (state === 'idle') {
-        state = 'running'; R.dial.dataset.state = 'running'; R.lbl.textContent = 'tap to stop';
-        R.msg.textContent = 'Counting… in your head.'; t0 = performance.now();
+        state = 'running'; R.dial.dataset.state = 'running'; R.lbl.textContent = T('tap to stop');
+        R.msg.textContent = T('Counting… in your head.'); t0 = performance.now();
         stopTick = api.loop(now => {
           const t = (now - t0) / 1000;
           if (t < 1) R.disp.textContent = t.toFixed(2);
@@ -705,13 +720,13 @@ game({
         const t = (performance.now() - t0) / 1000, diff = t - target, e = Math.abs(diff) * 1000;
         errs.push(e); draw();
         R.disp.classList.remove('fog'); R.disp.textContent = t.toFixed(3); R.dial.dataset.state = 'done';
-        R.msg.innerHTML = `<strong>${verdict(e)}</strong>${diff < 0 ? 'Early' : 'Late'} by <span class="num">${Math.round(e)} ms</span>.`;
+        R.msg.innerHTML = `<strong>${verdict(e)}</strong>${T(diff < 0 ? 'Early by {ms}.' : 'Late by {ms}.', { ms: `<span class="num">${Math.round(e)} ms</span>` })}`;
         if (errs.length >= ROUNDS) {
           state = 'over'; R.lbl.textContent = '';
-          api.later(() => api.finish(avg(errs), [[Math.round(Math.min(...errs)) + ' ms', 'best round']]), 1300);
-        } else { state = 'between'; R.lbl.textContent = 'next round'; }
+          api.later(() => api.finish(avg(errs), [[Math.round(Math.min(...errs)) + ' ms', T('best round')]]), 1300);
+        } else { state = 'between'; R.lbl.textContent = T('next round'); }
       } else if (state === 'between') {
-        newTarget(); idle(); R.msg.textContent = `Round ${errs.length + 1} of ${ROUNDS}. New target.`;
+        newTarget(); idle(); R.msg.textContent = T('Round {n} of {total}. New target.', { n: errs.length + 1, total: ROUNDS });
       }
     }
     api.on(R.dial, 'pointerdown', press);
@@ -726,7 +741,7 @@ game({
   desc: 'A cloud of dots flashes for a moment. Guess how many you saw.',
   intro: 'Dots appear for 1.5 seconds, far too short to count, so trust your gut. Each round gets more crowded.',
   fact: 'You can see up to about four things at once without counting. Psychologists call it subitizing. Past that, your brain switches to estimating, and the error grows with the number.',
-  better: 'high', label: 'points out of 800', fmt: v => v + ' pts',
+  better: 'high', label: 'points out of 800', fmt: v => T('{n} pts', { n: v }),
   curve: { mid: 400, p: 4 },
   art: `<svg viewBox="0 0 120 120" aria-hidden="true"><g class="f-tom"><circle cx="22" cy="28" r="7"/><circle cx="48" cy="18" r="5"/><circle cx="90" cy="30" r="8"/><circle cx="70" cy="50" r="6"/><circle cx="30" cy="70" r="9"/><circle cx="96" cy="88" r="6"/></g><g class="f-sky"><circle cx="58" cy="82" r="7"/><circle cx="16" cy="96" r="5"/><circle cx="84" cy="64" r="4"/><circle cx="44" cy="46" r="6"/></g><g class="f-ink"><circle cx="104" cy="50" r="4"/><circle cx="66" cy="104" r="5"/><circle cx="38" cy="102" r="4"/><circle cx="76" cy="14" r="4"/></g></svg>`,
   mount(s, api) {
@@ -734,10 +749,10 @@ game({
     let round = 0, score = 0, dots = [], count = 0;
     s.innerHTML = `<div class="hud"><span data-r="round"></span><span data-r="score"></span></div>
       <div class="canvas-box"><canvas data-r="cv"></canvas><div class="cover" data-r="cover">?</div></div>
-      <div class="msg" data-r="msg">Ready when you are.</div>
+      <div class="msg" data-r="msg">${T('Ready when you are.')}</div>
       <div class="row">
-        <button class="btn" data-r="show">Show the dots</button>
-        <form data-r="form" class="row" hidden><input class="field" data-r="guess" type="number" inputmode="numeric" min="1" max="9999" autocomplete="off" aria-label="Your guess" placeholder="guess"><button class="btn" type="submit">Guess</button></form>
+        <button class="btn" data-r="show">${T('Show the dots')}</button>
+        <form data-r="form" class="row" hidden><input class="field" data-r="guess" type="number" inputmode="numeric" min="1" max="9999" autocomplete="off" aria-label="Your guess" placeholder="guess"><button class="btn" type="submit">${T('Guess')}</button></form>
       </div>`;
     const R = refs(s);
     let F = fitCanvas(R.cv);
@@ -748,7 +763,7 @@ game({
       for (const d of dots) { ctx.fillStyle = d.c; ctx.beginPath(); ctx.arc(d.x * W, d.y * H, d.r * W, 0, 7); ctx.fill(); }
     }
     api.on(window, 'resize', () => { F = fitCanvas(R.cv); draw(); });
-    function bar() { R.round.textContent = `Round ${Math.min(round + 1, 8)} of 8`; R.score.textContent = `Score ${score} / 800`; }
+    function bar() { R.round.textContent = T('Round {n} of {total}', { n: Math.min(round + 1, 8), total: 8 }); R.score.textContent = T('Score {n} / 800', { n: score }); }
     function generate() {
       const [a, b] = RANGES[round];
       count = randInt(a, b);
@@ -766,26 +781,26 @@ game({
     }
     function showDots() {
       generate(); draw();
-      R.cover.hidden = true; R.show.hidden = true; R.msg.textContent = 'Look!';
+      R.cover.hidden = true; R.show.hidden = true; R.msg.textContent = T('Look!');
       api.later(() => {
         R.cover.hidden = false; R.form.hidden = false; R.guess.value = '';
-        R.msg.textContent = 'How many were there?'; R.guess.focus();
+        R.msg.textContent = T('How many were there?'); R.guess.focus();
       }, 1500);
     }
     api.on(R.show, 'click', showDots);
     api.on(R.form, 'submit', e => {
       e.preventDefault();
       const g = parseInt(R.guess.value, 10);
-      if (!g || g < 1) { R.msg.textContent = 'Type a number above zero, then press Guess.'; return; }
+      if (!g || g < 1) { R.msg.textContent = T('Type a number above zero, then press Guess.'); return; }
       const pts = Math.round(100 * Math.exp(-3 * Math.abs(Math.log(g / count))));
       score += pts;
       const pct = Math.round(Math.abs(g - count) / count * 100);
-      const line = g === count ? 'Exactly right!' : pct <= 10 ? 'So close.' : pct <= 25 ? 'Not bad.' : pct <= 50 ? 'In the neighborhood.' : 'Way off. Dots are sneaky.';
-      R.msg.innerHTML = `<strong>${line} +${pts}</strong>You said <span class="num">${g}</span>. There were <span class="num">${count}</span>${g === count ? '' : ` (off by ${pct}%)`}.`;
+      const line = T(g === count ? 'Exactly right!' : pct <= 10 ? 'So close.' : pct <= 25 ? 'Not bad.' : pct <= 50 ? 'In the neighborhood.' : 'Way off. Dots are sneaky.');
+      R.msg.innerHTML = `<strong>${line} +${pts}</strong>${T(g === count ? 'You said {g}. There were {c}.' : 'You said {g}. There were {c} (off by {p}%).', { g: `<span class="num">${g}</span>`, c: `<span class="num">${count}</span>`, p: pct })}`;
       R.cover.hidden = true; R.form.hidden = true;
       round++; bar();
       if (round >= 8) api.later(() => api.finish(score), 1800);
-      else { R.show.hidden = false; R.show.textContent = 'Next round'; R.show.focus(); }
+      else { R.show.hidden = false; R.show.textContent = T('Next round'); R.show.focus(); }
     });
     bar(); draw();
   }
@@ -802,27 +817,27 @@ game({
   art: `<svg viewBox="0 0 120 120" aria-hidden="true"><rect x="38" y="8" width="44" height="104" rx="14" class="f-ink"/><circle cx="60" cy="32" r="12" class="f-tom" opacity=".35"/><circle cx="60" cy="60" r="12" class="f-sun" opacity=".35"/><circle cx="60" cy="88" r="12" class="f-mint"/></svg>`,
   mount(s, api) {
     const N = 5; let times = [], state = 'ready', goAt = 0, tok = 0;
-    s.innerHTML = `<button class="pad" data-r="pad" data-state="ready"><span class="pad-big" data-r="big">Tap to start</span><span data-r="small">Wait for green, then tap as fast as you can.</span></button><div class="pips" data-r="pips"></div>`;
+    s.innerHTML = `<button class="pad" data-r="pad" data-state="ready"><span class="pad-big" data-r="big">${T('Tap to start')}</span><span data-r="small">${T('Wait for green, then tap as fast as you can.')}</span></button><div class="pips" data-r="pips"></div>`;
     const R = refs(s);
     const set = (st, big, small) => { R.pad.dataset.state = st; R.big.textContent = big; R.small.textContent = small; };
     const draw = () => pips(R.pips, N, times.map(t => t < 280 ? 'good' : t < 400 ? 'ok' : 'bad'));
     function arm() {
-      const my = ++tok; state = 'wait'; set('wait', 'Wait for green…', '');
+      const my = ++tok; state = 'wait'; set('wait', T('Wait for green…'), '');
       const delay = rand(1300, 4200);
-      if (Math.random() < 0.4) api.later(() => { if (my === tok && state === 'wait') { state = 'decoy'; set('decoy', 'Not yet…', ''); api.later(() => { if (my === tok && state === 'decoy') { state = 'wait'; set('wait', 'Wait for green…', ''); } }, 450); } }, delay * rand(0.3, 0.6));
-      api.later(() => { if (my === tok && (state === 'wait' || state === 'decoy')) { state = 'go'; goAt = performance.now(); set('go', 'TAP!', ''); } }, delay);
+      if (Math.random() < 0.4) api.later(() => { if (my === tok && state === 'wait') { state = 'decoy'; set('decoy', T('Not yet…'), ''); api.later(() => { if (my === tok && state === 'decoy') { state = 'wait'; set('wait', T('Wait for green…'), ''); } }, 450); } }, delay * rand(0.3, 0.6));
+      api.later(() => { if (my === tok && (state === 'wait' || state === 'decoy')) { state = 'go'; goAt = performance.now(); set('go', T('TAP!'), ''); } }, delay);
     }
     function hit() {
       if (state === 'ready' || state === 'shown') arm();
       else if (state === 'wait' || state === 'decoy') {
         tok++; state = 'shown';
-        set('early', R.pad.dataset.state === 'decoy' ? 'That was yellow!' : 'Too soon!', 'Tap to try that round again.');
+        set('early', T(R.pad.dataset.state === 'decoy' ? 'That was yellow!' : 'Too soon!'), T('Tap to try that round again.'));
       } else if (state === 'go') {
         const t = performance.now() - goAt; times.push(t); draw();
         if (times.length >= N) {
-          state = 'over'; set('shown', Math.round(t) + ' ms', 'Done!');
-          api.later(() => api.finish(avg(times), [[Math.round(Math.min(...times)) + ' ms', 'fastest']]), 1100);
-        } else { state = 'shown'; set('shown', Math.round(t) + ' ms', `Round ${times.length} of ${N}. Tap to keep going.`); }
+          state = 'over'; set('shown', Math.round(t) + ' ms', T('Done!'));
+          api.later(() => api.finish(avg(times), [[Math.round(Math.min(...times)) + ' ms', T('fastest')]]), 1100);
+        } else { state = 'shown'; set('shown', Math.round(t) + ' ms', T('Round {n} of {total}. Tap to keep going.', { n: times.length, total: N })); }
       }
     }
     api.on(R.pad, 'pointerdown', e => { e.preventDefault(); hit(); });
@@ -837,28 +852,28 @@ game({
   desc: 'One square is a slightly different shade. The difference keeps shrinking.',
   intro: 'Find the square that doesn’t match. Every level the grid grows and the difference gets smaller. Three wrong taps and you’re done.',
   fact: 'People can tell apart roughly a million colors. Your screen’s brightness and night-mode settings change how well you’ll do here.',
-  better: 'high', label: 'levels cleared', fmt: v => v + (v === 1 ? ' level' : ' levels'),
+  better: 'high', label: 'levels cleared', fmt: v => T(v === 1 ? '{n} level' : '{n} levels', { n: v }),
   curve: { mid: 12, p: 2.5 },
   art: `<svg viewBox="0 0 120 120" aria-hidden="true"><g>${[0, 1, 2].map(r => [0, 1, 2].map(c => `<rect x="${12 + c * 34}" y="${12 + r * 34}" width="28" height="28" rx="6" style="fill:${r === 1 && c === 2 ? 'hsl(220 70% 66%)' : 'hsl(220 70% 58%)'}"/>`).join('')).join('')}</g></svg>`,
   mount(s, api) {
     let level = 1, lives = 3, lock = false;
-    s.innerHTML = `<div class="hud" style="max-width:440px"><span data-r="lvl"></span><span class="pips" data-r="lives"></span></div><div class="tgrid" data-r="grid"></div><div class="msg" data-r="msg">Tap the square that’s a different shade.</div>`;
+    s.innerHTML = `<div class="hud" style="max-width:440px"><span data-r="lvl"></span><span class="pips" data-r="lives"></span></div><div class="tgrid" data-r="grid"></div><div class="msg" data-r="msg">${T('Tap the square that’s a different shade.')}</div>`;
     const R = refs(s);
     function build() {
       lock = false;
       const n = Math.min(8, 2 + Math.floor((level - 1) / 3));
       const d = Math.max(1, 20 * Math.pow(0.87, level - 1));
       const h = rand(0, 360), sa = rand(45, 75), l = rand(38, 62), sign = Math.random() < 0.5 ? -1 : 1, odd = Math.floor(Math.random() * n * n);
-      R.lvl.textContent = `Level ${level}`; hearts(R.lives, 3, lives);
+      R.lvl.textContent = T('Level {n}', { n: level }); hearts(R.lives, 3, lives);
       R.grid.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
       R.grid.innerHTML = Array.from({ length: n * n }, (_, i) => `<button class="cell" data-i="${i}" aria-label="Square ${i + 1}" style="background:hsl(${h.toFixed(0)} ${sa.toFixed(0)}% ${(i === odd ? l + sign * d : l).toFixed(2)}%)"></button>`).join('');
       R.grid.onclick = e => {
         const b = e.target.closest('.cell'); if (!b || lock) return; lock = true;
-        if (+b.dataset.i === odd) { level++; R.msg.textContent = 'Got it.'; build(); return; }
+        if (+b.dataset.i === odd) { level++; R.msg.textContent = T('Got it.'); build(); return; }
         lives--; hearts(R.lives, 3, lives);
         R.grid.children[odd].classList.add('reveal');
-        R.msg.textContent = lives ? 'Nope, it was that one. New grid coming.' : 'Out of lives.';
-        api.later(() => lives ? build() : api.finish(level - 1, [[d.toFixed(1) + '%', 'last lightness gap']]), 1100);
+        R.msg.textContent = lives ? T('Nope, it was that one. New grid coming.') : T('Out of lives.');
+        api.later(() => lives ? build() : api.finish(level - 1, [[d.toFixed(1) + '%', T('last lightness gap')]]), 1100);
       };
     }
     build();
@@ -871,20 +886,20 @@ game({
   desc: 'Numbers appear one at a time. Type them back. The list keeps growing.',
   intro: 'Watch the digits appear one by one, then type the whole sequence. Each success adds a digit. Two misses at the same length ends the test.',
   fact: 'In 1956, psychologist George Miller noticed people hold about “seven, plus or minus two” items in short-term memory. Phone numbers were designed around it.',
-  better: 'high', label: 'longest sequence', fmt: v => v + ' digits',
+  better: 'high', label: 'longest sequence', fmt: v => T('{n} digits', { n: v }),
   curve: { mid: 6.5, p: 4 },
   art: `<svg viewBox="0 0 120 120" aria-hidden="true"><rect x="8" y="34" width="104" height="52" rx="12" class="f-surf s-ink" stroke-width="5"/><text x="60" y="72" text-anchor="middle" style="font-family:var(--mono);font-size:28px;font-weight:700" class="f-ink">7 2 9</text><rect x="86" y="50" width="4" height="22" class="f-sky"/></svg>`,
   mount(s, api) {
     let len = 3, strikes = 0, best = 0, seq = '';
     s.innerHTML = `<div class="hud" style="max-width:560px"><span data-r="len"></span><span class="pips" data-r="lives"></span></div>
       <div class="flash-box" data-r="box">…</div>
-      <button class="btn" data-r="go">Start</button>
-      <form data-r="form" class="row" hidden><input class="field" style="width:220px" data-r="in" inputmode="numeric" autocomplete="off" aria-label="Type the digits"><button class="btn" type="submit">Submit</button></form>
-      <div class="msg" data-r="msg">Focus on the box. Digits appear one at a time.</div>`;
+      <button class="btn" data-r="go">${T('Start')}</button>
+      <form data-r="form" class="row" hidden><input class="field" style="width:220px" data-r="in" inputmode="numeric" autocomplete="off" aria-label="Type the digits"><button class="btn" type="submit">${T('Submit')}</button></form>
+      <div class="msg" data-r="msg">${T('Focus on the box. Digits appear one at a time.')}</div>`;
     const R = refs(s);
-    const hud = () => { R.len.textContent = `${len} digits`; hearts(R.lives, 2, 2 - strikes); };
+    const hud = () => { R.len.textContent = T('{n} digits', { n: len }); hearts(R.lives, 2, 2 - strikes); };
     function play() {
-      R.go.hidden = true; R.form.hidden = true; R.msg.textContent = 'Watch…';
+      R.go.hidden = true; R.form.hidden = true; R.msg.textContent = T('Watch…');
       seq = '';
       for (let i = 0; i < len; i++) { let d; do d = randInt(0, 9); while (String(d) === seq.slice(-1)); seq += d; }
       [...seq].forEach((d, i) => {
@@ -893,7 +908,7 @@ game({
       });
       api.later(() => {
         R.box.textContent = '?'; R.form.hidden = false; R.in.value = ''; R.in.focus();
-        R.msg.textContent = 'Type the digits in order.';
+        R.msg.textContent = T('Type the digits in order.');
       }, 400 + len * 900);
     }
     api.on(R.go, 'click', play);
@@ -903,13 +918,13 @@ game({
       R.form.hidden = true; R.box.textContent = seq;
       if (a === seq) {
         best = len; len++; strikes = 0;
-        R.msg.innerHTML = `<strong>Correct!</strong>Next one is ${len} digits long.`;
+        R.msg.innerHTML = T('<strong>Correct!</strong>Next one is {n} digits long.', { n: len });
       } else {
         strikes++;
-        R.msg.innerHTML = `<strong>Not quite.</strong>You typed <span class="num">${a || 'nothing'}</span>.`;
+        R.msg.innerHTML = T('<strong>Not quite.</strong>You typed {x}.', { x: `<span class="num">${a || T('nothing')}</span>` });
         if (strikes >= 2) { api.later(() => api.finish(best), 1600); return; }
       }
-      hud(); R.go.hidden = false; R.go.textContent = 'Next sequence'; R.go.focus();
+      hud(); R.go.hidden = false; R.go.textContent = T('Next sequence'); R.go.focus();
     });
     hud();
   }
@@ -926,15 +941,15 @@ game({
   art: `<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M42 12h36l20 96H22z" class="f-surf s-ink" stroke-width="5" stroke-linejoin="round"/><path d="M60 84 82 24" class="s-tom" stroke-width="5" stroke-linecap="round"/><circle cx="74" cy="46" r="7" class="f-ink"/><path d="M22 108h76" class="s-ink" stroke-width="5"/></svg>`,
   mount(s, api) {
     const ROUNDS = 3; let r = 0, errs = [], state = 'ready', iv = 500, beats = [], taps = [], lit = 0, tok = 0;
-    s.innerHTML = `<div class="hud" style="max-width:680px"><span data-r="round">Round 1 of 3</span><span data-r="bpm"></span></div>
-      <button class="pad" data-r="pad" data-state="ready"><span class="pad-big" data-r="big">Tap to start</span><span data-r="small">Turn your sound on. 4 clicks, then 8 silent taps.</span></button>
-      <div class="pips" data-r="beats"></div><div class="msg" data-r="msg">Tap the pad or press the space bar.</div>`;
+    s.innerHTML = `<div class="hud" style="max-width:680px"><span data-r="round">${T('Round {n} of {total}', { n: 1, total: 3 })}</span><span data-r="bpm"></span></div>
+      <button class="pad" data-r="pad" data-state="ready"><span class="pad-big" data-r="big">${T('Tap to start')}</span><span data-r="small">${T('Turn your sound on. 4 clicks, then 8 silent taps.')}</span></button>
+      <div class="pips" data-r="beats"></div><div class="msg" data-r="msg">${T('Tap the pad or press the space bar.')}</div>`;
     const R = refs(s);
     const marks = () => pips(R.beats, 12, Array.from({ length: 12 }, (_, i) => i < 4 ? (i < lit ? 'on' : '') : (i - 4 < taps.length ? 'ok' : '')));
     function startRound() {
       const my = ++tok; state = 'count'; taps = []; lit = 0;
       const bpm = randInt(78, 128); iv = 60000 / bpm;
-      R.bpm.textContent = bpm + ' BPM'; R.big.textContent = 'Listen…'; R.small.textContent = '';
+      R.bpm.textContent = bpm + ' BPM'; R.big.textContent = T('Listen…'); R.small.textContent = '';
       const lead = 500, t0 = performance.now() + lead;
       beats = Array.from({ length: 12 }, (_, k) => t0 + k * iv);
       for (let k = 0; k < 4; k++) {
@@ -943,7 +958,7 @@ game({
           if (my !== tok) return;
           lit = k + 1; marks(); R.pad.dataset.state = 'pulse'; R.big.textContent = String(k + 1);
           api.later(() => { if (my === tok) R.pad.dataset.state = 'ready'; }, 110);
-          if (k === 3) { state = 'tap'; R.small.textContent = 'Now keep tapping the beat…'; }
+          if (k === 3) { state = 'tap'; R.small.textContent = T('Now keep tapping the beat…'); }
         }, lead + k * iv);
       }
       api.later(() => { if (my === tok) evaluate(); }, lead + 12 * iv + 300);
@@ -952,18 +967,18 @@ game({
     function evaluate() {
       if (state !== 'count' && state !== 'tap') return;
       tok++;
-      if (taps.length < 4) { state = 'between'; R.big.textContent = 'Missed it'; R.small.textContent = 'Not enough taps. Tap to retry this round.'; return; }
+      if (taps.length < 4) { state = 'between'; R.big.textContent = T('Missed it'); R.small.textContent = T('Not enough taps. Tap to retry this round.'); return; }
       const signed = taps.map(t => {
         let k = 4; for (let j = 5; j < 12; j++) if (Math.abs(t - beats[j]) < Math.abs(t - beats[k])) k = j;
         return t - beats[k];
       });
       const m = avg(signed.map(Math.abs));
       const half = Math.floor(signed.length / 2), drift = avg(signed.slice(half)) - avg(signed.slice(0, half));
-      const dtext = Math.abs(drift) < 15 ? 'Rock steady tempo.' : drift < 0 ? 'You sped up toward the end.' : 'You slowed down toward the end.';
+      const dtext = T(Math.abs(drift) < 15 ? 'Rock steady tempo.' : drift < 0 ? 'You sped up toward the end.' : 'You slowed down toward the end.');
       errs.push(m); r++;
-      R.big.textContent = Math.round(m) + ' ms off';
-      if (r >= ROUNDS) { state = 'over'; R.small.textContent = dtext; api.later(() => api.finish(avg(errs), [[Math.round(Math.min(...errs)) + ' ms', 'best round']]), 1500); }
-      else { state = 'between'; R.small.textContent = dtext + ' Tap for the next round.'; R.round.textContent = `Round ${r + 1} of ${ROUNDS}`; }
+      R.big.textContent = T('{n} ms off', { n: Math.round(m) });
+      if (r >= ROUNDS) { state = 'over'; R.small.textContent = dtext; api.later(() => api.finish(avg(errs), [[Math.round(Math.min(...errs)) + ' ms', T('best round')]]), 1500); }
+      else { state = 'between'; R.small.textContent = dtext + ' ' + T('Tap for the next round.'); R.round.textContent = T('Round {n} of {total}', { n: r + 1, total: ROUNDS }); }
     }
     function tap() {
       if (state === 'ready' || state === 'between') { startRound(); return; }
@@ -991,18 +1006,18 @@ game({
   curve: { mid: 650, p: 2, off: 400 },
   art: `<svg viewBox="0 0 120 120" aria-hidden="true"><text x="60" y="74" text-anchor="middle" style="font-family:var(--display);font-size:40px" class="f-sky">RED</text><path d="M24 90h72" class="s-ink" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 9"/></svg>`,
   mount(s, api) {
-    const C = [['RED', '--tomato', 'KeyR'], ['BLUE', '--sky', 'KeyB'], ['GREEN', '--mint', 'KeyG'], ['YELLOW', '--sun', 'KeyY']];
+    const C = [['RED', '--tomato', 'Digit1'], ['BLUE', '--sky', 'Digit2'], ['GREEN', '--mint', 'Digit3'], ['YELLOW', '--sun', 'Digit4']];
     const N = 20; let k = 0, mistakes = 0, t0 = 0, ink = 0, word = -1, running = false;
     s.innerHTML = `<div class="hud" style="max-width:560px"><span data-r="prog">0 / ${N}</span><span class="num" data-r="time">0.0 s</span></div>
-      <div class="word" data-r="word">Ready?</div>
-      <div class="row" data-r="opts" hidden>${C.map((c, i) => `<button class="btn ghost" data-i="${i}">${c[0].toLowerCase()} <kbd>${c[0][0]}</kbd></button>`).join('')}</div>
-      <button class="btn" data-r="go">Start</button>
-      <div class="msg" data-r="msg">Choose the ink color, not the word. Keys R, B, G and Y work too.</div>`;
+      <div class="word" data-r="word">${T('Ready?')}</div>
+      <div class="row" data-r="opts" hidden>${C.map((c, i) => `<button class="btn ghost" data-i="${i}">${T(c[0]).toLowerCase()} <kbd>${i + 1}</kbd></button>`).join('')}</div>
+      <button class="btn" data-r="go">${T('Start')}</button>
+      <div class="msg" data-r="msg">${T('Choose the ink color, not the word. Keys 1 to 4 work too.')}</div>`;
     const R = refs(s);
     function next() {
       let w; do w = randInt(0, 3); while (w === word); word = w;
       ink = Math.random() < 0.25 ? w : (w + randInt(1, 3)) % 4;
-      R.word.textContent = C[w][0]; R.word.style.color = `var(${C[ink][1]})`;
+      R.word.textContent = T(C[w][0]); R.word.style.color = `var(${C[ink][1]})`;
       R.prog.textContent = `${k} / ${N}`;
     }
     function answer(i) {
@@ -1012,14 +1027,14 @@ game({
         if (k >= N) {
           running = false;
           const total = performance.now() - t0 + mistakes * 1000;
-          R.word.textContent = 'Done!'; R.word.style.color = '';
-          api.later(() => api.finish(total / N, [[mistakes, mistakes === 1 ? 'mistake' : 'mistakes']]), 900);
+          R.word.textContent = T('Done!'); R.word.style.color = '';
+          api.later(() => api.finish(total / N, [[mistakes, T(mistakes === 1 ? 'mistake' : 'mistakes')]]), 900);
           return;
         }
         next();
       } else {
         mistakes++;
-        R.msg.textContent = `Wrong ink! +1 s penalty (${mistakes} so far)`;
+        R.msg.textContent = T('Wrong ink! +1 s penalty ({n} so far)', { n: mistakes });
         R.word.classList.remove('shake'); void R.word.offsetWidth; R.word.classList.add('shake');
       }
     }
@@ -1045,8 +1060,8 @@ game({
     const N = 6; let round = 0, errs = [], ang = 0, rot = 0;
     s.innerHTML = `<div class="hud"><span data-r="round"></span><span data-r="err"></span></div>
       <div class="canvas-box"><canvas data-r="cv"></canvas></div>
-      <form data-r="form" class="row"><input class="field" data-r="in" type="number" inputmode="decimal" min="0" max="180" step="any" autocomplete="off" aria-label="Angle in degrees" placeholder="degrees"><button class="btn" type="submit">Guess</button></form>
-      <div class="msg" data-r="msg">How many degrees between the two lines?</div>`;
+      <form data-r="form" class="row"><input class="field" data-r="in" type="number" inputmode="decimal" min="0" max="180" step="any" autocomplete="off" aria-label="Angle in degrees" placeholder="degrees"><button class="btn" type="submit">${T('Guess')}</button></form>
+      <div class="msg" data-r="msg">${T('How many degrees between the two lines?')}</div>`;
     const R = refs(s);
     let F = fitCanvas(R.cv);
     const col = { ink: css('--ink'), sky: css('--sky'), tom: css('--tomato') };
@@ -1070,20 +1085,20 @@ game({
     }
     function newRound() {
       revealed = false; ang = randInt(8, 172); rot = rand(0, Math.PI * 2);
-      R.round.textContent = `Round ${round + 1} of ${N}`;
+      R.round.textContent = T('Round {n} of {total}', { n: round + 1, total: N });
       R.form.hidden = false; R.in.value = ''; R.in.focus();
-      R.msg.textContent = 'How many degrees between the two lines?';
+      R.msg.textContent = T('How many degrees between the two lines?');
       draw();
     }
     api.on(window, 'resize', () => { F = fitCanvas(R.cv); draw(); });
     api.on(R.form, 'submit', e => {
       e.preventDefault();
       const g = parseFloat(R.in.value);
-      if (isNaN(g)) { R.msg.textContent = 'Type a number of degrees, like 45.'; return; }
+      if (isNaN(g)) { R.msg.textContent = T('Type a number of degrees, like 45.'); return; }
       const err = Math.abs(g - ang); errs.push(err); round++;
       revealed = true; draw(); R.form.hidden = true;
-      R.msg.innerHTML = `<strong>${err < 3 ? 'Spot on!' : err < 8 ? 'Close.' : err < 15 ? 'Not bad.' : 'Way off.'}</strong>You said ${g}°. It was ${ang}°.`;
-      R.err.textContent = `Average error ${avg(errs).toFixed(1)}°`;
+      R.msg.innerHTML = `<strong>${T(err < 3 ? 'Spot on!' : err < 8 ? 'Close.' : err < 15 ? 'Not bad.' : 'Way off.')}</strong>${T('You said {g}°. It was {a}°.', { g, a: ang })}`;
+      R.err.textContent = T('Average error {n}°', { n: avg(errs).toFixed(1) });
       api.later(() => round >= N ? api.finish(avg(errs)) : newRound(), 1700);
     });
     newRound();
@@ -1096,7 +1111,7 @@ game({
   desc: 'Tiles light up for a moment. Tap every one you saw.',
   intro: 'A few tiles light up, then go dark. Tap all of them. Each level adds one more tile. A wrong tap costs a life.',
   fact: 'Visual memory works in chunks. People who do well here often see shapes in the pattern, like “an L in the corner”, instead of remembering single tiles.',
-  better: 'high', label: 'most tiles remembered', fmt: v => v + ' tiles',
+  better: 'high', label: 'most tiles remembered', fmt: v => T('{n} tiles', { n: v }),
   curve: { mid: 8, p: 3 },
   art: `<svg viewBox="0 0 120 120" aria-hidden="true">${Array.from({ length: 16 }, (_, i) => `<rect x="${10 + (i % 4) * 26}" y="${10 + Math.floor(i / 4) * 26}" width="22" height="22" rx="5" class="${[1, 6, 7, 12].includes(i) ? 'f-sky' : 'f-surf'}"/>`).join('')}</svg>`,
   mount(s, api) {
@@ -1107,13 +1122,13 @@ game({
       const n = N <= 4 ? 4 : N <= 8 ? 5 : N <= 13 ? 6 : 7;
       targets = new Set(); while (targets.size < N) targets.add(randInt(0, n * n - 1));
       found = 0; phase = 'show';
-      R.lvl.textContent = `${N} tiles`; hearts(R.lives, 3, lives);
+      R.lvl.textContent = T('{n} tiles', { n: N }); hearts(R.lives, 3, lives);
       R.grid.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
       R.grid.innerHTML = Array.from({ length: n * n }, (_, i) => `<button class="cell ${targets.has(i) ? 'lit' : ''}" data-i="${i}" aria-label="Tile ${i + 1}"></button>`).join('');
-      R.msg.textContent = 'Memorize…';
+      R.msg.textContent = T('Memorize…');
       api.later(() => {
         [...R.grid.children].forEach(c => c.classList.remove('lit'));
-        phase = 'input'; R.msg.textContent = 'Now tap the tiles that were lit.';
+        phase = 'input'; R.msg.textContent = T('Now tap the tiles that were lit.');
       }, 1000 + N * 70);
     }
     api.on(R.grid, 'click', e => {
@@ -1121,11 +1136,11 @@ game({
       if (!b || phase !== 'input' || b.classList.contains('hit')) return;
       if (targets.has(+b.dataset.i)) {
         b.classList.add('hit'); found++;
-        if (found === N) { phase = 'done'; best = N; R.msg.textContent = 'Perfect! One more tile next time.'; N++; api.later(build, 800); }
+        if (found === N) { phase = 'done'; best = N; R.msg.textContent = T('Perfect! One more tile next time.'); N++; api.later(build, 800); }
       } else {
         b.classList.add('miss'); lives--; phase = 'done'; hearts(R.lives, 3, lives);
         targets.forEach(i => { const c = R.grid.children[i]; if (!c.classList.contains('hit')) c.classList.add('lit'); });
-        R.msg.textContent = lives ? 'Missed one. Same size, new pattern.' : 'Out of lives.';
+        R.msg.textContent = lives ? T('Missed one. Same size, new pattern.') : T('Out of lives.');
         api.later(() => lives ? build() : api.finish(best), 1300);
       }
     });
@@ -1139,19 +1154,19 @@ game({
   desc: 'Two notes play. Which was higher? They keep getting closer.',
   intro: 'Listen to two short notes and choose which one was higher. After each right answer the notes get closer together. Headphones help a lot.',
   fact: 'A semitone, the gap between two piano keys, is 100 cents. Trained musicians can often hear differences of 5 to 10 cents.',
-  better: 'low', label: 'smallest gap heard', fmt: v => v >= 400 ? 'none' : (v < 10 ? v.toFixed(1) : Math.round(v)) + ' cents',
+  better: 'low', label: 'smallest gap heard', fmt: v => v >= 400 ? T('none') : T('{n} cents', { n: v < 10 ? v.toFixed(1) : Math.round(v) }),
   curve: { mid: 40, p: 1.2 },
   art: `<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M8 50q13-26 26 0t26 0 26 0 26 0" class="f-none s-sky" stroke-width="6" stroke-linecap="round"/><path d="M8 82q9-18 18 0t18 0 18 0 18 0 18 0 18 0" class="f-none s-tom" stroke-width="6" stroke-linecap="round"/></svg>`,
   mount(s, api) {
     let cents = 200, lives = 3, best = 400, ans = 1, phase = 'idle';
     s.innerHTML = `<div class="hud" style="max-width:520px"><span data-r="gap"></span><span class="pips" data-r="lives"></span></div>
       <div class="flash-box" data-r="box" style="font-size:clamp(28px,6vw,44px)">♪ ♪</div>
-      <div class="row"><button class="btn" data-r="play">Play the notes</button></div>
-      <div class="row" data-r="choices" hidden><button class="btn ghost" data-a="1">First was higher <kbd>1</kbd></button><button class="btn ghost" data-a="2">Second was higher <kbd>2</kbd></button></div>
-      <div class="msg" data-r="msg">Turn your sound on, then press play.</div>`;
+      <div class="row"><button class="btn" data-r="play">${T('Play the notes')}</button></div>
+      <div class="row" data-r="choices" hidden><button class="btn ghost" data-a="1">${T('First was higher')} <kbd>1</kbd></button><button class="btn ghost" data-a="2">${T('Second was higher')} <kbd>2</kbd></button></div>
+      <div class="msg" data-r="msg">${T('Turn your sound on, then press play.')}</div>`;
     const R = refs(s);
     let f1 = 0, f2 = 0;
-    const hud = () => { R.gap.textContent = `Gap: ${cents < 10 ? cents.toFixed(1) : Math.round(cents)} cents`; hearts(R.lives, 3, lives); };
+    const hud = () => { R.gap.textContent = T('Gap: {n} cents', { n: cents < 10 ? cents.toFixed(1) : Math.round(cents) }); hearts(R.lives, 3, lives); };
     function newPair() {
       const base = rand(260, 520), hi = base * Math.pow(2, cents / 1200);
       ans = Math.random() < 0.5 ? 1 : 2;
@@ -1161,18 +1176,18 @@ game({
       phase = 'playing'; R.choices.hidden = true;
       tone(f1, 0.5, { vol: 0.22 }); tone(f2, 0.5, { vol: 0.22, at: 0.75 });
       R.box.textContent = '♪ 1'; api.later(() => { R.box.textContent = '♪ 2'; }, 750);
-      api.later(() => { phase = 'choose'; R.box.textContent = '1 or 2?'; R.choices.hidden = false; R.play.textContent = 'Replay'; R.msg.textContent = 'Which note was higher?'; }, 1350);
+      api.later(() => { phase = 'choose'; R.box.textContent = T('1 or 2?'); R.choices.hidden = false; R.play.textContent = T('Replay'); R.msg.textContent = T('Which note was higher?'); }, 1350);
     }
     function choose(a) {
       if (phase !== 'choose') return;
       phase = 'wait'; R.choices.hidden = true;
       if (a === ans) {
         best = Math.min(best, cents);
-        R.msg.innerHTML = `<strong>Correct!</strong>Getting closer…`;
+        R.msg.innerHTML = T('<strong>Correct!</strong>Getting closer…');
         cents = Math.max(1, cents * 0.7);
       } else {
         lives--;
-        R.msg.innerHTML = `<strong>Nope.</strong>The ${ans === 1 ? 'first' : 'second'} one was higher.`;
+        R.msg.innerHTML = T(ans === 1 ? '<strong>Nope.</strong>The first one was higher.' : '<strong>Nope.</strong>The second one was higher.');
         if (!lives) { hud(); api.later(() => api.finish(best), 1300); return; }
         cents = Math.min(300, cents * 1.25);
       }
@@ -1202,9 +1217,9 @@ game({
       return `<svg viewBox="0 0 10 10">${c.s === 'circle' ? `<circle cx="5" cy="5" r="3.7" ${st}/>` : c.s === 'square' ? `<rect x="1.5" y="1.5" width="7" height="7" rx=".8" ${st}/>` : c.s === 'tri' ? `<path d="M5 1 9.2 8.6H.8z" ${st}/>` : `<path d="M5 .8 9.2 5 5 9.2 .8 5z" ${st}/>`}</svg>`;
     };
     let round = 0, score = 0, changed = -1, phase = 'idle';
-    s.innerHTML = `<div class="hud" style="max-width:440px"><span data-r="round"></span><span data-r="score"></span></div><div class="tgrid" data-r="grid"></div><button class="btn" data-r="go">Show the grid</button><div class="msg" data-r="msg">You’ll get about 3 seconds to memorize it.</div>`;
+    s.innerHTML = `<div class="hud" style="max-width:440px"><span data-r="round"></span><span data-r="score"></span></div><div class="tgrid" data-r="grid"></div><button class="btn" data-r="go">${T('Show the grid')}</button><div class="msg" data-r="msg">${T('You’ll get about 3 seconds to memorize it.')}</div>`;
     const R = refs(s);
-    const hud = () => { R.round.textContent = `Round ${Math.min(round + 1, 8)} of 8`; R.score.textContent = `Spotted ${score}`; };
+    const hud = () => { R.round.textContent = T('Round {n} of {total}', { n: Math.min(round + 1, 8), total: 8 }); R.score.textContent = T('Spotted {n}', { n: score }); };
     function render(scene, n) {
       R.grid.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
       R.grid.innerHTML = scene.map((c, i) => `<button class="cell" data-i="${i}" aria-label="Cell ${i + 1}">${shape(c)}</button>`).join('');
@@ -1223,9 +1238,9 @@ game({
         else if (kind === 'color') c.c = pick(CO.filter(x => x !== c.c));
         else c.s = pick(SH.filter(x => x !== c.s));
       }
-      render(A, n); R.msg.textContent = 'Memorize the grid…';
+      render(A, n); R.msg.textContent = T('Memorize the grid…');
       api.later(() => { R.grid.classList.add('blank'); R.msg.textContent = '…'; }, 2600 + n * 120);
-      api.later(() => { render(B, n); R.grid.classList.remove('blank'); phase = 'pick'; R.msg.textContent = 'What changed? Tap it.'; }, 3200 + n * 120);
+      api.later(() => { render(B, n); R.grid.classList.remove('blank'); phase = 'pick'; R.msg.textContent = T('What changed? Tap it.'); }, 3200 + n * 120);
     }
     api.on(R.go, 'click', play);
     api.on(R.grid, 'click', e => {
@@ -1235,10 +1250,10 @@ game({
       if (ok) score++;
       b.classList.add(ok ? 'hit' : 'miss');
       R.grid.children[changed].classList.add('reveal');
-      R.msg.innerHTML = ok ? '<strong>Got it!</strong>' : '<strong>Missed.</strong>The outlined one changed.';
+      R.msg.innerHTML = T(ok ? '<strong>Got it!</strong>' : '<strong>Missed.</strong>The outlined one changed.');
       round++; hud();
       if (round >= 8) api.later(() => api.finish(score), 1500);
-      else { R.go.hidden = false; R.go.textContent = 'Next grid'; }
+      else { R.go.hidden = false; R.go.textContent = T('Next grid'); }
     });
     hud(); render(Array(16).fill(null), 4);
   }
@@ -1257,7 +1272,7 @@ game({
     const N = 6; let round = 0, errs = [], poly = [], cen = [0, 0], area = 1, guess = null, phase = 'pick';
     s.innerHTML = `<div class="hud"><span data-r="round"></span><span data-r="err"></span></div>
       <div class="canvas-box"><canvas data-r="cv" style="cursor:crosshair;touch-action:manipulation"></canvas></div>
-      <div class="msg" data-r="msg">Tap the balance point.</div>`;
+      <div class="msg" data-r="msg">${T('Tap the balance point.')}</div>`;
     const R = refs(s);
     let F = fitCanvas(R.cv);
     const col = { ink: css('--ink'), tint: css('--tint-yellow'), tom: css('--tomato'), sky: css('--sky') };
@@ -1292,7 +1307,7 @@ game({
     }
     function newRound() {
       newPoly(); guess = null; phase = 'pick';
-      R.round.textContent = `Round ${round + 1} of ${N}`; R.msg.textContent = 'Tap the balance point.';
+      R.round.textContent = T('Round {n} of {total}', { n: round + 1, total: N }); R.msg.textContent = T('Tap the balance point.');
       draw();
     }
     api.on(window, 'resize', () => { F = fitCanvas(R.cv); draw(); });
@@ -1303,8 +1318,8 @@ game({
       guess = [(e.clientX - b.left - cx) / S, (e.clientY - b.top - cy) / S];
       const err = Math.hypot(guess[0] - cen[0], guess[1] - cen[1]) / Math.sqrt(area) * 100;
       errs.push(err); round++; draw();
-      R.msg.innerHTML = `<strong>${err < 4 ? 'Perfectly balanced!' : err < 9 ? 'Close.' : err < 16 ? 'A bit off.' : 'It would tip over.'}</strong>Blue X is your tap, red dot is the real balance point.`;
-      R.err.textContent = `Average miss ${avg(errs).toFixed(1)}%`;
+      R.msg.innerHTML = `<strong>${T(err < 4 ? 'Perfectly balanced!' : err < 9 ? 'Close.' : err < 16 ? 'A bit off.' : 'It would tip over.')}</strong>${T('Blue X is your tap, red dot is the real balance point.')}`;
+      R.err.textContent = T('Average miss {n}%', { n: avg(errs).toFixed(1) });
       api.later(() => round >= N ? api.finish(avg(errs)) : newRound(), 1900);
     });
     newRound();
@@ -1317,22 +1332,22 @@ game({
   desc: 'A word flashes for a split second. Can you read it?',
   intro: 'Look at the + sign. A word flashes and is covered up. Type the word you saw. Each correct answer makes the next flash shorter.',
   fact: 'Your eyes only need about 50 milliseconds to take in a familiar word. Most screens refresh every 16.7 ms, so that’s the shortest flash possible here.',
-  better: 'low', label: 'shortest flash read', fmt: v => v >= 1000 ? 'none' : Math.round(v) + ' ms',
+  better: 'low', label: 'shortest flash read', fmt: v => v >= 1000 ? T('none') : Math.round(v) + ' ms',
   curve: { mid: 110, p: 1.5 },
   art: `<svg viewBox="0 0 120 120" aria-hidden="true"><rect x="8" y="34" width="104" height="52" rx="12" class="f-surf s-ink" stroke-width="5"/><text x="60" y="70" text-anchor="middle" style="font-family:var(--mono);font-size:24px;font-weight:700" class="f-ink">wo<tspan class="f-tom">###</tspan></text></svg>`,
   mount(s, api) {
-    const WORDS = 'apple river candle garden pocket silver planet butter window rocket forest mirror jungle pencil castle ticket orange banana guitar zipper turtle wizard cactus spider island marble pepper bottle carpet hammer violin donkey parrot wallet cookie basket ladder helmet anchor frozen magnet tunnel puzzle saddle velvet lizard tomato'.split(' ');
+    const WORDS = (lang !== 'en' && I18N[lang] && I18N[lang].__words || 'apple river candle garden pocket silver planet butter window rocket forest mirror jungle pencil castle ticket orange banana guitar zipper turtle wizard cactus spider island marble pepper bottle carpet hammer violin donkey parrot wallet cookie basket ladder helmet anchor frozen magnet tunnel puzzle saddle velvet lizard tomato').split(' ');
     const MASK = '#@%&$#@%&';
     let ms = 250, lives = 3, best = 1000, word = '', phase = 'idle', last = '';
     s.innerHTML = `<div class="hud" style="max-width:560px"><span data-r="ms"></span><span class="pips" data-r="lives"></span></div>
       <div class="flash-box" data-r="box">+</div>
-      <button class="btn" data-r="go">Flash a word</button>
-      <form data-r="form" class="row" hidden><input class="field" style="width:220px" data-r="in" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="The word you saw"><button class="btn" type="submit">Submit</button></form>
-      <div class="msg" data-r="msg">Keep your eyes on the + sign.</div>`;
+      <button class="btn" data-r="go">${T('Flash a word')}</button>
+      <form data-r="form" class="row" hidden><input class="field" style="width:220px" data-r="in" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="The word you saw"><button class="btn" type="submit">${T('Submit')}</button></form>
+      <div class="msg" data-r="msg">${T('Keep your eyes on the + sign.')}</div>`;
     const R = refs(s);
-    const hud = () => { R.ms.textContent = `Flash: ${Math.round(ms)} ms`; hearts(R.lives, 3, lives); };
+    const hud = () => { R.ms.textContent = T('Flash: {n} ms', { n: Math.round(ms) }); hearts(R.lives, 3, lives); };
     function flash() {
-      R.go.hidden = true; phase = 'flash'; R.box.textContent = '+'; R.msg.textContent = 'Get ready…';
+      R.go.hidden = true; phase = 'flash'; R.box.textContent = '+'; R.msg.textContent = T('Get ready…');
       do word = pick(WORDS); while (word === last); last = word;
       api.later(() => {
         let start = 0;
@@ -1340,7 +1355,7 @@ game({
           if (!start) { start = now; R.box.textContent = word; return; }
           if (now - start >= ms - 6) {
             R.box.textContent = MASK.slice(0, word.length); stop();
-            phase = 'type'; R.form.hidden = false; R.in.value = ''; R.in.focus(); R.msg.textContent = 'What was the word?';
+            phase = 'type'; R.form.hidden = false; R.in.value = ''; R.in.focus(); R.msg.textContent = T('What was the word?');
           }
         });
       }, 800);
@@ -1352,16 +1367,16 @@ game({
       phase = 'idle'; R.form.hidden = true;
       const a = R.in.value.trim().toLowerCase();
       R.box.textContent = word;
-      if (a === word) {
+      if (norm(a) === norm(word)) {
         best = Math.min(best, ms);
-        R.msg.innerHTML = `<strong>Correct!</strong>Next flash is shorter.`;
+        R.msg.innerHTML = T('<strong>Correct!</strong>Next flash is shorter.');
         ms = Math.max(17, ms * 0.72);
       } else {
         lives--;
-        R.msg.innerHTML = `<strong>Not quite.</strong>The word was “${word}”.`;
+        R.msg.innerHTML = T('<strong>Not quite.</strong>The word was “{w}”.', { w: word });
         if (!lives) { hud(); api.later(() => api.finish(best), 1500); return; }
       }
-      hud(); R.go.hidden = false; R.go.textContent = 'Next word'; R.go.focus();
+      hud(); R.go.hidden = false; R.go.textContent = T('Next word'); R.go.focus();
     });
     hud();
   }
@@ -1378,7 +1393,7 @@ game({
   art: `<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="70" cy="52" r="26" class="f-none s-mint" stroke-width="7"/><path d="M14 104c10-8 14-30 26-26s6 22 18 8 2-30 12-34" class="f-none s-ink" stroke-width="4" stroke-linecap="round"/></svg>`,
   mount(s, api) {
     const DUR = 15;
-    s.innerHTML = `<div class="canvas-box"><canvas data-r="cv" style="touch-action:none;cursor:crosshair"></canvas></div><div class="msg" data-r="msg">Put your cursor or finger inside the ring to begin.</div>`;
+    s.innerHTML = `<div class="canvas-box"><canvas data-r="cv" style="touch-action:none;cursor:crosshair"></canvas></div><div class="msg" data-r="msg">${T('Put your cursor or finger inside the ring to begin.')}</div>`;
     const R = refs(s);
     let F = fitCanvas(R.cv);
     api.on(window, 'resize', () => { F = fitCanvas(R.cv); });
@@ -1394,7 +1409,7 @@ game({
       const t = started ? (now - t0) / 1000 : 0;
       const [x, y] = pos(t, W, H), r = m * (0.14 - 0.08 * Math.min(1, t / DUR));
       const inR = Math.hypot(px - x, py - y) < r;
-      if (!started && inR) { started = true; t0 = now; last = now; R.msg.textContent = 'Stay inside!'; }
+      if (!started && inR) { started = true; t0 = now; last = now; R.msg.textContent = T('Stay inside!'); }
       if (started) { const dt = (now - last) / 1000; last = now; total += dt; if (inR) inside += dt; }
       ctx.clearRect(0, 0, W, H);
       ctx.fillStyle = col.line; ctx.fillRect(0, 0, W, 6);
@@ -1404,12 +1419,38 @@ game({
       ctx.lineWidth = 6; ctx.strokeStyle = started ? (inR ? col.ok : col.bad) : col.ink;
       ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke();
       ctx.fillStyle = col.muted; ctx.font = `600 15px ${css('--mono')}`; ctx.textAlign = 'left';
-      ctx.fillText(started ? `${Math.max(0, DUR - t).toFixed(1)} s · ${total ? Math.round(inside / total * 100) : 100}% inside` : 'move into the ring', 14, 30);
+      ctx.fillText(started ? T('{s} s · {p}% inside', { s: Math.max(0, DUR - t).toFixed(1), p: total ? Math.round(inside / total * 100) : 100 }) : T('move into the ring'), 14, 30);
       if (started && t >= DUR) api.finish(inside / total * 100);
     });
   }
 });
 
+/* ---------- Language picker ---------- */
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    if (el.dataset.en == null) el.dataset.en = el.innerHTML.trim();
+    el.innerHTML = T(el.dataset.en);
+  });
+  $('lang').value = lang;
+  if (typeof syncMute === 'function') syncMute();
+}
+function setLang(l) {
+  lang = LANGS[l] ? l : 'en';
+  store.set('lang', lang);
+  applyLang();
+  const was = current;
+  current = null;
+  show(was || 'home');
+}
+(function initLang() {
+  const saved = store.get('lang');
+  const auto = (navigator.languages || [navigator.language || 'en']).map(l => String(l).slice(0, 2).toLowerCase()).find(l => LANGS[l]);
+  lang = LANGS[saved] ? saved : auto || 'en';
+  $('lang').innerHTML = Object.entries(LANGS).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+  $('lang').addEventListener('change', e => setLang(e.target.value));
+  applyLang();
+})();
 $('start-run').addEventListener('click', startRun);
 $('mute').addEventListener('click', e => {
   muted = !muted; store.set('muted', muted); syncMute();
@@ -1417,7 +1458,7 @@ $('mute').addEventListener('click', e => {
 addEventListener('keydown', e => {
   if (['Space', 'ArrowUp', 'ArrowDown'].includes(e.code) && !e.target.closest('input, textarea, button')) e.preventDefault();
 });
-function syncMute() { $('mute').setAttribute('aria-pressed', muted); $('mute').textContent = muted ? 'Sound off' : 'Sound on'; }
+function syncMute() { $('mute').setAttribute('aria-pressed', muted); $('mute').textContent = T(muted ? 'Sound off' : 'Sound on'); }
 muted = !!store.get('muted'); syncMute();
 show(location.hash.slice(1) || 'home');
 initSdk().then(() => {
